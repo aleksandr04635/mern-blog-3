@@ -1,0 +1,20 @@
+https://www.youtube.com/watch?v=Kkht2mwSL_I
+https://github.com/sahandghavidel/mern-blog
+Sahand's blog
+Build a Blog App with Dashboard using MERN (jwt, redux toolkit)
+with redux toolkit with local persistance for user and dark theme
+with very developed search 
+with comments with likes and deletion with a modal
+with flowbite UI library
+in Header component is navigation with
+const path = useLocation().pathname;
+<Navbar.Link active={path === "/"} as={"div"}>
+with Gooogle OAuth auth via firebase and firebase user avatar and post image uploading
+avatar image uploading to firebase 
+Circular progresbar
+https://www.npmjs.com/package/react-circular-progressbar
+don't forget to add domains to firebase configuration here
+https://console.firebase.google.com/project/mern-blog-1c1f6/authentication/settings
+deployed to 
+https://mern-blog-2-khaki.vercel.app/
+
