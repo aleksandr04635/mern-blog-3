@@ -16,7 +16,7 @@ const createComment = async (req, res, next) => {
 
     const newComment = new Comment({
       content,
-      postId,
+      post: postId,
       userId,
     });
     await newComment.save();
@@ -30,7 +30,7 @@ const createComment = async (req, res, next) => {
 const getPostComments = async (req, res, next) => {
   connectDB();
   try {
-    const comments = await Comment.find({ postId: req.params.postId }).sort({
+    const comments = await Comment.find({ post: req.params.postId }).sort({
       createdAt: -1,
     });
     res.status(200).json(comments);

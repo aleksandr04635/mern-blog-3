@@ -3,6 +3,7 @@ import { connectDB, errorHandler, verifyToken } from "../utils/utils.js";
 import Post from "../models/post.model.js";
 
 const create = async (req, res, next) => {
+  console.log("req.body:", req.body);
   connectDB();
   /*   if (!req.user.isAdmin) {
     return next(errorHandler(403, "You are not allowed to create a post"));
@@ -120,6 +121,7 @@ const updatepost = async (req, res, next) => {
           title: req.body.title,
           content: req.body.content,
           category: req.body.category,
+          tags: req.body.tags,
           slug,
           image: req.body.image,
         },
@@ -127,6 +129,7 @@ const updatepost = async (req, res, next) => {
       { new: true } //returns a new post and not old as by default
     );
     res.status(200).json(updatedPost);
+    //console.log("updatedPost: ", updatedPost);
   } catch (error) {
     next(error);
   }

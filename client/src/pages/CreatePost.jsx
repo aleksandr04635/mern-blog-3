@@ -12,6 +12,7 @@ import { useState } from "react";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { useNavigate } from "react-router-dom";
+import { ImCross } from "react-icons/im";
 
 export default function CreatePost() {
   const [file, setFile] = useState(null);
@@ -20,7 +21,24 @@ export default function CreatePost() {
   const [formData, setFormData] = useState({});
   const [publishError, setPublishError] = useState(null);
 
+  const [cat, setCat] = useState("");
+  const [cats, setCats] = useState([]);
+
   const navigate = useNavigate();
+
+  const deleteCategory = (i) => {
+    let updatedCats = [...cats];
+    updatedCats.splice(i);
+    setCats(updatedCats);
+  };
+
+  const addCategory = () => {
+    let updatedCats = [...cats];
+    updatedCats.push(cat);
+    setCat("");
+    setCats(updatedCats);
+    setFormData({ ...formData, tags: updatedCats });
+  };
 
   const handleUpdloadImage = async () => {
     try {
@@ -61,6 +79,7 @@ export default function CreatePost() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("formData: ", formData);
     try {
       const res = await fetch("/api/post/create", {
         method: "POST",
@@ -110,7 +129,7 @@ export default function CreatePost() {
             <option value="nextjs">Next.js</option>
           </Select>
         </div>
-        <div className="flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3">
+        <div className="flex gap-4 items-center justify-between border border-teal-500 rounded p-3">
           <FileInput
             type="file"
             accept="image/*"
@@ -144,6 +163,41 @@ export default function CreatePost() {
             className="w-full h-72 object-cover"
           />
         )}
+        <div className="flex flex-col">
+          <div className="flex items-center space-x-4 md:space-x-8">
+            <input
+              value={cat}
+              onChange={(e) => setCat(e.target.value)}
+              className="px-4 py-2 outline-none rounded border-teal-500 "
+              placeholder="Enter post category"
+              type="text"
+            />
+            <div
+              onClick={addCategory}
+              className="bg-teal-500 rounded text-white px-4 py-2 font-semibold cursor-pointer"
+            >
+              Add
+            </div>
+          </div>
+
+          {/* categories */}
+          <div className="flex px-4 mt-3">
+            {cats?.map((c, i) => (
+              <div
+                key={i}
+                className="flex justify-center items-center space-x-2 mr-4 bg-gray-200 px-2 py-1 rounded-md"
+              >
+                <p>{c}</p>
+                <p
+                  onClick={() => deleteCategory(i)}
+                  className="text-white bg-teal-500 rounded-full cursor-pointer p-1 text-sm"
+                >
+                  <ImCross />
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
         <ReactQuill
           theme="snow"
           placeholder="Write something..."
@@ -153,7 +207,7 @@ export default function CreatePost() {
             setFormData({ ...formData, content: value });
           }}
         />
-        <Button type="submit" gradientDuoTone="purpleToPink">
+        <Button type="submit" outline gradientDuoTone="purpleToBlue">
           Publish
         </Button>
         {publishError && (

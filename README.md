@@ -1,7 +1,10 @@
 ## MERN Blog with comments, search, tags and dark mode
 
-The previous version is deployed to vercel [here:](https://mern-blog-2-khaki.vercel.app/)
+Tailored to be deployed on vercel
 
+The previous version is deployed [here](https://mern-blog-2-khaki.vercel.app/)
+
+<!--
 All the rest is here only for example
 
 <br />
@@ -15,8 +18,8 @@ All the rest is here only for example
 <div align="center">
     <a href="https://refine.dev">Home Page</a> |
     <a href="https://discord.gg/refine">Discord</a> |
-    <a href="https://refine.dev/examples/">Examples</a> | 
-    <a href="https://refine.dev/blog/">Blog</a> | 
+    <a href="https://refine.dev/examples/">Examples</a> |
+    <a href="https://refine.dev/blog/">Blog</a> |
     <a href="https://refine.dev/docs/">Documentation</a>
 </div>
 <br />
@@ -61,3 +64,5 @@ Currently, two official plugins are available:
 ```bash
 npm create refine-app@latest -- --example mern-dashboard-client
 ```
+
+-->

@@ -13,6 +13,7 @@ import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { ImCross } from "react-icons/im";
 
 export default function UpdatePost() {
   const [file, setFile] = useState(null);
@@ -21,6 +22,8 @@ export default function UpdatePost() {
   const [formData, setFormData] = useState({});
   const [postData, setPostData] = useState({});
   const [publishError, setPublishError] = useState(null);
+  const [cat, setCat] = useState("");
+  const [cats, setCats] = useState([]);
 
   const { postId } = useParams();
 
@@ -42,6 +45,7 @@ export default function UpdatePost() {
           setPublishError(null);
           setFormData(data.posts[0]);
           setPostData(data.posts[0]);
+          setCats(data.posts[0].tags);
         }
       };
 
@@ -89,8 +93,30 @@ export default function UpdatePost() {
     }
   };
 
+  //console.log("cats :", cats);
+  const deleteCategory = (i) => {
+    //console.log("cats before:", cats);
+    //console.log("i:", i);
+    //let updatedCats = [...cats];
+    //console.log("cats after:", updatedCats.splice(i, 1));
+    // updatedCats.splice(i, 1);
+    setCats((c) => {
+      //console.log("c:", c);
+      //return c.splice(i, 1);
+      return c.filter((e, n) => n != i);
+    });
+  };
+
+  const addCategory = () => {
+    let updatedCats = [...cats];
+    updatedCats.push(cat);
+    setCat("");
+    setCats(updatedCats);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    formData.tags = cats;
     formData._id = postData._id; //it gets lost
     //console.log("formData from handleSubmit: ", formData);
     try {
@@ -181,6 +207,41 @@ export default function UpdatePost() {
             className="w-full h-72 object-cover"
           />
         )}
+        <div className="flex flex-col">
+          <div className="flex items-center space-x-4 md:space-x-8">
+            <input
+              value={cat}
+              onChange={(e) => setCat(e.target.value)}
+              className="px-4 py-2 outline-none rounded border-teal-500 "
+              placeholder="Enter post category"
+              type="text"
+            />
+            <div
+              onClick={addCategory}
+              className="bg-teal-500 rounded text-white px-4 py-2 font-semibold cursor-pointer"
+            >
+              Add
+            </div>
+          </div>
+
+          {/* categories */}
+          <div className="flex px-4 mt-3">
+            {cats?.map((c, i) => (
+              <div
+                key={i}
+                className="flex justify-center items-center space-x-2 mr-4 bg-gray-200 px-2 py-1 rounded-md"
+              >
+                <p>{c}</p>
+                <p
+                  onClick={() => deleteCategory(i)}
+                  className="text-white bg-teal-500 rounded-full cursor-pointer p-1 text-sm"
+                >
+                  <ImCross />
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
         <ReactQuill
           theme="snow"
           value={formData.content}

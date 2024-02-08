@@ -50,9 +50,11 @@ export default function Header() {
 
   return (
     <Navbar className="m-auto    rounded">
-      {/* <Navbar className="m-auto max-w-6xl max-w-[1200px]  border border-gray-400  rounded"></Navbar> */}
-      {/* my */}
-      {/*       <Link
+      <div className="flex flex-col w-full">
+        <div className="flex w-full justify-between ">
+          {/* <Navbar className="m-auto max-w-6xl max-w-[1200px]  border border-gray-400  rounded"></Navbar> */}
+          {/* my */}
+          {/*       <Link
         to="/"
         className="hover:bg-gray-300 self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white border rounded p-2"
       >
@@ -61,102 +63,102 @@ export default function Header() {
         </span>
         Blog
       </Link> */}
-      <Button
-        outline
-        onClick={() => {
-          navigate(`/`);
-        }}
-        gradientDuoTone="purpleToBlue"
-        className="font-semibold w-[100px]"
-      >
-        <h2> My Blog</h2>
-      </Button>
-      {/*      <form onSubmit={handleSubmit} className="relative hidden sm:inline"> */}
-      <form onSubmit={handleSubmit} className="relative ">
-        <TextInput
-          type="text"
-          placeholder="Search..."
-          /*  rightIcon={AiOutlineSearch} */
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-[100px] sm:w-[250px]"
-        />
-        <p
-          onClick={handleSubmit}
-          className="cursor-pointer border-none w-12 h-10 absolute text-xl top-[12px] right-[-21px]"
-        >
-          <AiOutlineSearch />
-        </p>
-      </form>
-      {/*       <Button className="w-12 h-10 sm:hidden" color="gray" pill>
-        <AiOutlineSearch />
-      </Button> */}
-      <div className="flex gap-2 md:order-2">
-        <Navbar.Toggle />
-        <button
-          className=" w-[40px] h-[40px] sm:inline rounded-full border border-gray-300 text-center"
-          color="gray"
-          /* pill */
-          /*  gradientDuoTone="purpleToBlue"
-          outline */
-
-          onClick={() => dispatch(toggleTheme())}
-        >
-          {theme === "light" ? (
-            <FaMoon className="mx-auto" />
-          ) : (
-            <FaSun className="mx-auto" />
-          )}
-        </button>
-
-        {currentUser ? (
-          <Dropdown
-            arrowIcon={false}
-            inline
-            label={
-              /*       <Avatar alt="user" img={currentUser.profilePicture} rounded /> */
-              <img
-                className="w-10 h-10 object-cover rounded-full"
-                src={currentUser.profilePicture}
-                alt={"user"}
-              />
-            }
+          <Button
+            outline
+            onClick={() => {
+              navigate(`/`);
+            }}
+            gradientDuoTone="purpleToBlue"
+            className="font-semibold w-[100px]"
           >
-            <Dropdown.Header>
-              <span className="block text-sm">@{currentUser.username}</span>
-              <span className="block text-sm font-medium truncate">
-                {currentUser.email}
-              </span>
-            </Dropdown.Header>
-            <Link to={"/create-post"}>
-              <Dropdown.Item>Create a post</Dropdown.Item>
+            <h2> My Blog</h2>
+          </Button>
+          {/*      <form onSubmit={handleSubmit} className="relative hidden sm:inline"> */}
+          <form onSubmit={handleSubmit} className="relative hidden sm:inline">
+            <TextInput
+              type="text"
+              placeholder="Search..."
+              /*  rightIcon={AiOutlineSearch} */
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-[300px]"
+            />
+            <p
+              onClick={handleSubmit}
+              className="cursor-pointer border-none w-12 h-10 absolute text-xl top-[12px] right-[-21px]"
+            >
+              <AiOutlineSearch />
+            </p>
+          </form>
+
+          <button
+            className=" w-[40px] h-[40px] sm:inline rounded-full border border-gray-300 text-center"
+            color="gray"
+            onClick={() => dispatch(toggleTheme())}
+          >
+            {theme === "light" ? (
+              <FaMoon className="mx-auto" />
+            ) : (
+              <FaSun className="mx-auto" />
+            )}
+          </button>
+          {currentUser ? (
+            <Dropdown
+              arrowIcon={false}
+              inline
+              label={
+                /*       <Avatar alt="user" img={currentUser.profilePicture} rounded /> */
+                <img
+                  className="w-10 h-10 object-cover rounded-full"
+                  src={currentUser.profilePicture}
+                  alt={"user"}
+                />
+              }
+            >
+              <Dropdown.Header>
+                <span className="block text-sm">@{currentUser.username}</span>
+                <span className="block text-sm font-medium truncate">
+                  {currentUser.email}
+                </span>
+              </Dropdown.Header>
+              <Link to={"/create-post"}>
+                <Dropdown.Item>Create a post</Dropdown.Item>
+              </Link>
+              <Dropdown.Divider />
+              <Link to={"/dashboard?tab=profile"}>
+                <Dropdown.Item>Profile</Dropdown.Item>
+              </Link>
+              <Dropdown.Divider />
+              <Dropdown.Item onClick={handleSignout}>Sign out</Dropdown.Item>
+            </Dropdown>
+          ) : (
+            <Link to="/sign-in">
+              <Button gradientDuoTone="purpleToBlue" outline>
+                Sign In
+              </Button>
             </Link>
-            <Dropdown.Divider />
-            <Link to={"/dashboard?tab=profile"}>
-              <Dropdown.Item>Profile</Dropdown.Item>
-            </Link>
-            <Dropdown.Divider />
-            <Dropdown.Item onClick={handleSignout}>Sign out</Dropdown.Item>
-          </Dropdown>
-        ) : (
-          <Link to="/sign-in">
-            <Button gradientDuoTone="purpleToBlue" outline>
-              Sign In
-            </Button>
-          </Link>
-        )}
+          )}
+        </div>
+        <form
+          onSubmit={handleSubmit}
+          className="relative  sm:hidden mx-auto mt-1"
+        >
+          <TextInput
+            type="text"
+            placeholder="Search..."
+            /*  rightIcon={AiOutlineSearch} */
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-[300px]"
+          />
+          <p
+            onClick={handleSubmit}
+            className="cursor-pointer border-none w-12 h-10 absolute text-xl top-[12px] right-[-21px]"
+          >
+            <AiOutlineSearch />
+          </p>
+        </form>
       </div>
-      <Navbar.Collapse>
-        <Navbar.Link active={path === "/"} as={"div"}>
-          <Link to="/">Home</Link>
-        </Navbar.Link>
-        <Navbar.Link active={path === "/about"} as={"div"}>
-          <Link to="/about">About</Link>
-        </Navbar.Link>
-        <Navbar.Link active={path === "/projects"} as={"div"}>
-          <Link to="/projects">Projects</Link>
-        </Navbar.Link>
-      </Navbar.Collapse>
     </Navbar>
   );
 }
