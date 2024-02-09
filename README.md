@@ -1,13 +1,12 @@
-## MERN Blog with comments, search, tags and dark mode
+## MERN Blog with comments structure, tags, search, dark mode and image uploading from a rich text editor
 
-Tailored to be deployed on vercel
+Tailored to be deployed on vercel. For this minimisation of the number of files in api directory is necessary.
 
 The previous version is deployed [here](https://mern-blog-2-khaki.vercel.app/)
 
 <!--
-All the rest is here only for example
+All the rest is here only for examples
 
-<br />
 <br />
 
 <div align="center" style="margin: 30px;">

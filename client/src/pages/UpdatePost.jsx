@@ -22,8 +22,8 @@ export default function UpdatePost() {
   const [formData, setFormData] = useState({});
   const [postData, setPostData] = useState({});
   const [publishError, setPublishError] = useState(null);
-  const [cat, setCat] = useState("");
-  const [cats, setCats] = useState([]);
+  const [tag, setTag] = useState("");
+  const [tags, setTags] = useState([]);
 
   const { postId } = useParams();
 
@@ -45,7 +45,7 @@ export default function UpdatePost() {
           setPublishError(null);
           setFormData(data.posts[0]);
           setPostData(data.posts[0]);
-          setCats(data.posts[0].tags);
+          setTags(data.posts[0].tags);
         }
       };
 
@@ -93,30 +93,30 @@ export default function UpdatePost() {
     }
   };
 
-  //console.log("cats :", cats);
-  const deleteCategory = (i) => {
-    //console.log("cats before:", cats);
+  console.log("tags :", tags);
+  const deleteTag = (i) => {
+    //console.log("tags before:", tags);
     //console.log("i:", i);
-    //let updatedCats = [...cats];
-    //console.log("cats after:", updatedCats.splice(i, 1));
-    // updatedCats.splice(i, 1);
-    setCats((c) => {
+    //let updatedTags = [...tags];
+    //console.log("tags after:", updatedTags.splice(i, 1));
+    // updatedTags.splice(i, 1);
+    setTags((t) => {
       //console.log("c:", c);
       //return c.splice(i, 1);
-      return c.filter((e, n) => n != i);
+      return t.filter((e, n) => n != i);
     });
   };
 
-  const addCategory = () => {
-    let updatedCats = [...cats];
-    updatedCats.push(cat);
-    setCat("");
-    setCats(updatedCats);
+  const addTag = () => {
+    let updatedTags = [...tags];
+    updatedTags.push(tag.trim());
+    setTag("");
+    setTags(updatedTags);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    formData.tags = cats;
+    formData.tags = tags;
     formData._id = postData._id; //it gets lost
     //console.log("formData from handleSubmit: ", formData);
     try {
@@ -161,17 +161,6 @@ export default function UpdatePost() {
             }
             value={formData.title}
           />
-          <Select
-            onChange={(e) =>
-              setFormData({ ...formData, category: e.target.value })
-            }
-            value={formData.category}
-          >
-            <option value="uncategorized">Select a category</option>
-            <option value="javascript">JavaScript</option>
-            <option value="reactjs">React.js</option>
-            <option value="nextjs">Next.js</option>
-          </Select>
         </div>
         <div className="flex gap-4 items-center justify-between rounded border border-gray-300 p-3">
           <FileInput
@@ -210,30 +199,30 @@ export default function UpdatePost() {
         <div className="flex flex-col">
           <div className="flex items-center space-x-4 md:space-x-8">
             <input
-              value={cat}
-              onChange={(e) => setCat(e.target.value)}
+              value={tag}
+              onChange={(e) => setTag(e.target.value)}
               className="px-4 py-2 outline-none rounded border-teal-500 "
-              placeholder="Enter post category"
+              placeholder="Enter a post tag"
               type="text"
             />
             <div
-              onClick={addCategory}
+              onClick={addTag}
               className="bg-teal-500 rounded text-white px-4 py-2 font-semibold cursor-pointer"
             >
               Add
             </div>
           </div>
 
-          {/* categories */}
+          {/* tags */}
           <div className="flex px-4 mt-3">
-            {cats?.map((c, i) => (
+            {tags?.map((c, i) => (
               <div
                 key={i}
                 className="flex justify-center items-center space-x-2 mr-4 bg-gray-200 px-2 py-1 rounded-md"
               >
                 <p>{c}</p>
                 <p
-                  onClick={() => deleteCategory(i)}
+                  onClick={() => deleteTag(i)}
                   className="text-white bg-teal-500 rounded-full cursor-pointer p-1 text-sm"
                 >
                   <ImCross />

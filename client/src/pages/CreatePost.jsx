@@ -26,13 +26,13 @@ export default function CreatePost() {
 
   const navigate = useNavigate();
 
-  const deleteCategory = (i) => {
+  const deleteTag = (i) => {
     let updatedCats = [...cats];
     updatedCats.splice(i);
     setCats(updatedCats);
   };
 
-  const addCategory = () => {
+  const addTag = () => {
     let updatedCats = [...cats];
     updatedCats.push(cat);
     setCat("");
@@ -118,16 +118,6 @@ export default function CreatePost() {
               setFormData({ ...formData, title: e.target.value })
             }
           />
-          <Select
-            onChange={(e) =>
-              setFormData({ ...formData, category: e.target.value })
-            }
-          >
-            <option value="uncategorized">Select a category</option>
-            <option value="javascript">JavaScript</option>
-            <option value="reactjs">React.js</option>
-            <option value="nextjs">Next.js</option>
-          </Select>
         </div>
         <div className="flex gap-4 items-center justify-between border border-teal-500 rounded p-3">
           <FileInput
@@ -169,11 +159,11 @@ export default function CreatePost() {
               value={cat}
               onChange={(e) => setCat(e.target.value)}
               className="px-4 py-2 outline-none rounded border-teal-500 "
-              placeholder="Enter post category"
+              placeholder="Enter a post tag"
               type="text"
             />
             <div
-              onClick={addCategory}
+              onClick={addTag}
               className="bg-teal-500 rounded text-white px-4 py-2 font-semibold cursor-pointer"
             >
               Add
@@ -189,7 +179,7 @@ export default function CreatePost() {
               >
                 <p>{c}</p>
                 <p
-                  onClick={() => deleteCategory(i)}
+                  onClick={() => deleteTag(i)}
                   className="text-white bg-teal-500 rounded-full cursor-pointer p-1 text-sm"
                 >
                   <ImCross />

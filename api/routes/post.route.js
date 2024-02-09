@@ -37,7 +37,6 @@ const getposts = async (req, res, next) => {
     const sortDirection = req.query.order === "asc" ? 1 : -1;
     const posts = await Post.find({
       ...(req.query.userId && { userId: req.query.userId }), // if query has userId then search for { userId: req.query.userId }
-      ...(req.query.category && { category: req.query.category }),
       ...(req.query.slug && { slug: req.query.slug }),
       ...(req.query.postId && { _id: req.query.postId }), // if query has postId then search for specific _id in the DB
       // if query has searchTerm
@@ -49,10 +48,12 @@ const getposts = async (req, res, next) => {
         ],
       }),
     })
+      .populate("userId")
       .sort({ updatedAt: sortDirection })
       .skip(startIndex)
       .limit(limit);
 
+    console.log("posts: ", posts);
     const totalPosts = await Post.countDocuments(); // post or Post?
 
     const now = new Date();
@@ -120,7 +121,6 @@ const updatepost = async (req, res, next) => {
         $set: {
           title: req.body.title,
           content: req.body.content,
-          category: req.body.category,
           tags: req.body.tags,
           slug,
           image: req.body.image,

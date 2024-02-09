@@ -73,37 +73,26 @@ export default function PostPage() {
     );
   return (
     <main className="p-3   max-w-6xl mx-auto min-h-screen">
-      <div className="flex flex-col max-w-2xl w-full mx-auto items-center mt-8  ">
-        <h1 className="text-3xl mt-8 p-3 text-center font-serif  lg:text-4xl">
-          {post && post.title}
-        </h1>
-        <Link
-          to={`/search?category=${post && post.category}`}
-          className="self-center mt-2"
-        >
-          <Button color="gray" pill size="xs">
-            {post && post.category}
-          </Button>
-        </Link>
+      <div className="flex flex-col max-w-2xl w-full mx-auto items-center   ">
         <img
           src={post && post.image}
           alt={post && post.title}
           className="mt-2 p-3    object-contain "
         />
         <div className="flex justify-between p-3 border-b border-slate-500  w-full text-xs">
-          <span>{post && new Date(post.createdAt).toLocaleDateString()}</span>
+          <span>{post && new Date(post.updatedAt).toUTCString()}</span>
           <span className="italic">
             {post && (post.content.length / 1000).toFixed(0)} mins read
           </span>
         </div>
-        <div className="flex max-w-2xl w-full items-center mt-8  font-semibold">
+        <div className="flex max-w-2xl w-full items-center mt-2  font-semibold">
           <p>Tags: </p>
           <div className="flex justify-center items-center space-x-2">
             {post.tags?.map((t, i) => (
               <>
                 <div
                   key={i}
-                  className="cursor-pointer border rounded rounded-lg px-3 py-1"
+                  className="cursor-pointer border rounded  px-2 py-1"
                 >
                   {t}
                 </div>
@@ -111,11 +100,28 @@ export default function PostPage() {
             ))}
           </div>
         </div>
+        {post && post.userId.username && (
+          <Link
+            to={
+              post.userId._id == currentUser._id
+                ? "/dashboard?tab=posts"
+                : `/search?userId=${post.userId._id}`
+            }
+            className="text-blue-500"
+          >
+            <h1 className="text-xl  p-3 text-center font-serif  ">
+              {post.userId.username}
+            </h1>
+          </Link>
+        )}
+        <h1 className="text-3xl  p-3 text-center font-serif  lg:text-3xl">
+          {post && post.title}
+        </h1>
         <div
           className="p-3 max-w-2xl mx-auto w-full post-content"
           dangerouslySetInnerHTML={{ __html: post && post.content }}
         ></div>
-        {currentUser && post.userId == currentUser._id && (
+        {currentUser && post.userId._id == currentUser._id && (
           <div className="flex justify-around gap-2 w-full max-w-2xl mx-auto mb-4">
             <Button
               outline
@@ -156,10 +162,10 @@ export default function PostPage() {
               </h3>
               <div className="flex justify-center gap-4">
                 <Button color="failure" onClick={handleDeletePost}>
-                  Yes, I'm sure
+                  Delete
                 </Button>
                 <Button color="gray" onClick={() => setShowModal(false)}>
-                  No, cancel
+                  Cancel
                 </Button>
               </div>
             </div>
