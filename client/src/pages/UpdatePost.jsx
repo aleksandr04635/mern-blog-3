@@ -1,4 +1,12 @@
-import { Alert, Button, FileInput, Select, TextInput } from "flowbite-react";
+import {
+  Alert,
+  Button,
+  FileInput,
+  Select,
+  TextInput,
+  Spinner,
+} from "flowbite-react";
+
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import {
@@ -22,8 +30,9 @@ export default function UpdatePost() {
   const [formData, setFormData] = useState({});
   const [postData, setPostData] = useState({});
   const [publishError, setPublishError] = useState(null);
-  const [tag, setTag] = useState("");
-  const [tags, setTags] = useState([]);
+  const [tag, setTag] = useState(""); //scalar
+  const [tags, setTags] = useState([]); //array of objects
+  const [loading, setLoading] = useState(true);
 
   const { postId } = useParams();
 
@@ -38,19 +47,21 @@ export default function UpdatePost() {
         if (!res.ok) {
           console.log(data.message);
           setPublishError(data.message);
+          setLoading(false);
           return;
         }
         if (res.ok) {
-          //console.log("data.posts[0]: ", data.posts[0]);
+          console.log("data.posts[0]: ", data.posts[0]);
           setPublishError(null);
           setFormData(data.posts[0]);
           setPostData(data.posts[0]);
           setTags(data.posts[0].tags);
+          setLoading(false);
         }
       };
 
       fetchPost();
-      //console.log("formData upon fetch: ", formData);
+      console.log("formData upon fetch: ", formData);
     } catch (error) {
       console.log(error.message);
     }
@@ -93,7 +104,7 @@ export default function UpdatePost() {
     }
   };
 
-  console.log("tags :", tags);
+  //console.log("tags :", tags);
   const deleteTag = (i) => {
     //console.log("tags before:", tags);
     //console.log("i:", i);
@@ -109,11 +120,22 @@ export default function UpdatePost() {
 
   const addTag = () => {
     let updatedTags = [...tags];
-    updatedTags.push(tag.trim());
+    updatedTags.push({
+      name: tag.trim(),
+      slug: tag
+        .replace(/[^a-z\-A-Z0-9-]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim()
+        .split(" ")
+        .join("-")
+        /* .toLowerCase() */
+        .replace(/[^a-z\-A-Z0-9-]/g, ""),
+    });
     setTag("");
     setTags(updatedTags);
   };
 
+  //console.log("formData: ", formData);
   const handleSubmit = async (e) => {
     e.preventDefault();
     formData.tags = tags;
@@ -148,126 +170,133 @@ export default function UpdatePost() {
   return (
     <div className="p-3 max-w-3xl mx-auto min-h-screen">
       <h1 className="text-center text-3xl my-7 font-semibold">Update post</h1>
-      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-4 sm:flex-row justify-between">
-          <TextInput
-            type="text"
-            placeholder="Title"
-            required
-            id="title"
-            className="flex-1"
-            onChange={(e) =>
-              setFormData({ ...formData, title: e.target.value })
-            }
-            value={formData.title}
-          />
+      {loading ? (
+        <div className="h-[80vh] flex justify-center items-center w-full">
+          <Spinner size="xl" />
         </div>
-        <div className="flex gap-4 items-center justify-between rounded border border-gray-300 p-3">
-          <FileInput
-            type="file"
-            accept="image/*"
-            onChange={(e) => setFile(e.target.files[0])}
-          />
-          <Button
-            type="button"
-            gradientDuoTone="purpleToBlue"
-            size="sm"
-            outline
-            onClick={handleUpdloadImage}
-            disabled={imageUploadProgress}
-          >
-            {imageUploadProgress ? (
-              <div className="w-16 h-16">
-                <CircularProgressbar
-                  value={imageUploadProgress}
-                  text={`${imageUploadProgress || 0}%`}
-                />
-              </div>
-            ) : (
-              "Upload Image"
-            )}
-          </Button>
-        </div>
-        {imageUploadError && <Alert color="failure">{imageUploadError}</Alert>}
-        {formData.image && (
-          <img
-            src={formData.image}
-            alt="upload"
-            className="w-full h-72 object-cover"
-          />
-        )}
-        <div className="flex flex-col">
-          <div className="flex items-center space-x-4 md:space-x-8">
-            <input
-              value={tag}
-              onChange={(e) => setTag(e.target.value)}
-              className="px-4 py-2 outline-none rounded border-teal-500 "
-              placeholder="Enter a post tag"
+      ) : (
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+          <div className="flex flex-col gap-4 sm:flex-row justify-between">
+            <TextInput
               type="text"
+              placeholder="Title"
+              required
+              id="title"
+              className="flex-1"
+              onChange={(e) =>
+                setFormData({ ...formData, title: e.target.value })
+              }
+              value={formData.title}
             />
-            <div
-              onClick={addTag}
-              className="bg-teal-500 rounded text-white px-4 py-2 font-semibold cursor-pointer"
+          </div>
+          <div className="flex gap-4 items-center justify-between rounded border border-gray-300 p-3">
+            <FileInput
+              type="file"
+              accept="image/*"
+              onChange={(e) => setFile(e.target.files[0])}
+            />
+            <Button
+              type="button"
+              gradientDuoTone="purpleToBlue"
+              size="sm"
+              outline
+              onClick={handleUpdloadImage}
+              disabled={imageUploadProgress}
             >
-              Add
+              {imageUploadProgress ? (
+                <div className="w-16 h-16">
+                  <CircularProgressbar
+                    value={imageUploadProgress}
+                    text={`${imageUploadProgress || 0}%`}
+                  />
+                </div>
+              ) : (
+                "Upload Image"
+              )}
+            </Button>
+          </div>
+          {imageUploadError && (
+            <Alert color="failure">{imageUploadError}</Alert>
+          )}
+          {formData.image && (
+            <img
+              src={formData.image}
+              alt="upload"
+              className="w-full h-72 object-cover"
+            />
+          )}
+          {/* tags */}
+          <div className="flex flex-col">
+            <div className="flex items-center space-x-4 md:space-x-8">
+              <input
+                value={tag}
+                onChange={(e) => setTag(e.target.value)}
+                className="px-4 py-2 outline-none rounded border-teal-500 "
+                placeholder="Enter a post tag"
+                type="text"
+              />
+              <div
+                onClick={addTag}
+                className="bg-teal-500 rounded text-white px-4 py-2 font-semibold cursor-pointer"
+              >
+                Add
+              </div>
+            </div>
+            <div className="flex px-4 mt-3">
+              {tags?.map((t, i) => (
+                <div
+                  key={i}
+                  className="flex justify-center items-center space-x-2 mr-4 bg-gray-200 px-2 py-1 rounded-md"
+                >
+                  <p>{t.name}</p>
+                  <p
+                    onClick={() => deleteTag(i)}
+                    className="text-white bg-teal-500 rounded-full cursor-pointer p-1 text-sm"
+                  >
+                    <ImCross />
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
-
-          {/* tags */}
-          <div className="flex px-4 mt-3">
-            {tags?.map((c, i) => (
-              <div
-                key={i}
-                className="flex justify-center items-center space-x-2 mr-4 bg-gray-200 px-2 py-1 rounded-md"
-              >
-                <p>{c}</p>
-                <p
-                  onClick={() => deleteTag(i)}
-                  className="text-white bg-teal-500 rounded-full cursor-pointer p-1 text-sm"
-                >
-                  <ImCross />
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-        <ReactQuill
-          theme="snow"
-          value={formData.content}
-          placeholder="Write something..."
-          className="h-72 mb-12"
-          required
-          onChange={(value) => {
-            setFormData({ ...formData, content: value });
-          }}
-        />
-        <div className="flex gap-2 items-center justify-around  ">
-          <Button
-            type="submit"
-            outline
-            gradientDuoTone="purpleToBlue"
-            className="w-[150px]"
-          >
-            Update post
-          </Button>
-          <Button
-            type="button"
-            outline
-            className="w-[150px] "
-            gradientDuoTone="pinkToOrange"
-            onClick={() => {
-              navigate(-1);
+          <ReactQuill
+            theme="snow"
+            value={formData.content}
+            placeholder="Write something..."
+            className="h-72 mb-12"
+            required
+            onChange={(value) => {
+              setFormData({ ...formData, content: value });
             }}
-          >
-            Back
-          </Button>
-        </div>
-        {publishError && (
-          <Alert className="mt-5" color="failure">
-            {publishError}
-          </Alert>
-        )}
-      </form>
+          />
+          <div className="flex gap-2 items-center justify-around  ">
+            <Button
+              type="submit"
+              outline
+              gradientDuoTone="purpleToBlue"
+              className="w-[150px]"
+            >
+              Update post
+            </Button>
+            <Button
+              type="button"
+              outline
+              className="w-[150px] "
+              gradientDuoTone="pinkToOrange"
+              onClick={() => {
+                navigate(-1);
+              }}
+            >
+              Back
+            </Button>
+          </div>
+          {publishError && (
+            <Alert className="mt-5" color="failure">
+              {publishError}
+            </Alert>
+          )}
+        </form>
+      )}
     </div>
   );
 }

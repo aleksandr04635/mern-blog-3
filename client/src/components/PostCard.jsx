@@ -21,7 +21,7 @@ export default function PostCard({ post }) {
         <span> By </span>
         <Link
           to={
-            currentUser._id && post.userId._id == currentUser._id
+            currentUser && currentUser._id && post.userId._id == currentUser._id
               ? "/dashboard?tab=posts"
               : `/search?userId=${post.userId._id}`
           }
@@ -29,6 +29,17 @@ export default function PostCard({ post }) {
         >
           <span className="text-lg   font-serif  ">{post.userId.username}</span>
         </Link>
+      </div>
+      <div className="flex gap-1 px-2 py-1 ">
+        {post.tags?.map((t, i) => (
+          <Link
+            key={i}
+            to={`/search?tag=${t.slug}`}
+            className=" border rounded  px-2 py-1"
+          >
+            {t.name}
+          </Link>
+        ))}
       </div>
     </div>
   );

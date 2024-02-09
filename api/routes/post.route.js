@@ -3,7 +3,7 @@ import { connectDB, errorHandler, verifyToken } from "../utils/utils.js";
 import Post from "../models/post.model.js";
 
 const create = async (req, res, next) => {
-  console.log("req.body:", req.body);
+  //console.log("req.body:", req.body);
   connectDB();
   /*   if (!req.user.isAdmin) {
     return next(errorHandler(403, "You are not allowed to create a post"));
@@ -31,14 +31,19 @@ const create = async (req, res, next) => {
 
 const getposts = async (req, res, next) => {
   connectDB();
+  console.log("req.query from getposts:", req.query);
   try {
     const startIndex = parseInt(req.query.startIndex) || 0; //by default starts from 0
     const limit = parseInt(req.query.limit) || 9; //by default takes 9
     const sortDirection = req.query.order === "asc" ? 1 : -1;
+    /*     if(req.query.tag){const query = Post.where({ tag.slug: req.query.tag});
+    const posts = await query.find();} */
+
     const posts = await Post.find({
       ...(req.query.userId && { userId: req.query.userId }), // if query has userId then search for { userId: req.query.userId }
       ...(req.query.slug && { slug: req.query.slug }),
       ...(req.query.postId && { _id: req.query.postId }), // if query has postId then search for specific _id in the DB
+      ...(req.query.tag && { "tags.slug": req.query.tag }), // my, searches by tags.slug
       // if query has searchTerm
       ...(req.query.searchTerm && {
         $or: [
@@ -53,7 +58,7 @@ const getposts = async (req, res, next) => {
       .skip(startIndex)
       .limit(limit);
 
-    console.log("posts: ", posts);
+    console.log("posts from getposts: ", posts);
     const totalPosts = await Post.countDocuments(); // post or Post?
 
     const now = new Date();
@@ -93,6 +98,7 @@ const deletepost = async (req, res, next) => {
 
 const updatepost = async (req, res, next) => {
   connectDB();
+  //console.log("req.body: ", req.body);
   /*   console.log("req.user.id: ", req.user.id);
   console.log("req.params.userId: ", req.params.userId);
   console.log(

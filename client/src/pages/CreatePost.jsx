@@ -21,23 +21,40 @@ export default function CreatePost() {
   const [formData, setFormData] = useState({});
   const [publishError, setPublishError] = useState(null);
 
-  const [cat, setCat] = useState("");
-  const [cats, setCats] = useState([]);
+  const [tag, setTag] = useState(""); //scalar
+  const [tags, setTags] = useState([]); //array of objects
 
   const navigate = useNavigate();
 
+  //console.log("tags :", tags);
   const deleteTag = (i) => {
-    let updatedCats = [...cats];
-    updatedCats.splice(i);
-    setCats(updatedCats);
+    //console.log("tags before:", tags);
+    //console.log("i:", i);
+    //let updatedTags = [...tags];
+    //console.log("tags after:", updatedTags.splice(i, 1));
+    // updatedTags.splice(i, 1);
+    setTags((t) => {
+      //console.log("c:", c);
+      //return c.splice(i, 1);
+      return t.filter((e, n) => n != i);
+    });
   };
 
   const addTag = () => {
-    let updatedCats = [...cats];
-    updatedCats.push(cat);
-    setCat("");
-    setCats(updatedCats);
-    setFormData({ ...formData, tags: updatedCats });
+    let updatedTags = [...tags];
+    updatedTags.push({
+      name: tag.trim(),
+      slug: tag
+        .replace(/[^a-z\-A-Z0-9-]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim()
+        .split(" ")
+        .join("-")
+        /* .toLowerCase() */
+        .replace(/[^a-z\-A-Z0-9-]/g, ""),
+    });
+    setTag("");
+    setTags(updatedTags);
   };
 
   const handleUpdloadImage = async () => {
@@ -79,7 +96,9 @@ export default function CreatePost() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("formData: ", formData);
+    //setFormData({ ...formData, tags: tags });
+    formData.tags = tags;
+    // console.log("formData: ", formData);
     try {
       const res = await fetch("/api/post/create", {
         method: "POST",
@@ -153,11 +172,12 @@ export default function CreatePost() {
             className="w-full h-72 object-cover"
           />
         )}
+        {/* tags */}
         <div className="flex flex-col">
           <div className="flex items-center space-x-4 md:space-x-8">
             <input
-              value={cat}
-              onChange={(e) => setCat(e.target.value)}
+              value={tag}
+              onChange={(e) => setTag(e.target.value)}
               className="px-4 py-2 outline-none rounded border-teal-500 "
               placeholder="Enter a post tag"
               type="text"
@@ -169,15 +189,13 @@ export default function CreatePost() {
               Add
             </div>
           </div>
-
-          {/* categories */}
           <div className="flex px-4 mt-3">
-            {cats?.map((c, i) => (
+            {tags?.map((t, i) => (
               <div
                 key={i}
                 className="flex justify-center items-center space-x-2 mr-4 bg-gray-200 px-2 py-1 rounded-md"
               >
-                <p>{c}</p>
+                <p>{t.name}</p>
                 <p
                   onClick={() => deleteTag(i)}
                   className="text-white bg-teal-500 rounded-full cursor-pointer p-1 text-sm"

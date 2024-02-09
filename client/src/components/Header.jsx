@@ -48,6 +48,8 @@ export default function Header() {
     navigate(`/search?${searchQuery}`);
   };
 
+  //console.log(" currentUser from header: ", currentUser);
+
   return (
     <Navbar className="m-auto    rounded">
       <div className="flex flex-col w-full">

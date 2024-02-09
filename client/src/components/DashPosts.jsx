@@ -12,11 +12,15 @@ export default function DashPosts() {
   const [showModal, setShowModal] = useState(false);
   const [postIdToDelete, setPostIdToDelete] = useState("");
 
+  //console.log("currentUser._id: ", currentUser._id);
+  //console.log("userPosts: ", userPosts);
   useEffect(() => {
     const fetchPosts = async () => {
       try {
+        //console.log("currentUser._id: ", currentUser._id);
         const res = await fetch(`/api/post/getposts?userId=${currentUser._id}`); //limits to 9 posts by default
         const data = await res.json();
+        //console.log(" data: ", data);
         if (res.ok) {
           setUserPosts(data.posts);
           if (data.posts.length < 9) {
@@ -27,9 +31,10 @@ export default function DashPosts() {
         console.log(error.message);
       }
     };
-    if (currentUser.isAdmin) {
+    /*     if (currentUser.isAdmin) {
       fetchPosts();
-    }
+    } */
+    fetchPosts();
   }, [currentUser._id]);
 
   //adds more and more posts to already shown
@@ -75,7 +80,8 @@ export default function DashPosts() {
 
   return (
     <div className="table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
-      {currentUser.isAdmin && userPosts.length > 0 ? (
+      {/* {currentUser.isAdmin && userPosts.length > 0 ? ( */}
+      {userPosts.length > 0 ? (
         <>
           <Table hoverable className="shadow-md">
             <Table.Head>

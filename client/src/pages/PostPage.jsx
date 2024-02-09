@@ -49,7 +49,7 @@ export default function PostPage() {
     setShowModal(false);
     try {
       const res = await fetch(
-        `/api/post/deletepost/${post._id}/${currentUser._id}`,
+        `/api/post/deletepost/${post._id}/${currentUser?._id}`,
         {
           method: "DELETE",
         }
@@ -89,21 +89,20 @@ export default function PostPage() {
           <p>Tags: </p>
           <div className="flex justify-center items-center space-x-2">
             {post.tags?.map((t, i) => (
-              <>
-                <div
-                  key={i}
-                  className="cursor-pointer border rounded  px-2 py-1"
-                >
-                  {t}
-                </div>
-              </>
+              <Link
+                key={i}
+                to={`/search?tag=${t.slug}`}
+                className=" border rounded  px-2 py-1"
+              >
+                {t.name}
+              </Link>
             ))}
           </div>
         </div>
         {post && post.userId.username && (
           <Link
             to={
-              post.userId._id == currentUser._id
+              currentUser && post.userId._id == currentUser._id
                 ? "/dashboard?tab=posts"
                 : `/search?userId=${post.userId._id}`
             }
@@ -121,30 +120,31 @@ export default function PostPage() {
           className="p-3 max-w-2xl mx-auto w-full post-content"
           dangerouslySetInnerHTML={{ __html: post && post.content }}
         ></div>
-        {currentUser && post.userId._id == currentUser._id && (
-          <div className="flex justify-around gap-2 w-full max-w-2xl mx-auto mb-4">
-            <Button
-              outline
-              gradientDuoTone="purpleToBlue"
-              className="w-[150px]"
-              onClick={() => {
-                navigate(`/update-post/${post._id}`);
-              }}
-            >
-              Edit
-            </Button>
-            <Button
-              outline
-              gradientDuoTone="pinkToOrange"
-              className="w-[150px]"
-              onClick={() => {
-                setShowModal(true);
-              }}
-            >
-              Delete
-            </Button>
-          </div>
-        )}
+        {currentUser &&
+          (post.userId._id == currentUser._id || currentUser.isAdmin) && (
+            <div className="flex justify-around gap-2 w-full max-w-2xl mx-auto mb-4">
+              <Button
+                outline
+                gradientDuoTone="purpleToBlue"
+                className="w-[150px]"
+                onClick={() => {
+                  navigate(`/update-post/${post._id}`);
+                }}
+              >
+                Edit
+              </Button>
+              <Button
+                outline
+                gradientDuoTone="pinkToOrange"
+                className="w-[150px]"
+                onClick={() => {
+                  setShowModal(true);
+                }}
+              >
+                Delete
+              </Button>
+            </div>
+          )}
         <CommentSection postId={post._id} />
 
         <Modal
