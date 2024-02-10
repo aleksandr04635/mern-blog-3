@@ -141,11 +141,80 @@ const updatepost = async (req, res, next) => {
   }
 };
 
+const likePost = async (req, res, next) => {
+  connectDB();
+  const type = req.body.type;
+  const action = req.body.action;
+  console.log("type, action : ", type, action);
+  try {
+    const post = await Post.findById(req.params.postId);
+    if (!post) {
+      return next(errorHandler(404, "Post not found"));
+    }
+    //excessive clauses are present here, but they can be useful in case of some changes
+    if (type == "l" && action == "+") {
+      const userIndexInLikes = post.likes.indexOf(req.user.id);
+      if (userIndexInLikes === -1) {
+        post.numberOfLikes += 1;
+        post.likes.push(req.user.id);
+      } else {
+        post.numberOfLikes -= 1;
+        post.likes.splice(userIndexInLikes, 1);
+      }
+      const userIndexInDislikes = post.dislikes.indexOf(req.user.id);
+      if (userIndexInDislikes !== -1) {
+        post.numberOfDislikes -= 1;
+        post.dislikes.splice(userIndexInDislikes, 1);
+      }
+    }
+    if (type == "l" && action == "-") {
+      const userIndex = post.likes.indexOf(req.user.id);
+      if (userIndex === -1) {
+        post.numberOfLikes += 1;
+        post.likes.push(req.user.id);
+      } else {
+        post.numberOfLikes -= 1;
+        post.likes.splice(userIndex, 1);
+      }
+    }
+    if (type == "d" && action == "+") {
+      const userIndexInDislikes = post.dislikes.indexOf(req.user.id);
+      if (userIndexInDislikes === -1) {
+        post.numberOfDislikes += 1;
+        post.dislikes.push(req.user.id);
+      } else {
+        post.numberOfDislikes -= 1;
+        post.dislikes.splice(userIndexInDislikes, 1);
+      }
+      const userIndexInLikes = post.likes.indexOf(req.user.id);
+      if (userIndexInLikes !== -1) {
+        post.numberOfLikes -= 1;
+        post.likes.splice(userIndexInLikes, 1);
+      }
+    }
+    if (type == "d" && action == "-") {
+      const userIndexInDislikes = post.dislikes.indexOf(req.user.id);
+      if (userIndexInDislikes === -1) {
+        post.numberOfDislikes += 1;
+        post.dislikes.push(req.user.id);
+      } else {
+        post.numberOfDislikes -= 1;
+        post.dislikes.splice(userIndexInDislikes, 1);
+      }
+    }
+    await post.save();
+    res.status(200).json(post);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const router = express.Router();
 
 router.post("/create", verifyToken, create);
 router.get("/getposts", getposts);
 router.delete("/deletepost/:postId/:userId", verifyToken, deletepost);
 router.put("/updatepost/:postId/:userId", verifyToken, updatepost);
+router.put("/likePost/:postId", verifyToken, likePost);
 
 export default router;

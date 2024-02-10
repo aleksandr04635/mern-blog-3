@@ -189,7 +189,7 @@ export default function UpdatePost() {
               value={formData.title}
             />
           </div>
-          <div className="flex gap-4 items-center justify-between rounded border border-gray-300 p-3">
+          <div className="flex gap-4 items-center justify-between border border-teal-500 rounded p-3">
             <FileInput
               type="file"
               accept="image/*"

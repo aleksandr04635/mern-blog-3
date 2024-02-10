@@ -1,7 +1,7 @@
 import { Button, Spinner } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-
+import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 import CommentSection from "../components/CommentSection";
 import PostCard from "../components/PostCard";
 import { useSelector } from "react-redux";
@@ -18,7 +18,7 @@ export default function PostPage() {
   const [showModal, setShowModal] = useState(false);
 
   const navigate = useNavigate();
-  //console.log("post: ", post);
+  console.log("post: ", post);
   //console.log(" currentUser : ", currentUser);
 
   useEffect(() => {
@@ -44,6 +44,52 @@ export default function PostPage() {
     };
     fetchPost();
   }, [postSlug]);
+
+  const onLike = async (type, ac) => {
+    try {
+      if (!currentUser) {
+        navigate("/sign-in");
+        return;
+      }
+      console.log("type, ac from onLike: ", type, ac);
+      const res = await fetch(`/api/post/likePost/${post._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: type,
+          action: ac,
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        //console.log("data from onLike: ", data);
+        setPost({
+          ...post,
+          likes: data.likes,
+          numberOfLikes: data.likes.length,
+          dislikes: data.dislikes,
+          numberOfDislikes: data.dislikes.length,
+        });
+        /*         setComments(
+          comments.map((comment) =>
+            comment._id === commentId
+              ? {
+                  ...comment,
+                  likes: data.likes,
+                  numberOfLikes: data.likes.length,
+                  dislikes: data.dislikes,
+                  numberOfDislikes: data.dislikes.length,
+                }
+              : comment
+          )
+        ); */
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   const handleDeletePost = async () => {
     setShowModal(false);
@@ -99,6 +145,7 @@ export default function PostPage() {
             ))}
           </div>
         </div>
+
         {post && post.userId.username && (
           <Link
             to={
@@ -108,7 +155,7 @@ export default function PostPage() {
             }
             className="text-blue-500"
           >
-            <h1 className="text-xl  p-1 text-center font-serif  ">
+            <h1 className="text-xl  p-1 my-1 text-center font-serif  ">
               {post.userId.username}
             </h1>
           </Link>
@@ -120,6 +167,46 @@ export default function PostPage() {
           className="p-3 max-w-2xl mx-auto w-full post-content"
           dangerouslySetInnerHTML={{ __html: post && post.content }}
         ></div>
+        <div className="flex h-[50px] w-full p-2 text-lg  dark:border-gray-700  gap-2">
+          <button
+            type="button"
+            onClick={() =>
+              onLike("l", post.likes.includes(currentUser._id) ? "-" : "+")
+            }
+            className={`text-gray-400 hover:text-blue-500 ${
+              currentUser &&
+              post.likes.includes(currentUser._id) &&
+              "!text-blue-500"
+            }`}
+          >
+            <FaThumbsUp className="text-lg" />
+          </button>
+          <p className="text-gray-400">
+            {post.numberOfLikes > 0 &&
+              post.numberOfLikes +
+                " " +
+                (post.numberOfLikes === 1 ? "like" : "likes")}
+          </p>
+          <button
+            type="button"
+            onClick={() =>
+              onLike("d", post.dislikes.includes(currentUser._id) ? "-" : "+")
+            }
+            className={`text-gray-400 hover:text-blue-500 ${
+              currentUser &&
+              post.dislikes.includes(currentUser._id) &&
+              "!text-blue-500"
+            }`}
+          >
+            <FaThumbsDown className="text-lg" />
+          </button>
+          <p className="text-gray-400">
+            {post.numberOfDislikes > 0 &&
+              post.numberOfDislikes +
+                " " +
+                (post.numberOfDislikes === 1 ? "dislike" : "dislikes")}
+          </p>
+        </div>
         {currentUser &&
           (post.userId._id == currentUser._id || currentUser.isAdmin) && (
             <div className="flex justify-around gap-2 w-full max-w-2xl mx-auto mb-4">

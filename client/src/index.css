@@ -12,6 +12,7 @@ body {
 
 .post-content p {
   margin-bottom: 0.5rem;
+  text-align: justify;
 }
 
 .post-content h1 {
