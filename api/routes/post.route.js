@@ -54,7 +54,8 @@ const getposts = async (req, res, next) => {
       }),
     })
       .populate("userId")
-      .sort({ updatedAt: sortDirection })
+      .sort({ createdAt: sortDirection })
+      //.sort({ updatedAt: sortDirection })
       .skip(startIndex)
       .limit(limit);
 
@@ -128,6 +129,7 @@ const updatepost = async (req, res, next) => {
           title: req.body.title,
           content: req.body.content,
           tags: req.body.tags,
+          intro: req.body.intro,
           slug,
           image: req.body.image,
         },
@@ -145,7 +147,7 @@ const likePost = async (req, res, next) => {
   connectDB();
   const type = req.body.type;
   const action = req.body.action;
-  console.log("type, action : ", type, action);
+  console.log("type, action from likePost: ", type, action);
   try {
     const post = await Post.findById(req.params.postId);
     if (!post) {
@@ -158,6 +160,7 @@ const likePost = async (req, res, next) => {
         post.numberOfLikes += 1;
         post.likes.push(req.user.id);
       } else {
+        //nw
         post.numberOfLikes -= 1;
         post.likes.splice(userIndexInLikes, 1);
       }
@@ -170,6 +173,7 @@ const likePost = async (req, res, next) => {
     if (type == "l" && action == "-") {
       const userIndex = post.likes.indexOf(req.user.id);
       if (userIndex === -1) {
+        //nw
         post.numberOfLikes += 1;
         post.likes.push(req.user.id);
       } else {
@@ -183,6 +187,7 @@ const likePost = async (req, res, next) => {
         post.numberOfDislikes += 1;
         post.dislikes.push(req.user.id);
       } else {
+        //nw
         post.numberOfDislikes -= 1;
         post.dislikes.splice(userIndexInDislikes, 1);
       }
@@ -195,6 +200,7 @@ const likePost = async (req, res, next) => {
     if (type == "d" && action == "-") {
       const userIndexInDislikes = post.dislikes.indexOf(req.user.id);
       if (userIndexInDislikes === -1) {
+        //nw
         post.numberOfDislikes += 1;
         post.dislikes.push(req.user.id);
       } else {

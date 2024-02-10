@@ -65,7 +65,7 @@ export default function Header() {
         </span>
         Blog
       </Link> */}
-          <Button
+          {/*           <Button
             outline
             onClick={() => {
               navigate(`/`);
@@ -74,7 +74,18 @@ export default function Header() {
             className="font-semibold w-[100px]"
           >
             <h2> My Blog</h2>
-          </Button>
+          </Button> 
+          active:outline-none
+          */}
+          <Link className="" to="/">
+            <Button
+              outline
+              gradientDuoTone="purpleToBlue"
+              className=" font-semibold w-[100px]"
+            >
+              <h2> My Blog</h2>
+            </Button>
+          </Link>
           {/*      <form onSubmit={handleSubmit} className="relative hidden sm:inline"> */}
           <form onSubmit={handleSubmit} className="relative hidden sm:inline">
             <TextInput

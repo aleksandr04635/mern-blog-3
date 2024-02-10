@@ -5,6 +5,8 @@ import {
   Select,
   TextInput,
   Spinner,
+  Textarea,
+  Label,
 } from "flowbite-react";
 
 import ReactQuill from "react-quill";
@@ -39,6 +41,8 @@ export default function UpdatePost() {
   const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
 
+  //console.log("formData : ", formData);
+
   useEffect(() => {
     try {
       const fetchPost = async () => {
@@ -51,7 +55,7 @@ export default function UpdatePost() {
           return;
         }
         if (res.ok) {
-          console.log("data.posts[0]: ", data.posts[0]);
+          //console.log("data.posts[0]: ", data.posts[0]);
           setPublishError(null);
           setFormData(data.posts[0]);
           setPostData(data.posts[0]);
@@ -61,7 +65,7 @@ export default function UpdatePost() {
       };
 
       fetchPost();
-      console.log("formData upon fetch: ", formData);
+      //console.log("formData upon fetch: ", formData);
     } catch (error) {
       console.log(error.message);
     }
@@ -135,6 +139,7 @@ export default function UpdatePost() {
     setTags(updatedTags);
   };
 
+  //console.log("formData.content.length: ", formData.content.length);
   //console.log("formData: ", formData);
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -167,86 +172,80 @@ export default function UpdatePost() {
       setPublishError("Something went wrong");
     }
   };
+
   return (
-    <div className="p-3 max-w-3xl mx-auto min-h-screen">
-      <h1 className="text-center text-3xl my-7 font-semibold">Update post</h1>
+    <div className="p-2 max-w-3xl mx-auto min-h-screen">
+      <h1 className="text-center text-3xl my-3 font-semibold">Update post</h1>
       {loading ? (
         <div className="h-[80vh] flex justify-center items-center w-full">
           <Spinner size="xl" />
         </div>
       ) : (
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-          <div className="flex flex-col gap-4 sm:flex-row justify-between">
-            <TextInput
-              type="text"
-              placeholder="Title"
-              required
-              id="title"
-              className="flex-1"
-              onChange={(e) =>
-                setFormData({ ...formData, title: e.target.value })
-              }
-              value={formData.title}
-            />
+          {/* image */}
+          <div>
+            <h3 className="p-1">Front image (optional):</h3>
+            <div className="flex gap-4 items-center justify-between border border-teal-500 rounded-lg p-3">
+              <FileInput
+                type="file"
+                accept="image/*"
+                onChange={(e) => setFile(e.target.files[0])}
+              />
+              <Button
+                type="button"
+                gradientDuoTone="purpleToBlue"
+                size="sm"
+                outline
+                onClick={handleUpdloadImage}
+                disabled={imageUploadProgress}
+              >
+                {imageUploadProgress ? (
+                  <div className="w-16 h-16">
+                    <CircularProgressbar
+                      value={imageUploadProgress}
+                      text={`${imageUploadProgress || 0}%`}
+                    />
+                  </div>
+                ) : (
+                  "Upload Image"
+                )}
+              </Button>
+            </div>
+            {imageUploadError && (
+              <Alert color="failure">{imageUploadError}</Alert>
+            )}
+            {formData.image && (
+              <img
+                src={formData.image}
+                alt="upload"
+                className="w-full h-72 object-cover"
+              />
+            )}
           </div>
-          <div className="flex gap-4 items-center justify-between border border-teal-500 rounded p-3">
-            <FileInput
-              type="file"
-              accept="image/*"
-              onChange={(e) => setFile(e.target.files[0])}
-            />
-            <Button
-              type="button"
-              gradientDuoTone="purpleToBlue"
-              size="sm"
-              outline
-              onClick={handleUpdloadImage}
-              disabled={imageUploadProgress}
-            >
-              {imageUploadProgress ? (
-                <div className="w-16 h-16">
-                  <CircularProgressbar
-                    value={imageUploadProgress}
-                    text={`${imageUploadProgress || 0}%`}
-                  />
-                </div>
-              ) : (
-                "Upload Image"
-              )}
-            </Button>
-          </div>
-          {imageUploadError && (
-            <Alert color="failure">{imageUploadError}</Alert>
-          )}
-          {formData.image && (
-            <img
-              src={formData.image}
-              alt="upload"
-              className="w-full h-72 object-cover"
-            />
-          )}
           {/* tags */}
           <div className="flex flex-col">
+            <h3 className="p-1 text-base">Tags list (optional):</h3>
             <div className="flex items-center space-x-4 md:space-x-8">
-              <input
+              <TextInput
                 value={tag}
                 onChange={(e) => setTag(e.target.value)}
                 className="px-4 py-2 outline-none rounded border-teal-500 "
                 placeholder="Enter a post tag"
+                /* color="success" */
                 type="text"
               />
               <div
                 onClick={addTag}
-                className="bg-teal-500 rounded text-white px-4 py-2 font-semibold cursor-pointer"
+                className="bg-teal-500 rounded-lg text-white px-4 py-2 font-semibold cursor-pointer"
               >
                 Add
               </div>
             </div>
-            <div className="flex px-4 mt-3">
+            <div className="flex flex-wrap px-4 mt-3">
               {tags?.map((t, i) => (
                 <div
                   key={i}
-                  className="flex justify-center items-center space-x-2 mr-4 bg-gray-200 px-2 py-1 rounded-md"
+                  className="flex justify-center items-center space-x-2 mr-4 bg-gray-200 px-2 py-1 rounded-lg"
                 >
                   <p>{t.name}</p>
                   <p
@@ -259,6 +258,64 @@ export default function UpdatePost() {
               ))}
             </div>
           </div>
+          {/* title */}
+          <div className="flex flex-col  justify-between">
+            {/* <h3 className="p-1">Title (minimum 5 characters):</h3> */}
+            <Label
+              htmlFor="title"
+              color="gray"
+              value="Title (minimum 5 characters)"
+              className="p-1 text-base"
+            />
+            <TextInput
+              type="text"
+              maxLength="150"
+              placeholder="Title"
+              required
+              id="title"
+              className="flex-1"
+              onChange={(e) =>
+                setFormData({ ...formData, title: e.target.value })
+              }
+              value={formData.title}
+              color={formData.title?.length > 5 ? "success" : "failure"}
+              helperText={
+                formData.title?.length > 5 ? "" : "minimum 5 characters"
+              }
+            />
+            <p className="text-gray-500 p-1 text-xs">
+              {150 - formData.title?.length} characters remaining
+            </p>
+          </div>
+          {/* intro */}
+          <div className="flex flex-col">
+            {/* <h3 className="p-1">Introduction (minimum 5 characters):</h3> */}
+            <Label
+              htmlFor="intro"
+              color="gray"
+              value="Introduction (minimum 5 characters)"
+              className="p-1 text-base"
+            />
+            <Textarea
+              placeholder="Add a comment..."
+              maxLength="300"
+              id="intro"
+              color={formData.intro?.length > 5 ? "success" : "failure"}
+              onChange={(e) =>
+                setFormData({ ...formData, intro: e.target.value })
+              }
+              className="h-[160px] sm:h-[80px]"
+              value={formData.intro || ""}
+              helperText={
+                formData.intro?.length > 5 ? "" : "minimum 5 characters"
+              }
+            />
+            <p className="text-gray-500 text-xs">
+              {300 - formData.intro?.length} characters remaining
+            </p>
+          </div>
+          {/* Text */}
+          <h3 className="p-1">Main content (necessary):</h3>
           <ReactQuill
             theme="snow"
             value={formData.content}
@@ -269,20 +326,26 @@ export default function UpdatePost() {
               setFormData({ ...formData, content: value });
             }}
           />
+          {/* Controls */}
           <div className="flex gap-2 items-center justify-around  ">
             <Button
               type="submit"
-              outline
+              disabled={
+                formData.title?.length < 6 ||
+                formData.content?.length < 16 ||
+                !formData.intro ||
+                formData.intro?.length < 5
+              }
               gradientDuoTone="purpleToBlue"
               className="w-[150px]"
             >
-              Update post
+              Update the post
             </Button>
             <Button
               type="button"
               outline
               className="w-[150px] "
-              gradientDuoTone="pinkToOrange"
+              gradientDuoTone="purpleToBlue"
               onClick={() => {
                 navigate(-1);
               }}

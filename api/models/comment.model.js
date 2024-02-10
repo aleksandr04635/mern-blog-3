@@ -28,7 +28,7 @@ const commentSchema = new Schema(
       type: Array,
       default: [],
     },
-    numberOfDisikes: {
+    numberOfDislikes: {
       type: Number,
       default: 0,
     },

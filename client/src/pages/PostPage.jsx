@@ -117,14 +117,17 @@ export default function PostPage() {
         <Spinner size="xl" />
       </div>
     );
+
   return (
     <main className="p-3   max-w-6xl mx-auto min-h-screen">
       <div className="flex flex-col max-w-2xl w-full mx-auto items-center   ">
-        <img
-          src={post && post.image}
-          alt={post && post.title}
-          className="mt-2 p-3    object-contain "
-        />
+        {post && post.image && (
+          <img
+            src={post && post.image}
+            alt={post && post.title}
+            className="mt-2 p-3    object-contain "
+          />
+        )}
         <div className="flex justify-between p-3 border-b border-slate-500  w-full text-xs">
           <span>{post && new Date(post.updatedAt).toUTCString()}</span>
           <span className="italic">
@@ -138,7 +141,7 @@ export default function PostPage() {
               <Link
                 key={i}
                 to={`/search?tag=${t.slug}`}
-                className=" border rounded my-1 px-1 py-1"
+                className=" border rounded my-1 px-2 py-1"
               >
                 {t.name}
               </Link>
@@ -163,10 +166,14 @@ export default function PostPage() {
         <h1 className="text-3xl  p-1 text-center font-serif  lg:text-3xl">
           {post && post.title}
         </h1>
+        <div className=" p-2  text-lg max-w-2xl mx-auto w-full post-content ">
+          {post && post.intro}
+        </div>
         <div
-          className="p-3 max-w-2xl mx-auto w-full post-content"
+          className="p-2 max-w-2xl mx-auto w-full post-content"
           dangerouslySetInnerHTML={{ __html: post && post.content }}
         ></div>
+        {/* Likes */}
         <div className="flex h-[50px] w-full p-2 text-lg  dark:border-gray-700  gap-2">
           <button
             type="button"

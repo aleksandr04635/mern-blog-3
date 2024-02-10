@@ -12,6 +12,10 @@ const postSchema = new Schema(
       type: String,
       required: true,
     },
+    intro: {
+      type: String,
+      required: true,
+    },
     title: {
       type: String,
       required: true,
@@ -19,8 +23,8 @@ const postSchema = new Schema(
     },
     image: {
       type: String,
-      default:
-        "https://www.hostinger.com/tutorials/wp-content/uploads/sites/2/2021/09/how-to-write-a-blog-post.png",
+      /* default:
+        "https://www.hostinger.com/tutorials/wp-content/uploads/sites/2/2021/09/how-to-write-a-blog-post.png", */
     },
     tags: [{ name: String, slug: String }],
     slug: {
@@ -40,7 +44,7 @@ const postSchema = new Schema(
       type: Array,
       default: [],
     },
-    numberOfDisikes: {
+    numberOfDislikes: {
       type: Number,
       default: 0,
     },
