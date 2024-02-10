@@ -30,7 +30,7 @@ export default function PostCard({ post }) {
           <span className="text-lg   font-serif  ">{post.userId.username}</span>
         </Link>
       </div>
-      <div className="flex gap-1 px-2 py-1 ">
+      <div className="flex flex-wrap gap-1 px-2 py-1 ">
         {post.tags?.map((t, i) => (
           <Link
             key={i}

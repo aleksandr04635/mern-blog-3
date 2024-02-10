@@ -86,13 +86,13 @@ export default function PostPage() {
           </span>
         </div>
         <div className="flex max-w-2xl w-full items-center mt-2  font-semibold">
-          <p>Tags: </p>
-          <div className="flex justify-center items-center space-x-2">
+          <div className="flex flex-wrap items-center space-x-2 ">
+            <span>Tags: </span>
             {post.tags?.map((t, i) => (
               <Link
                 key={i}
                 to={`/search?tag=${t.slug}`}
-                className=" border rounded  px-2 py-1"
+                className=" border rounded my-1 px-1 py-1"
               >
                 {t.name}
               </Link>
@@ -108,12 +108,12 @@ export default function PostPage() {
             }
             className="text-blue-500"
           >
-            <h1 className="text-xl  p-3 text-center font-serif  ">
+            <h1 className="text-xl  p-1 text-center font-serif  ">
               {post.userId.username}
             </h1>
           </Link>
         )}
-        <h1 className="text-3xl  p-3 text-center font-serif  lg:text-3xl">
+        <h1 className="text-3xl  p-1 text-center font-serif  lg:text-3xl">
           {post && post.title}
         </h1>
         <div

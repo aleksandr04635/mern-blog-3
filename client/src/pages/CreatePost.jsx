@@ -45,13 +45,13 @@ export default function CreatePost() {
     updatedTags.push({
       name: tag.trim(),
       slug: tag
-        .replace(/[^a-z\-A-Z0-9-]/g, " ")
+        .replace(/[^a-z\-+A-Z0-9-]/g, " ")
         .replace(/\s+/g, " ")
         .trim()
         .split(" ")
-        .join("-")
+        .join("+")
         /* .toLowerCase() */
-        .replace(/[^a-z\-A-Z0-9-]/g, ""),
+        .replace(/[^a-z\-+A-Z0-9-]/g, ""),
     });
     setTag("");
     setTags(updatedTags);

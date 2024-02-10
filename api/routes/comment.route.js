@@ -19,9 +19,14 @@ const createComment = async (req, res, next) => {
       post: postId,
       userId,
     });
-    await newComment.save();
-
-    res.status(200).json(newComment);
+    //console.log("newComment : ", newComment);
+    //await newComment.save();
+    const sent = await newComment.save();
+    //.populate("userId");
+    const sent2 = await sent.populate("userId");
+    //console.log("sent2 : ", sent2);
+    //res.status(200).json(newComment);
+    res.status(200).json(sent2);
   } catch (error) {
     next(error);
   }
@@ -30,9 +35,11 @@ const createComment = async (req, res, next) => {
 const getPostComments = async (req, res, next) => {
   connectDB();
   try {
-    const comments = await Comment.find({ post: req.params.postId }).sort({
-      createdAt: -1,
-    });
+    const comments = await Comment.find({ post: req.params.postId })
+      .populate("userId")
+      .sort({
+        createdAt: -1,
+      });
     res.status(200).json(comments);
   } catch (error) {
     next(error);
@@ -80,7 +87,7 @@ const editComment = async (req, res, next) => {
         content: req.body.content,
       },
       { new: true }
-    );
+    ).populate("userId");
     res.status(200).json(editedComment);
   } catch (error) {
     next(error);

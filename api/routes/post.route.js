@@ -31,7 +31,7 @@ const create = async (req, res, next) => {
 
 const getposts = async (req, res, next) => {
   connectDB();
-  console.log("req.query from getposts:", req.query);
+  //console.log("req.query from getposts:", req.query);
   try {
     const startIndex = parseInt(req.query.startIndex) || 0; //by default starts from 0
     const limit = parseInt(req.query.limit) || 9; //by default takes 9
@@ -58,7 +58,7 @@ const getposts = async (req, res, next) => {
       .skip(startIndex)
       .limit(limit);
 
-    console.log("posts from getposts: ", posts);
+    //console.log("posts from getposts: ", posts);
     const totalPosts = await Post.countDocuments(); // post or Post?
 
     const now = new Date();

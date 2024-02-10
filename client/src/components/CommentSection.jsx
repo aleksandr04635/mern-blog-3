@@ -43,6 +43,7 @@ export default function CommentSection({ postId }) {
       const data = await res.json();
       if (res.ok) {
         setComment("");
+        setTocomment(false);
         setCommentError(null);
         setComments([data, ...comments]);
       }
@@ -168,16 +169,16 @@ export default function CommentSection({ postId }) {
                   {200 - comment.length} characters remaining
                 </p>
                 <div className="flex justify-between gap-2">
-                  <Button outline gradientDuoTone="purpleToBlue" type="submit">
+                  <Button gradientDuoTone="purpleToBlue" type="submit">
                     Submit
                   </Button>{" "}
                   <Button
                     onClick={() => setTocomment(false)}
                     outline
-                    gradientDuoTone="redToYellow"
+                    gradientDuoTone="purpleToBlue"
                     type="submit"
                   >
-                    Not comment
+                    Cancel
                   </Button>
                 </div>
               </div>
