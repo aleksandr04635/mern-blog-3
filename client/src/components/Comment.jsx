@@ -90,7 +90,13 @@ export default function Comment({ comment, onLike, onEdit, onDelete }) {
             <div className="flex items-center pt-2 text-xs border-t dark:border-gray-700 max-w-fit gap-2">
               <button
                 type="button"
-                onClick={() => onLike(comment._id)}
+                onClick={() =>
+                  onLike(
+                    comment._id,
+                    "l",
+                    comment.likes.includes(currentUser._id) ? "-" : "+"
+                  )
+                }
                 className={`text-gray-400 hover:text-blue-500 ${
                   currentUser &&
                   comment.likes.includes(currentUser._id) &&
@@ -104,6 +110,29 @@ export default function Comment({ comment, onLike, onEdit, onDelete }) {
                   comment.numberOfLikes +
                     " " +
                     (comment.numberOfLikes === 1 ? "like" : "likes")}
+              </p>
+              <button
+                type="button"
+                onClick={() =>
+                  onLike(
+                    comment._id,
+                    "d",
+                    comment.dislikes.includes(currentUser._id) ? "-" : "+"
+                  )
+                }
+                className={`text-gray-400 hover:text-blue-500 ${
+                  currentUser &&
+                  comment.dislikes.includes(currentUser._id) &&
+                  "!text-blue-500"
+                }`}
+              >
+                <FaThumbsDown className="text-sm" />
+              </button>
+              <p className="text-gray-400">
+                {comment.numberOfDislikes > 0 &&
+                  comment.numberOfDislikes +
+                    " " +
+                    (comment.numberOfDislikes === 1 ? "dislike" : "dislikes")}
               </p>
               {currentUser &&
                 (currentUser._id === comment.userId._id ||

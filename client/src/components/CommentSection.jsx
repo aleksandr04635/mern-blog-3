@@ -70,17 +70,26 @@ export default function CommentSection({ postId }) {
     getComments();
   }, [postId]);
 
-  const handleLike = async (commentId) => {
+  const handleLike = async (commentId, type, ac) => {
     try {
       if (!currentUser) {
         navigate("/sign-in");
         return;
       }
+      //console.log("type, ac from handleLike: ", type, ac);
       const res = await fetch(`/api/comment/likeComment/${commentId}`, {
         method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: type,
+          action: ac,
+        }),
       });
       if (res.ok) {
         const data = await res.json();
+        //console.log("data from handleLike: ", data);
         setComments(
           comments.map((comment) =>
             comment._id === commentId
@@ -88,6 +97,8 @@ export default function CommentSection({ postId }) {
                   ...comment,
                   likes: data.likes,
                   numberOfLikes: data.likes.length,
+                  dislikes: data.dislikes,
+                  numberOfDislikes: data.dislikes.length,
                 }
               : comment
           )

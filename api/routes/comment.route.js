@@ -48,18 +48,64 @@ const getPostComments = async (req, res, next) => {
 
 const likeComment = async (req, res, next) => {
   connectDB();
+  const type = req.body.type;
+  const action = req.body.action;
+  //console.log("type, action : ", type, action);
   try {
     const comment = await Comment.findById(req.params.commentId);
     if (!comment) {
       return next(errorHandler(404, "Comment not found"));
     }
-    const userIndex = comment.likes.indexOf(req.user.id);
-    if (userIndex === -1) {
-      comment.numberOfLikes += 1;
-      comment.likes.push(req.user.id);
-    } else {
-      comment.numberOfLikes -= 1;
-      comment.likes.splice(userIndex, 1);
+    //excessive clauses are present here, but they can be useful in case of some changes
+    if (type == "l" && action == "+") {
+      const userIndexInLikes = comment.likes.indexOf(req.user.id);
+      if (userIndexInLikes === -1) {
+        comment.numberOfLikes += 1;
+        comment.likes.push(req.user.id);
+      } else {
+        comment.numberOfLikes -= 1;
+        comment.likes.splice(userIndexInLikes, 1);
+      }
+      const userIndexInDislikes = comment.dislikes.indexOf(req.user.id);
+      if (userIndexInDislikes !== -1) {
+        comment.numberOfDislikes -= 1;
+        comment.dislikes.splice(userIndexInDislikes, 1);
+      }
+    }
+    if (type == "l" && action == "-") {
+      const userIndex = comment.likes.indexOf(req.user.id);
+      if (userIndex === -1) {
+        comment.numberOfLikes += 1;
+        comment.likes.push(req.user.id);
+      } else {
+        comment.numberOfLikes -= 1;
+        comment.likes.splice(userIndex, 1);
+      }
+    }
+    if (type == "d" && action == "+") {
+      const userIndexInDislikes = comment.dislikes.indexOf(req.user.id);
+      if (userIndexInDislikes === -1) {
+        comment.numberOfDislikes += 1;
+        comment.dislikes.push(req.user.id);
+      } else {
+        comment.numberOfDislikes -= 1;
+        comment.dislikes.splice(userIndexInDislikes, 1);
+      }
+      const userIndexInLikes = comment.likes.indexOf(req.user.id);
+      if (userIndexInLikes !== -1) {
+        comment.numberOfLikes -= 1;
+        comment.likes.splice(userIndexInLikes, 1);
+      }
+    }
+    if (type == "d" && action == "-") {
+      const userIndexInDislikes = comment.dislikes.indexOf(req.user.id);
+      if (userIndexInDislikes === -1) {
+        comment.numberOfDislikes += 1;
+        comment.dislikes.push(req.user.id);
+      } else {
+        comment.numberOfDislikes -= 1;
+        comment.dislikes.splice(userIndexInDislikes, 1);
+      }
     }
     await comment.save();
     res.status(200).json(comment);
