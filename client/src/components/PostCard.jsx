@@ -25,7 +25,7 @@ export default function PostCard({ post }) {
           </h2>
         </Link>
         <div className="px-2  ">
-          <span> By </span>
+          {/* <span> By </span> */}
           <Link
             to={
               currentUser &&
@@ -34,11 +34,20 @@ export default function PostCard({ post }) {
                 ? "/dashboard?tab=posts"
                 : `/search?userId=${post.userId._id}`
             }
-            className="text-blue-500"
+            className="text-gray-500"
           >
-            <span className="text-lg   font-serif  ">
-              {post.userId.username}
-            </span>
+            <div className="flex max-w-full ">
+              <div className="relative w-10 h-10 self-center shadow-md overflow-hidden rounded-full">
+                <img
+                  src={post.userId.profilePicture}
+                  alt="user"
+                  className={`rounded-full w-full h-full object-cover border-2 border-[lightgray] `}
+                />
+              </div>
+              <h1 className="text-xl  p-1 my-1 text-center font-serif  ">
+                {post.userId.username}
+              </h1>
+            </div>
           </Link>
         </div>
         {post.intro && <div className="px-2  ">{post.intro}</div>}

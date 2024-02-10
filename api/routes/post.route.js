@@ -53,23 +53,20 @@ const getposts = async (req, res, next) => {
         ],
       }),
     })
-      .populate("userId")
       .sort({ createdAt: sortDirection })
       //.sort({ updatedAt: sortDirection })
       .skip(startIndex)
-      .limit(limit);
-
+      .limit(limit)
+      .populate("userId", ["username", "_id", "profilePicture"]);
     //console.log("posts from getposts: ", posts);
-    const totalPosts = await Post.countDocuments(); // post or Post?
+    const totalPosts = await Post.countDocuments(); // posts or Post?
 
     const now = new Date();
-
     const oneMonthAgo = new Date(
       now.getFullYear(),
       now.getMonth() - 1,
       now.getDate()
     );
-
     const lastMonthPosts = await Post.countDocuments({
       createdAt: { $gte: oneMonthAgo },
     });
@@ -147,7 +144,7 @@ const likePost = async (req, res, next) => {
   connectDB();
   const type = req.body.type;
   const action = req.body.action;
-  console.log("type, action from likePost: ", type, action);
+  //console.log("type, action from likePost: ", type, action);
   try {
     const post = await Post.findById(req.params.postId);
     if (!post) {

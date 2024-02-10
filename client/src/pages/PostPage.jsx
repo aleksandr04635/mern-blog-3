@@ -156,11 +156,20 @@ export default function PostPage() {
                 ? "/dashboard?tab=posts"
                 : `/search?userId=${post.userId._id}`
             }
-            className="text-blue-500"
+            className="text-gray-500"
           >
-            <h1 className="text-xl  p-1 my-1 text-center font-serif  ">
-              {post.userId.username}
-            </h1>
+            <div className="flex max-w-full ">
+              <div className="relative w-10 h-10 self-center shadow-md overflow-hidden rounded-full">
+                <img
+                  src={post.userId.profilePicture}
+                  alt="user"
+                  className={`rounded-full w-full h-full object-cover border-2 border-[lightgray] `}
+                />
+              </div>
+              <h1 className="text-xl  p-1 my-1 text-center font-serif  ">
+                {post.userId.username}
+              </h1>
+            </div>
           </Link>
         )}
         <h1 className="text-3xl  p-1 text-center font-serif  lg:text-3xl">
