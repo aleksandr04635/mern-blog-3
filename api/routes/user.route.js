@@ -9,36 +9,59 @@ const test = (req, res) => {
 
 const updateUser = async (req, res, next) => {
   connectDB();
-  console.log("req.user from updateUser: ", req.user);
-  console.log("req.body from updateUser: ", req.body);
+  //console.log("req.user from updateUser: ", req.user);
+  //console.log("req.body from updateUser: ", req.body);
+  // console.log("req.body from updateUser: ", req.body);
+
   if (req.user.id !== req.params.userId) {
     return next(errorHandler(403, "You are not allowed to update this user"));
   }
-  if (req.body.password) {
+  let password2;
+  if (req.body.hasOwnProperty("password") && req.body.password !== "") {
+    /*     console.log("password is: ", req.body.password);
+    console.log(
+      "req.body.password.length from updateUser: ",
+      req.body.password.length
+    ); */
     if (req.body.password.length < 6) {
+      // console.log("req.body.password.length < 6 ");
       return next(errorHandler(400, "Password must be at least 6 characters"));
     }
-    req.body.password = bcryptjs.hashSync(req.body.password, 10);
+    password2 = bcryptjs.hashSync(req.body.password, 10);
   }
-  if (req.body.username) {
-    if (req.body.username.length < 7 || req.body.username.length > 25) {
+  //console.log("password2: ", password2);
+  if (req.body.password === "") {
+    delete req.body.password;
+  }
+  if (req.body.hasOwnProperty("username")) {
+    if (req.body.username.length < 6 || req.body.username.length > 25) {
       return next(
-        errorHandler(400, "Username must be between 7 and 25 characters")
+        errorHandler(400, "Username must be between 6 and 25 characters")
       );
     }
-    if (req.body.username.includes(" ")) {
+    /*     if (req.body.username.includes(" ")) {
       return next(errorHandler(400, "Username cannot contain spaces"));
     }
     if (req.body.username !== req.body.username.toLowerCase()) {
       return next(errorHandler(400, "Username must be lowercase"));
-    }
-    if (!req.body.username.match(/^[a-zA-Z0-9]+$/)) {
+    } */
+    if (!req.body.username.match(/^[a-zA-Z0-9\_\-\ ]+$/)) {
       return next(
-        errorHandler(400, "Username can only contain letters and numbers")
+        errorHandler(
+          400,
+          "Username can only contain letters and numbers, -, _ and whitespace"
+        )
       );
     }
   }
   try {
+    const checkUser2 = await User.findOne({ username: req.body.username });
+    if (checkUser2 && req.user.id != checkUser2._id.toString()) {
+      return next(errorHandler(404, "Another user with this username exists."));
+    }
+
+    //console.log("req.body from updateUser2: ", req.body);
+    //return next(errorHandler(404, "Stopgap"));
     const updatedUser = await User.findByIdAndUpdate(
       req.params.userId,
       {
@@ -46,11 +69,12 @@ const updateUser = async (req, res, next) => {
           username: req.body.username,
           email: req.body.email,
           profilePicture: req.body.profilePicture,
-          password: req.body.password,
+          password: password2,
         },
       },
       { new: true }
     );
+    //console.log("updatedUser from updateUser2: ", updatedUser);
     const { password, ...rest } = updatedUser._doc;
     res.status(200).json(rest);
   } catch (error) {

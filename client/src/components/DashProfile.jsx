@@ -1,4 +1,12 @@
-import { Alert, Button, Modal, ModalBody, TextInput } from "flowbite-react";
+import {
+  Alert,
+  Button,
+  Modal,
+  ModalBody,
+  TextInput,
+  Label,
+  Spinner,
+} from "flowbite-react";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import {
@@ -19,6 +27,7 @@ import {
   deleteUserFailure,
   signoutSuccess,
 } from "../redux/user/userSlice";
+import { BsEyeSlash, BsEye } from "react-icons/bs";
 import { useDispatch } from "react-redux";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { Link } from "react-router-dom";
@@ -34,9 +43,16 @@ export default function DashProfile() {
   const [updateUserError, setUpdateUserError] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({});
+  const [visibleEr, setVisibleEr] = useState(true);
+  const [visible, setVisible] = useState(false);
+  const [loadingPage, setLoadingPage] = useState(true);
   const filePickerRef = useRef();
   const dispatch = useDispatch();
 
+  //console.log("formData", formData);
+  //console.log("loadingPage", loadingPage);
+  //console.log("setVisibleEr", setVisibleEr);
+  //console.log("formData.password?.length", formData.password?.length);
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -46,10 +62,31 @@ export default function DashProfile() {
   };
 
   useEffect(() => {
+    const ef = async () => {
+      setFormData({
+        username: currentUser.username,
+        email: currentUser.email,
+        password: "",
+      });
+      setLoadingPage(false);
+    };
+
+    ef();
+  }, [currentUser]);
+
+  useEffect(() => {
     if (imageFile) {
       uploadImage();
     }
   }, [imageFile]);
+
+  const validateEmail = (email) => {
+    return !!String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
 
   const uploadImage = async () => {
     // service firebase.storage {
@@ -96,6 +133,7 @@ export default function DashProfile() {
   };
 
   const handleChange = (e) => {
+    setVisibleEr(false);
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
@@ -103,10 +141,12 @@ export default function DashProfile() {
     e.preventDefault();
     setUpdateUserError(null);
     setUpdateUserSuccess(null);
+    setVisibleEr(true);
     if (Object.keys(formData).length === 0) {
       setUpdateUserError("No changes made");
       return;
     }
+    //console.log("sent formData:", formData);
     if (imageFileUploading) {
       setUpdateUserError("Please wait for image to upload");
       return;
@@ -168,9 +208,21 @@ export default function DashProfile() {
     }
   };
 
+  if (loadingPage) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Spinner size="xl" />
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-lg mx-auto p-3 w-full">
-      <h1 className="my-7 text-center font-semibold text-3xl">Profile</h1>
+      <h1 className="my-4 text-center font-semibold text-3xl">Profile</h1>
+      <h3 className=" my-1 text-center  text-base">
+        Here you can change your avatar image or data. Don't enter data you
+        don't want to change
+      </h3>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input
           type="file"
@@ -218,6 +270,7 @@ export default function DashProfile() {
         {imageFileUploadError && (
           <Alert color="failure">{imageFileUploadError}</Alert>
         )}
+        {/* 
         <TextInput
           type="text"
           id="username"
@@ -237,14 +290,90 @@ export default function DashProfile() {
           id="password"
           placeholder="password"
           onChange={handleChange}
-        />
-        <Button
+        /> */}
+        {/*         <Button
           type="submit"
           gradientDuoTone="purpleToBlue"
           outline
           disabled={loading || imageFileUploading}
         >
           {loading ? "Loading..." : "Update"}
+        </Button>
+ */}
+        <div>
+          <Label htmlFor="username" value="Your username:" />
+          <TextInput
+            type="text"
+            placeholder="Username"
+            id="username"
+            /*  defaultValue={currentUser.username} */
+            onChange={handleChange}
+            value={formData.username}
+            color={formData.username?.length > 5 ? "success" : "failure"}
+            helperText={
+              formData.username?.length > 5 ? "" : "minimum 6 characters"
+            }
+          />
+        </div>
+        <div>
+          <Label htmlFor="email" value="Your email:" />
+          <TextInput
+            type="email"
+            placeholder="name@company.com"
+            id="email"
+            /* defaultValue={currentUser.email} */
+            onChange={handleChange}
+            value={formData.email}
+            color={validateEmail(formData?.email) ? "success" : "failure"}
+            helperText={validateEmail(formData?.email) ? "" : "enter an email"}
+          />
+        </div>
+        <div className="relative">
+          <Label htmlFor="password" value="Your password:" />
+          <TextInput
+            type={visible ? "text" : "password"}
+            placeholder="Password"
+            id="password"
+            value={formData.password}
+            onChange={handleChange}
+            color={
+              !(formData.password && formData.password.length < 6)
+                ? "success"
+                : "failure"
+            }
+            helperText={
+              !(formData.password && formData.password.length < 6)
+                ? ""
+                : "minimum 6 characters"
+            }
+          />
+          <p
+            onClick={() => setVisible(!visible)}
+            className="cursor-pointer border-none w-12 h-10 absolute text-xl top-[35px] right-[-21px]"
+          >
+            {visible ? <BsEyeSlash /> : <BsEye />}
+          </p>
+        </div>
+        <Button
+          outline
+          gradientDuoTone="purpleToBlue"
+          type="submit"
+          disabled={
+            loading ||
+            imageFileUploading ||
+            formData.username?.length < 6 ||
+            !validateEmail(formData.email) ||
+            (formData.password && formData.password.length < 6)
+          }
+        >
+          {loading ? (
+            <>
+              <Spinner size="sm" />
+              <span className="pl-3">Loading...</span>
+            </>
+          ) : (
+            "Update"
+          )}
         </Button>
       </form>
       <div className="flex justify-around gap-4 mt-4">
@@ -266,18 +395,6 @@ export default function DashProfile() {
         >
           Sign Out
         </Button>
-        {/*         <span
-          onClick={() => setShowModal(true)}
-          className="cursor-pointer text-red-500"
-        >
-          Delete Account
-        </span>
-        <span
-          onClick={handleSignout}
-          className="cursor-pointer text-orange-500"
-        >
-          Sign Out
-        </span> */}
       </div>
       <Link to={"/create-post"} className="">
         <Button
@@ -295,15 +412,21 @@ export default function DashProfile() {
         </Alert>
       )}
       {updateUserError && (
-        <Alert color="failure" className="mt-5">
+        <Alert
+          color="failure"
+          className={`mt-5 text-justify ${!visibleEr && "hidden"}`}
+        >
           {updateUserError}
         </Alert>
       )}
-      {error && (
-        <Alert color="failure" className="mt-5">
+      {/*       {error && (
+        <Alert
+          color="failure"
+          className={`mt-5 text-justify ${!visibleEr && "hidden"}`}
+        >
           {error}
         </Alert>
-      )}
+      )} */}
       <Modal
         show={showModal}
         onClose={() => setShowModal(false)}

@@ -86,7 +86,6 @@ export default function Header() {
               <h2> My Blog</h2>
             </Button>
           </Link>
-          {/*      <form onSubmit={handleSubmit} className="relative hidden sm:inline"> */}
           <form onSubmit={handleSubmit} className="relative hidden sm:inline">
             <TextInput
               type="text"
@@ -119,6 +118,7 @@ export default function Header() {
             <Dropdown
               arrowIcon={false}
               inline
+              className="block text-lg"
               label={
                 /*       <Avatar alt="user" img={currentUser.profilePicture} rounded /> */
                 <img
@@ -129,13 +129,15 @@ export default function Header() {
               }
             >
               <Dropdown.Header>
-                <span className="block text-sm">@{currentUser.username}</span>
+                <span className="block text-sm">{currentUser.username}</span>
                 <span className="block text-sm font-medium truncate">
                   {currentUser.email}
                 </span>
               </Dropdown.Header>
               <Link to={"/create-post"}>
-                <Dropdown.Item>Create a post</Dropdown.Item>
+                <Dropdown.Item className="text-sm ">
+                  Create a post
+                </Dropdown.Item>
               </Link>
               <Dropdown.Divider />
               <Link to={"/dashboard?tab=profile"}>

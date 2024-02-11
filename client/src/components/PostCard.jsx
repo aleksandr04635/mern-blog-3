@@ -20,7 +20,7 @@ export default function PostCard({ post }) {
       {/*  className="max-h-[260px] w-[360px] min-w-full sm:min-w-[360px]  object-cover " */}
       <div className="pl-2 flex flex-col justify-around">
         <Link to={`/post/${post.slug}`}>
-          <h2 className="text-xl px-2 py-1 font-semibold line-clamp-2">
+          <h2 className="text-xl px-2 text-stone-800 hover:text-blue-800 py-1 font-semibold line-clamp-2">
             {post.title}
           </h2>
         </Link>
@@ -34,14 +34,14 @@ export default function PostCard({ post }) {
                 ? "/dashboard?tab=posts"
                 : `/search?userId=${post.userId._id}`
             }
-            className="text-gray-500"
+            className="text-slate-800 hover:text-blue-800"
           >
-            <div className="flex max-w-full ">
-              <div className="relative w-10 h-10 self-center shadow-md overflow-hidden rounded-full">
+            <div className="group flex max-w-full ">
+              <div className=" relative w-10 h-10 self-center shadow-md overflow-hidden rounded-full">
                 <img
                   src={post.userId.profilePicture}
                   alt="user"
-                  className={`rounded-full w-full h-full object-cover border-2 border-[lightgray] `}
+                  className={`rounded-full w-full h-full object-cover border-2 group-hover:border-blue-800 border-[lightgray] `}
                 />
               </div>
               <h1 className="text-xl  p-1 my-1 text-center font-serif  ">
@@ -56,7 +56,7 @@ export default function PostCard({ post }) {
             <Link
               key={i}
               to={`/search?tag=${t.slug}`}
-              className="text-sm border rounded  px-2 py-1"
+              className="hover:text-blue-800 text-sm border rounded  px-2 py-1"
             >
               {t.name}
             </Link>

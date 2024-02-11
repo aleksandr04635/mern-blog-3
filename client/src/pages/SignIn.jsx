@@ -7,20 +7,38 @@ import {
   signInSuccess,
   signInFailure,
 } from "../redux/user/userSlice";
+import { BsEyeSlash } from "react-icons/bs";
+import { BsEye } from "react-icons/bs";
 import OAuth from "../components/OAuth";
 
 export default function SignIn() {
   const [formData, setFormData] = useState({});
+  const [visible, setVisible] = useState(false);
+  const [visibleEr, setVisibleEr] = useState(true);
   const { loading, error: errorMessage } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  //console.log("visibleEr: ", visibleEr);
+  //console.log("formData: ", formData);
+  //console.log("formData.password: ", formData.password);
+  //console.log("formData.password.length: ", formData.password?.length);
   const handleChange = (e) => {
+    setVisibleEr(false);
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
+  };
+
+  const validateEmail = (email) => {
+    return !!String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setVisibleEr(true);
     if (!formData.email || !formData.password) {
       return dispatch(signInFailure("Please fill all the fields"));
     }
@@ -45,30 +63,100 @@ export default function SignIn() {
   };
 
   return (
-    <div className="min-h-screen mt-20">
+    <div className="min-h-screen sm:mt-20">
+      <div className="flex p-3 max-w-lg mx-auto flex-col  md:items-center gap-5">
+        <h3 className="text-lg font-semibold text-center">
+          You can sign in with your email and password or with Google.
+        </h3>
+        <div className="flex-1">
+          <form
+            className="flex flex-col w-[250px] mx-auto gap-4"
+            onSubmit={handleSubmit}
+          >
+            <div>
+              <Label htmlFor="email" value="Your email:" />
+              <TextInput
+                type="email"
+                placeholder="name@company.com"
+                id="email"
+                onChange={handleChange}
+                value={formData.email || ""}
+                color={validateEmail(formData?.email) ? "success" : "failure"}
+                helperText={
+                  validateEmail(formData?.email) ? "" : "enter an email"
+                }
+              />
+            </div>
+            <div className="relative">
+              <Label htmlFor="password" value="Your password:" />
+              <TextInput
+                type={visible ? "text" : "password"}
+                placeholder="Password"
+                id="password"
+                value={formData.password || ""}
+                onChange={handleChange}
+                color={formData.password?.length > 5 ? "success" : "failure"}
+                helperText={
+                  formData.password?.length > 5 ? "" : "minimum 6 characters"
+                }
+              />
+              <p
+                onClick={() => setVisible(!visible)}
+                className="cursor-pointer border-none w-12 h-10 absolute text-xl top-[35px] right-[-21px]"
+              >
+                {visible ? <BsEyeSlash /> : <BsEye />}
+              </p>
+            </div>
+            <Button
+              outline
+              gradientDuoTone="purpleToBlue"
+              type="submit"
+              disabled={
+                loading ||
+                !validateEmail(formData.email) ||
+                formData.password?.length < 6
+              }
+            >
+              {loading ? (
+                <>
+                  <Spinner size="sm" />
+                  <span className="pl-3">Loading...</span>
+                </>
+              ) : (
+                "Sign In"
+              )}
+            </Button>
+            <OAuth />
+            <div className="flex gap-2 text-sm ">
+              <span>Dont Have an account?</span>
+              <Link to="/sign-up" className="text-blue-500">
+                Sign Up
+              </Link>
+            </div>
+          </form>
+          {errorMessage && (
+            <Alert
+              /* hidden={!visibleEr} */
+              className={`mt-5 text-justify ${!visibleEr && "hidden"}`}
+              color="failure"
+            >
+              {/* it can be failure or success */}
+              {errorMessage}
+            </Alert>
+          )}
+        </div>
+      </div>
+    </div>
+    /*  <div className="min-h-screen mt-20">
       <div className="flex p-3 max-w-3xl mx-auto flex-col md:items-center gap-5">
         <h3 className="text-lg font-semibold text-center">
-          You can sign up with your email and password or with Google.
+          You can sign in with your email and password or with Google.
         </h3>
-        {/* left */}
-        {/*         <div className="flex-1">
-          <Link to="/" className="font-bold dark:text-white text-4xl">
-            <span className="px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white">
-              Sahand's
-            </span>
-            Blog
-          </Link>
-          <p className="text-sm mt-5">
-            This is a demo project. You can sign in with your email and password
-            or with Google.
-          </p>
-        </div> */}
-        {/* right */}
 
         <div className="flex-1">
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <div>
-              <Label value="Your email" />
+              <Label htmlFor="email" value="Your email" />
               <TextInput
                 type="email"
                 placeholder="name@company.com"
@@ -77,7 +165,7 @@ export default function SignIn() {
               />
             </div>
             <div>
-              <Label value="Your password" />
+              <Label htmlFor="password" value="Your password" />
               <TextInput
                 type="password"
                 placeholder="**********"
@@ -89,7 +177,9 @@ export default function SignIn() {
               outline
               gradientDuoTone="purpleToBlue"
               type="submit"
-              disabled={loading}
+              disabled={
+                loading || !formData.email || formData.password?.length < 3
+              }
             >
               {loading ? (
                 <>
@@ -115,6 +205,6 @@ export default function SignIn() {
           )}
         </div>
       </div>
-    </div>
+    </div> */
   );
 }

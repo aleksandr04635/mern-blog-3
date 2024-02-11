@@ -7,7 +7,7 @@ import jwt from "jsonwebtoken";
 const signup = async (req, res, next) => {
   connectDB();
   const { username, email, password } = req.body;
-
+  //console.log("signup:", username, email, password);
   if (
     !username ||
     !email ||
@@ -18,6 +18,19 @@ const signup = async (req, res, next) => {
   ) {
     next(errorHandler(400, "All fields are required"));
   }
+  const checkUser = await User.findOne({ email });
+  if (checkUser) {
+    return next(
+      errorHandler(
+        404,
+        "User with this email already exists. If you forgot the password use send it to email functionality"
+      )
+    );
+  }
+  const checkUser2 = await User.findOne({ username });
+  if (checkUser2) {
+    return next(errorHandler(404, "User with this username already exists."));
+  }
   const hashedPassword = bcryptjs.hashSync(password, 10);
   const newUser = new User({
     username,
@@ -26,7 +39,20 @@ const signup = async (req, res, next) => {
   });
   try {
     await newUser.save();
-    res.json("Signup successful");
+    //new
+    const token = jwt.sign(
+      { id: newUser._id, isAdmin: newUser.isAdmin },
+      process.env.JWT_SECRET
+    );
+    const { password: pass, ...rest } = newUser._doc;
+    res
+      .status(200)
+      .cookie("access_token", token, {
+        httpOnly: true,
+      })
+      .json(rest);
+    //old
+    //res.json("Signup successful");
   } catch (error) {
     next(error);
   }
@@ -41,11 +67,16 @@ const signin = async (req, res, next) => {
   try {
     const validUser = await User.findOne({ email });
     if (!validUser) {
-      return next(errorHandler(404, "User not found"));
+      return next(errorHandler(404, "User with this email not found"));
     }
     const validPassword = bcryptjs.compareSync(password, validUser.password);
     if (!validPassword) {
-      return next(errorHandler(400, "Invalid password"));
+      return next(
+        errorHandler(
+          400,
+          "Invalid password. If you forgot the password use send it to email functionality"
+        )
+      );
     }
     const token = jwt.sign(
       { id: validUser._id, isAdmin: validUser.isAdmin },

@@ -22,8 +22,11 @@ const createComment = async (req, res, next) => {
     //console.log("newComment : ", newComment);
     //await newComment.save();
     const sent = await newComment.save();
-    //.populate("userId");
-    const sent2 = await sent.populate("userId");
+    const sent2 = await sent.populate("userId", [
+      "username",
+      "_id",
+      "profilePicture",
+    ]);
     //console.log("sent2 : ", sent2);
     //res.status(200).json(newComment);
     res.status(200).json(sent2);
@@ -32,11 +35,13 @@ const createComment = async (req, res, next) => {
   }
 };
 
+//for a comment tree a recursive function is needed
+//which takes the _Id and returns a comment with a list of _Id's of comments to it, calling itself for each
 const getPostComments = async (req, res, next) => {
   connectDB();
   try {
     const comments = await Comment.find({ post: req.params.postId })
-      .populate("userId")
+      .populate("userId", ["username", "_id", "profilePicture"])
       .sort({
         createdAt: -1,
       });
@@ -133,7 +138,7 @@ const editComment = async (req, res, next) => {
         content: req.body.content,
       },
       { new: true }
-    ).populate("userId");
+    ).populate("userId", ["username", "_id", "profilePicture"]);
     res.status(200).json(editedComment);
   } catch (error) {
     next(error);

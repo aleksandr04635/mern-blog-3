@@ -141,7 +141,7 @@ export default function PostPage() {
               <Link
                 key={i}
                 to={`/search?tag=${t.slug}`}
-                className=" border rounded my-1 px-2 py-1"
+                className="hover:text-blue-800 border rounded my-1 px-2 py-1"
               >
                 {t.name}
               </Link>
@@ -158,15 +158,15 @@ export default function PostPage() {
             }
             className="text-gray-500"
           >
-            <div className="flex max-w-full ">
+            <div className="group flex max-w-full ">
               <div className="relative w-10 h-10 self-center shadow-md overflow-hidden rounded-full">
                 <img
                   src={post.userId.profilePicture}
                   alt="user"
-                  className={`rounded-full w-full h-full object-cover border-2 border-[lightgray] `}
+                  className={`rounded-full w-full h-full object-cover border-2 group-hover:border-blue-800 border-[lightgray] `}
                 />
               </div>
-              <h1 className="text-xl  p-1 my-1 text-center font-serif  ">
+              <h1 className="text-xl  text-slate-800 hover:text-blue-800 p-1 my-1 text-center font-serif  ">
                 {post.userId.username}
               </h1>
             </div>
