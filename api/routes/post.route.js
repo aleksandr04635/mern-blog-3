@@ -90,7 +90,7 @@ const getposts = async (req, res, next) => {
       return next(
         errorHandler(
           400,
-          `The page number${page} isn't in the correct range`
+          `The page number ${page} isn't in the correct range`
           //"The page number is set larger than the total number of pages"
         )
       );
@@ -161,7 +161,16 @@ const getposts = async (req, res, next) => {
 
     res
       .status(200)
-      .json({ posts, totalPosts, totalPages, page, skip, limit, lim });
+      .json({
+        posts,
+        totalPosts,
+        pageSize,
+        totalPages,
+        page,
+        skip,
+        limit,
+        lim,
+      });
   } catch (error) {
     next(error);
   }

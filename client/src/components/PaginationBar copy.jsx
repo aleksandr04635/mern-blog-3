@@ -17,10 +17,10 @@ export default function PaginationBar({ currentPage, totalPages }) {
   const cName = (n) => {
     let cn = "  border border-slate-500 px-2 ";
     if (n == currentPage) {
-      cn += " dark:bg-cyan-900 bg-cyan-50";
+      cn += " bg-cyan-50";
     }
     if (n != currentPage) {
-      cn += " dark:hover:bg-stone-700 hover:bg-stone-100 ";
+      cn += " hover:bg-stone-100 ";
     }
     if (n == totalPages) {
       cn += " rounded-l-lg ";
@@ -43,9 +43,11 @@ export default function PaginationBar({ currentPage, totalPages }) {
           {page}
         </div>
       ) : (
-        <Link key={page} to={`/search?${searchQuery}`} className="">
-          <div className={cName(page)}>{page}</div>
-        </Link>
+        <div key={page} className={cName(page)}>
+          <Link to={`/search?${searchQuery}`} className="">
+            {page}
+          </Link>
+        </div>
       )
     );
   }
@@ -62,17 +64,21 @@ export default function PaginationBar({ currentPage, totalPages }) {
       {/* <div className=" hidden sm:block"> */}
       <div className="flex flex-row">
         {maxPage < totalPages && (
-          <Link to={`/search?${searchQueryLast}`} key={totalPages}>
-            <div className={cName(totalPages)}>{totalPages}</div>
-          </Link>
+          <div className={cName(totalPages)}>
+            <Link to={`/search?${searchQueryLast}`} key={totalPages}>
+              {totalPages}
+            </Link>
+          </div>
         )}
-        {maxPage < totalPages - 1 && <div className="px-2 ">...</div>}
+        {maxPage < totalPages - 1 && <div className=" ">...</div>}
         {numberedPageItems}
-        {minPage > 2 && <div className="px-2 ">...</div>}
+        {minPage > 2 && <div className=" ">...</div>}
         {minPage > 1 && (
-          <Link to={`/search?${searchQueryFirst}`} key={1}>
-            <div className={cName(1)}>{1}</div>
-          </Link>
+          <div className={cName(1)}>
+            <Link to={`/search?${searchQueryFirst}`} key={1}>
+              {1}
+            </Link>
+          </div>
         )}
       </div>
       {/*      <p>currentPage:{currentPage}</p>

@@ -9,7 +9,10 @@ import {
 } from "react-icons/bs";
 export default function FooterCom() {
   return (
-    <Footer container className="m-auto  ">
+    <Footer
+      container
+      className=" rounded-none sm:border-t border-gray-500 m-auto  "
+    >
       {/* <Footer
       container
       className="m-auto max-w-6xl  max-w-[1200px]  border border-gray-400 rounded"
