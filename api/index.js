@@ -11,6 +11,11 @@ import dotenv from "dotenv";
 dotenv.config();
 
 //console.log(!!undefined);
+/* const totalPosts = 6;
+const pageSize = 3;
+let totalPages = Math.floor(totalPosts / pageSize) || 1;
+console.log("totalPages :", totalPages); */
+
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URL);

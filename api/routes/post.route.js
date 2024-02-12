@@ -84,7 +84,7 @@ const getposts = async (req, res, next) => {
       return;
     }
 
-    const totalPages = Math.ceil(totalPosts / pageSize);
+    const totalPages = Math.floor(totalPosts / pageSize) || 1; // Math.ceil(totalPosts / pageSize);
     console.log("totalPages from getposts:", totalPages);
     if (page > totalPages || page < 0) {
       return next(
@@ -96,18 +96,29 @@ const getposts = async (req, res, next) => {
       );
     }
 
+    const numOnTopPage = pageSize + (totalPosts % pageSize);
     const skip = !!req.query.page
+      ? page == totalPages
+        ? 0
+        : (totalPages - page - 1) * pageSize + numOnTopPage
+      : startIndex;
+    /*     const skip = !!req.query.page
       ? page == totalPages
         ? 0
         : (totalPages - 1 - page) * pageSize +
           (totalPosts % pageSize || pageSize)
-      : startIndex;
+      : startIndex; */
     //console.log("skip from getposts:", skip);
     const lim = !!req.query.page
       ? page == totalPages
-        ? totalPosts % pageSize || pageSize
+        ? numOnTopPage
         : pageSize
       : limit;
+    /*     const lim = !!req.query.page
+      ? page == totalPages
+        ? totalPosts % pageSize || pageSize
+        : pageSize
+      : limit; */
     //console.log("lim from getposts:", lim);
 
     const posts = await Post.find({
@@ -148,7 +159,9 @@ const getposts = async (req, res, next) => {
    lastMonthPosts,
     });*/
 
-    res.status(200).json({ posts, totalPosts, page, skip, limit, lim });
+    res
+      .status(200)
+      .json({ posts, totalPosts, totalPages, page, skip, limit, lim });
   } catch (error) {
     next(error);
   }

@@ -22,7 +22,8 @@ export default function Search() {
   console.log("totalPosts in state: ", totalPosts);
   console.log("page in state: ", page);
   console.log("sidebarData: ", sidebarData);
-  let totalPages = Math.ceil(totalPosts / pageSize);
+  // let totalPages = Math.ceil(totalPosts / pageSize);
+  let totalPages = Math.floor(totalPosts / pageSize) || 1;
 
   useEffect(() => {
     console.log("USEEFFECT RUN. location.search: ", location.search);
@@ -124,8 +125,9 @@ export default function Search() {
             console.log("pageSizeFromUr doesn't exist, so I use 2 instead: ");
             pageSizeFromUrl = 2;
           }
+          //totalPages2 = Math.floor(data.totalPosts/ pageSize) || 1;
           //let totalPages2 = Math.ceil(data.totalPosts / pageSize);
-          let totalPages2 = Math.ceil(data.totalPosts / pageSizeFromUrl);
+          let totalPages2 = Math.floor(data.totalPosts / pageSizeFromUrl) || 1;
           const urlParams2 = new URLSearchParams(location.search);
           urlParams2.set("page", totalPages2);
           let searchQuery3 = urlParams2.toString();
