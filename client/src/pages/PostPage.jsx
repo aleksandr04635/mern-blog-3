@@ -8,6 +8,8 @@ import { useSelector } from "react-redux";
 import { Modal, Table } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
+//import { DateTime } from "luxon";
+import { formatISO9075 } from "date-fns";
 
 export default function PostPage() {
   const { postSlug } = useParams();
@@ -18,7 +20,7 @@ export default function PostPage() {
   const [showModal, setShowModal] = useState(false);
 
   const navigate = useNavigate();
-  console.log("post: ", post);
+  //console.log("post: ", post);
   //console.log(" currentUser : ", currentUser);
 
   useEffect(() => {
@@ -129,7 +131,8 @@ export default function PostPage() {
           />
         )}
         <div className="flex justify-between p-3 border-b border-slate-500  w-full text-xs">
-          <span>{post && new Date(post.updatedAt).toUTCString()}</span>
+          <span>{formatISO9075(new Date(post.createdAt))}</span>;
+          {/*         <span>{new Date(post.createdAt).toUTCString()}</span> */}
           <span className="italic">
             {post && (post.content.length / 1000).toFixed(0)} mins read
           </span>
@@ -156,17 +159,21 @@ export default function PostPage() {
                 ? "/dashboard?tab=posts"
                 : `/search?userId=${post.userId._id}`
             }
-            className="text-gray-500"
+            className="text-gray-500 "
           >
             <div className="group flex max-w-full ">
               <div className="relative w-10 h-10 self-center shadow-md overflow-hidden rounded-full">
                 <img
                   src={post.userId.profilePicture}
                   alt="user"
-                  className={`rounded-full w-full h-full object-cover border-2 group-hover:border-blue-800 border-[lightgray] `}
+                  className={`rounded-full w-full h-full object-cover border-2 group-hover:border-blue-800
+                   dark:border-purple-800 dark:group-hover:border-blue-400 border-[lightgray] `}
                 />
               </div>
-              <h1 className="text-xl  text-slate-800 hover:text-blue-800 p-1 my-1 text-center font-serif  ">
+              <h1
+                className="text-xl  text-slate-800 hover:text-blue-800 
+               dark:text-purple-400 dark:group-hover:text-blue-400 p-1 my-1 text-center font-serif  "
+              >
                 {post.userId.username}
               </h1>
             </div>

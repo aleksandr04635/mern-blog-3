@@ -375,6 +375,23 @@ export default function DashProfile() {
             "Update"
           )}
         </Button>
+
+        {updateUserSuccess && (
+          <Alert
+            color="success"
+            className={`mt-5 text-justify ${!visibleEr && "hidden"}`}
+          >
+            {updateUserSuccess}
+          </Alert>
+        )}
+        {updateUserError && (
+          <Alert
+            color="failure"
+            className={`mt-5 text-justify ${!visibleEr && "hidden"}`}
+          >
+            {updateUserError}
+          </Alert>
+        )}
       </form>
       <div className="flex justify-around gap-4 mt-4">
         <Button
@@ -406,19 +423,7 @@ export default function DashProfile() {
           Create a post
         </Button>
       </Link>
-      {updateUserSuccess && (
-        <Alert color="success" className="mt-5">
-          {updateUserSuccess}
-        </Alert>
-      )}
-      {updateUserError && (
-        <Alert
-          color="failure"
-          className={`mt-5 text-justify ${!visibleEr && "hidden"}`}
-        >
-          {updateUserError}
-        </Alert>
-      )}
+
       {/*       {error && (
         <Alert
           color="failure"

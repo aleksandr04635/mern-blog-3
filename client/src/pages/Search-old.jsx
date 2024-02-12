@@ -1,37 +1,29 @@
-import { Button, Select, TextInput, Spinner } from "flowbite-react";
+import { Button, Select, TextInput } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import PostCard from "../components/PostCard";
-import PaginationBar from "../components/PaginationBar";
 
 export default function Search() {
-  const pageSize = 2;
   const [sidebarData, setSidebarData] = useState({
     searchTerm: "",
     sort: "desc",
   });
+  const [totalPosts, setTotalPosts] = useState(0);
+
+  //console.log(sidebarData);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showMore, setShowMore] = useState(false);
-  const location = useLocation();
-  const navigate = useNavigate();
 
-  const [totalPosts, setTotalPosts] = useState(0);
-  const [page, setPage] = useState(1);
-  console.log("page: ", page);
-  //console.log(sidebarData);
-  let totalPages = Math.ceil(totalPosts / pageSize);
+  const location = useLocation();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const searchTermFromUrl = urlParams.get("searchTerm");
     const sortFromUrl = urlParams.get("sort");
-    const pageFromUrl = urlParams.get("page");
-    if (pageFromUrl) {
-      console.log("page in URL: ", pageFromUrl);
-      setPage(pageFromUrl);
-    }
-    console.log("pageFromUrl: ", pageFromUrl);
+
     console.log("location.search: ", location.search);
 
     if (searchTermFromUrl || sortFromUrl) {
@@ -53,23 +45,11 @@ export default function Search() {
       }
       if (res.ok) {
         const data = await res.json();
-        if (pageFromUrl) {
-          setPosts(data.posts);
-          setTotalPosts(data.totalPosts);
-          setLoading(false);
-        } else {
-          totalPages = Math.ceil(data.totalPosts / pageSize);
-          setPage(totalPages);
-          const urlParams = new URLSearchParams(location.search);
-          urlParams.set("page", totalPages);
-          const searchQuery = urlParams.toString();
-          navigate(`/search?${searchQuery}`);
-          setPosts(data.posts);
-          setTotalPosts(data.totalPosts);
-          setLoading(false);
-        }
+        setPosts(data.posts);
+        setTotalPosts(data.totalPosts);
+        setLoading(false);
         // if (data.posts.length === 9) {//old
-        if (data.posts.length === pageSize) {
+        if (data.posts.length === 4) {
           setShowMore(true);
         } else {
           setShowMore(false);
@@ -112,7 +92,7 @@ export default function Search() {
       const data = await res.json();
       setPosts([...posts, ...data.posts]);
       //if (data.posts.length === 9) {//old
-      if (data.posts.length === pageSize) {
+      if (data.posts.length === 4) {
         setShowMore(true);
       } else {
         setShowMore(false);
@@ -152,23 +132,11 @@ export default function Search() {
         <h1 className="text-3xl font-semibold sm:border-b border-gray-500 p-3 mt-5 ">
           Posts results:
         </h1>
-        <p>Total number of posts: {totalPosts}</p>
-        <p>Total number of pages: {totalPages}</p>
-        <p>Page: {page}</p>
-        {totalPages > 1 && (
-          <PaginationBar currentPage={page} totalPages={totalPages} />
-        )}
-        <PaginationBar currentPage={15} totalPages={15} />
         <div className="p-7 flex flex-wrap gap-4">
           {!loading && posts.length === 0 && (
             <p className="text-xl text-gray-500">No posts found.</p>
           )}
-          {loading && (
-            <div className="flex justify-center items-center min-h-screen">
-              <Spinner size="xl" />
-              <p className="text-xl text-gray-500">Loading...</p>
-            </div>
-          )}
+          {loading && <p className="text-xl text-gray-500">Loading...</p>}
           {!loading &&
             posts &&
             posts.map((post) => <PostCard key={post._id} post={post} />)}

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
+import { formatISO9075 } from "date-fns";
 
 export default function PostCard({ post }) {
   const { currentUser } = useSelector((state) => state.user);
@@ -19,8 +20,15 @@ export default function PostCard({ post }) {
       )}
       {/*  className="max-h-[260px] w-[360px] min-w-full sm:min-w-[360px]  object-cover " */}
       <div className="pl-2 flex flex-col justify-around">
+        <span className="pt-1 text-sm px-2">
+          {formatISO9075(new Date(post.createdAt))}
+        </span>
         <Link to={`/post/${post.slug}`}>
-          <h2 className="text-xl px-2 text-stone-800 hover:text-blue-800 py-1 font-semibold line-clamp-2">
+          <h2
+            className="text-xl px-2
+           text-stone-800 dark:text-violet-400 dark:hover:text-blue-400 hover:text-blue-800 
+           py-1 font-semibold line-clamp-2"
+          >
             {post.title}
           </h2>
         </Link>
@@ -34,14 +42,15 @@ export default function PostCard({ post }) {
                 ? "/dashboard?tab=posts"
                 : `/search?userId=${post.userId._id}`
             }
-            className="text-slate-800 hover:text-blue-800"
+            className="text-slate-800 dark:text-purple-400 dark:hover:text-blue-400 hover:text-blue-800"
           >
             <div className="group flex max-w-full ">
               <div className=" relative w-10 h-10 self-center shadow-md overflow-hidden rounded-full">
                 <img
                   src={post.userId.profilePicture}
                   alt="user"
-                  className={`rounded-full w-full h-full object-cover border-2 group-hover:border-blue-800 border-[lightgray] `}
+                  className={`rounded-full w-full h-full object-cover border-2 dark:group-hover:border-blue-400
+                   group-hover:border-blue-800 border-gray-300 dark:border-purple-500`}
                 />
               </div>
               <h1 className="text-xl  p-1 my-1 text-center font-serif  ">

@@ -68,6 +68,7 @@ const likeComment = async (req, res, next) => {
         comment.numberOfLikes += 1;
         comment.likes.push(req.user.id);
       } else {
+        //n
         comment.numberOfLikes -= 1;
         comment.likes.splice(userIndexInLikes, 1);
       }
@@ -80,6 +81,7 @@ const likeComment = async (req, res, next) => {
     if (type == "l" && action == "-") {
       const userIndex = comment.likes.indexOf(req.user.id);
       if (userIndex === -1) {
+        //n
         comment.numberOfLikes += 1;
         comment.likes.push(req.user.id);
       } else {
@@ -93,6 +95,7 @@ const likeComment = async (req, res, next) => {
         comment.numberOfDislikes += 1;
         comment.dislikes.push(req.user.id);
       } else {
+        //n
         comment.numberOfDislikes -= 1;
         comment.dislikes.splice(userIndexInDislikes, 1);
       }
@@ -105,6 +108,7 @@ const likeComment = async (req, res, next) => {
     if (type == "d" && action == "-") {
       const userIndexInDislikes = comment.dislikes.indexOf(req.user.id);
       if (userIndexInDislikes === -1) {
+        //n
         comment.numberOfDislikes += 1;
         comment.dislikes.push(req.user.id);
       } else {

@@ -16,5 +16,6 @@ first version is deployed to
 https://mern-blog-2-khaki.vercel.app/
 
 https://github.com/aleksandr04635/mern-blog-3
-
+deployed to
+https://oleksandrs-mern-blog.vercel.app/
 

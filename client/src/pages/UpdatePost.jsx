@@ -37,7 +37,6 @@ export default function UpdatePost() {
   const [loading, setLoading] = useState(true);
 
   const { postId } = useParams();
-
   const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
 
@@ -277,7 +276,7 @@ export default function UpdatePost() {
               onChange={(e) =>
                 setFormData({ ...formData, title: e.target.value })
               }
-              value={formData.title}
+              value={formData.title || ""}
               color={formData.title?.length > 5 ? "success" : "failure"}
               helperText={
                 formData.title?.length > 5 ? "" : "minimum 5 characters"
@@ -318,7 +317,7 @@ export default function UpdatePost() {
           <h3 className="p-1">Main content (necessary):</h3>
           <ReactQuill
             theme="snow"
-            value={formData.content}
+            value={formData.content || ""}
             placeholder="Write something..."
             className="h-72 mb-12"
             required

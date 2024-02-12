@@ -31,14 +31,31 @@ const create = async (req, res, next) => {
 
 const getposts = async (req, res, next) => {
   connectDB();
+  const pageSize = 2; //by default takes 9
   //console.log("req.query from getposts:", req.query);
   try {
     const startIndex = parseInt(req.query.startIndex) || 0; //by default starts from 0
-    const limit = parseInt(req.query.limit) || 9; //by default takes 9
+    const limit = parseInt(req.query.limit) || pageSize; //by default takes 9
     const sortDirection = req.query.order === "asc" ? 1 : -1;
-    /*     if(req.query.tag){const query = Post.where({ tag.slug: req.query.tag});
-    const posts = await query.find();} */
+    const page = parseInt(req.query.page) || 1; //by first page
 
+    const totalPosts = await Post.find({
+      ...(req.query.userId && { userId: req.query.userId }), // if query has userId then search for { userId: req.query.userId }
+      ...(req.query.slug && { slug: req.query.slug }),
+      ...(req.query.postId && { _id: req.query.postId }), // if query has postId then search for specific _id in the DB
+      ...(req.query.tag && { "tags.slug": req.query.tag }), // my, searches by tags.slug
+      // if query has searchTerm
+      ...(req.query.searchTerm && {
+        $or: [
+          //searches in title or in content for req.query.searchTerm
+          { title: { $regex: req.query.searchTerm, $options: "i" } },
+          { content: { $regex: req.query.searchTerm, $options: "i" } },
+        ],
+      }),
+    }).countDocuments();
+
+    const totalPages = Math.ceil(totalPosts / pageSize);
+    //console.log("totalPages from getposts:", totalPages);
     const posts = await Post.find({
       ...(req.query.userId && { userId: req.query.userId }), // if query has userId then search for { userId: req.query.userId }
       ...(req.query.slug && { slug: req.query.slug }),
@@ -55,11 +72,32 @@ const getposts = async (req, res, next) => {
     })
       .sort({ createdAt: sortDirection })
       //.sort({ updatedAt: sortDirection })
-      .skip(startIndex)
-      .limit(limit)
-      .populate("userId", ["username", "_id", "profilePicture"]);
+      .populate("userId", ["username", "_id", "profilePicture"])
+      .skip(
+        req.query.hasOwnProperty("page")
+          ? page == totalPages
+            ? 0
+            : (totalPages - 1 - page) * pageSize + (totalPosts % pageSize)
+          : startIndex
+      )
+      //.skip(        req.query.hasOwnProperty("page") ? (page - 1) * pageSize : startIndex      ) //CHECK
+      .limit(
+        req.query.hasOwnProperty("page")
+          ? page == totalPages
+            ? totalPosts % pageSize
+            : pageSize
+          : limit
+      );
+    //console.log("allPosts: ", allPostsq);
+    //const totalNumber = await allPostsq.countDocuments();
+    //console.log("totalNumber: ", totalNumber);
+    // const posts = await allPostsq;
+
+    //const totalNumber = await allPostsq.countDocuments();
+    //console.log("totalNumber: ", totalNumber);
     //console.log("posts from getposts: ", posts);
-    const totalPosts = await Post.countDocuments(); // posts or Post?
+
+    //const totalPosts = await Post.countDocuments(); // posts or Post?
 
     const now = new Date();
     const oneMonthAgo = new Date(
