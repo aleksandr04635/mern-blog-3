@@ -32,7 +32,7 @@ const create = async (req, res, next) => {
 const getposts = async (req, res, next) => {
   connectDB();
   const pageSize = 2; //by default takes 9
-  //console.log("req.query from getposts:", req.query);
+  console.log("req.query from getposts:", req.query);
   try {
     const startIndex = parseInt(req.query.startIndex) || 0; //by default starts from 0
     const limit = parseInt(req.query.limit) || pageSize; //by default takes 9
@@ -54,8 +54,25 @@ const getposts = async (req, res, next) => {
       }),
     }).countDocuments();
 
+    console.log(
+      " req.query.hasOwnProperty('page') from getposts:",
+      req.query.hasOwnProperty("page")
+    );
     const totalPages = Math.ceil(totalPosts / pageSize);
-    //console.log("totalPages from getposts:", totalPages);
+    console.log("totalPages from getposts:", totalPages);
+    const skip = req.query.hasOwnProperty("page")
+      ? page == totalPages
+        ? 0
+        : (totalPages - 1 - page) * pageSize +
+          (totalPosts % pageSize || pageSize)
+      : startIndex;
+    console.log("skip from getposts:", skip);
+    const lim = req.query.hasOwnProperty("page")
+      ? page == totalPages
+        ? totalPosts % pageSize || pageSize
+        : pageSize
+      : limit;
+    console.log("lim from getposts:", lim);
     const posts = await Post.find({
       ...(req.query.userId && { userId: req.query.userId }), // if query has userId then search for { userId: req.query.userId }
       ...(req.query.slug && { slug: req.query.slug }),
@@ -73,21 +90,9 @@ const getposts = async (req, res, next) => {
       .sort({ createdAt: sortDirection })
       //.sort({ updatedAt: sortDirection })
       .populate("userId", ["username", "_id", "profilePicture"])
-      .skip(
-        req.query.hasOwnProperty("page")
-          ? page == totalPages
-            ? 0
-            : (totalPages - 1 - page) * pageSize + (totalPosts % pageSize)
-          : startIndex
-      )
+      .skip(skip)
       //.skip(        req.query.hasOwnProperty("page") ? (page - 1) * pageSize : startIndex      ) //CHECK
-      .limit(
-        req.query.hasOwnProperty("page")
-          ? page == totalPages
-            ? totalPosts % pageSize
-            : pageSize
-          : limit
-      );
+      .limit(lim);
     //console.log("allPosts: ", allPostsq);
     //const totalNumber = await allPostsq.countDocuments();
     //console.log("totalNumber: ", totalNumber);
