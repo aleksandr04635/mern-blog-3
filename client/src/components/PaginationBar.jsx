@@ -31,10 +31,12 @@ export default function PaginationBar({ currentPage, totalPages }) {
     let searchQuery = urlParams.toString();
     numberedPageItems.push(
       +currentPage === page ? (
-        <div className={cName(page)}>{page}</div>
+        <div key={page} className={cName(page)}>
+          {page}
+        </div>
       ) : (
-        <div className={cName(page)}>
-          <Link to={`/search?${searchQuery}`} key={page} className="">
+        <div key={page} className={cName(page)}>
+          <Link to={`/search?${searchQuery}`} className="">
             {page}
           </Link>
         </div>

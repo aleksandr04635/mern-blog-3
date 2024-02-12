@@ -31,13 +31,13 @@ const create = async (req, res, next) => {
 
 const getposts = async (req, res, next) => {
   connectDB();
-  const pageSize = 2; //by default takes 9
   console.log("req.query from getposts:", req.query);
   try {
-    const startIndex = parseInt(req.query.startIndex) || 0; //by default starts from 0
+    const pageSize = parseInt(req.query.pageSize) || 2; //by default takes 9
     const limit = parseInt(req.query.limit) || pageSize; //by default takes 9
     const sortDirection = req.query.order === "asc" ? 1 : -1;
     const page = parseInt(req.query.page) || 1; //by first page
+    const startIndex = parseInt(req.query.startIndex) || 0; //by default starts from 0
 
     const totalPosts = await Post.find({
       ...(req.query.userId && { userId: req.query.userId }), // if query has userId then search for { userId: req.query.userId }
@@ -53,26 +53,46 @@ const getposts = async (req, res, next) => {
         ],
       }),
     }).countDocuments();
+    console.log("totalPosts from getposts:", totalPosts);
 
-    console.log(
+    console.log("!+req.query.page from getposts:", !+req.query.page);
+    /*  console.log(
       " req.query.hasOwnProperty('page') from getposts:",
       req.query.hasOwnProperty("page")
-    );
+    ); */
+    if (!req.query.hasOwnProperty("page") || !+req.query.page) {
+      console.log("from getposts send only totalPosts:", totalPosts);
+      res.status(200).json({ totalPosts, page: 0 });
+      return;
+    }
+
     const totalPages = Math.ceil(totalPosts / pageSize);
     console.log("totalPages from getposts:", totalPages);
-    const skip = req.query.hasOwnProperty("page")
-      ? page == totalPages
-        ? 0
-        : (totalPages - 1 - page) * pageSize +
-          (totalPosts % pageSize || pageSize)
-      : startIndex;
-    console.log("skip from getposts:", skip);
-    const lim = req.query.hasOwnProperty("page")
-      ? page == totalPages
-        ? totalPosts % pageSize || pageSize
-        : pageSize
-      : limit;
-    console.log("lim from getposts:", lim);
+    if (page > totalPages) {
+      return next(
+        errorHandler(
+          400,
+          "The page number is set larger than the total number of pages"
+        )
+      );
+    }
+
+    const skip =
+      req.query.hasOwnProperty("page") || !+req.query.page
+        ? page == totalPages
+          ? 0
+          : (totalPages - 1 - page) * pageSize +
+            (totalPosts % pageSize || pageSize)
+        : startIndex;
+    //console.log("skip from getposts:", skip);
+    const lim =
+      req.query.hasOwnProperty("page") || !+req.query.page
+        ? page == totalPages
+          ? totalPosts % pageSize || pageSize
+          : pageSize
+        : limit;
+    //console.log("lim from getposts:", lim);
+
     const posts = await Post.find({
       ...(req.query.userId && { userId: req.query.userId }), // if query has userId then search for { userId: req.query.userId }
       ...(req.query.slug && { slug: req.query.slug }),
@@ -88,23 +108,15 @@ const getposts = async (req, res, next) => {
       }),
     })
       .sort({ createdAt: sortDirection })
-      //.sort({ updatedAt: sortDirection })
       .populate("userId", ["username", "_id", "profilePicture"])
       .skip(skip)
-      //.skip(        req.query.hasOwnProperty("page") ? (page - 1) * pageSize : startIndex      ) //CHECK
+      //.skip(        req.query.hasOwnProperty("page") ? (page - 1) * pageSize : startIndex      ) //old
       .limit(lim);
-    //console.log("allPosts: ", allPostsq);
-    //const totalNumber = await allPostsq.countDocuments();
-    //console.log("totalNumber: ", totalNumber);
-    // const posts = await allPostsq;
 
-    //const totalNumber = await allPostsq.countDocuments();
-    //console.log("totalNumber: ", totalNumber);
     //console.log("posts from getposts: ", posts);
-
     //const totalPosts = await Post.countDocuments(); // posts or Post?
 
-    const now = new Date();
+    /*     const now = new Date();
     const oneMonthAgo = new Date(
       now.getFullYear(),
       now.getMonth() - 1,
@@ -112,13 +124,14 @@ const getposts = async (req, res, next) => {
     );
     const lastMonthPosts = await Post.countDocuments({
       createdAt: { $gte: oneMonthAgo },
-    });
-
-    res.status(200).json({
+    }); 
+        res.status(200).json({
       posts,
       totalPosts,
-      lastMonthPosts,
-    });
+   lastMonthPosts,
+    });*/
+
+    res.status(200).json({ posts, totalPosts, page, skip, limit, lim });
   } catch (error) {
     next(error);
   }

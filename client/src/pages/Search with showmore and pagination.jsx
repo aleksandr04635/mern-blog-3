@@ -5,104 +5,76 @@ import PostCard from "../components/PostCard";
 import PaginationBar from "../components/PaginationBar";
 
 export default function Search() {
-  //const pageSize = 2;
+  const pageSize = 2;
   const [sidebarData, setSidebarData] = useState({
     searchTerm: "",
     sort: "desc",
-    pageSize: 2,
   });
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [showMore, setShowMore] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
   const [totalPosts, setTotalPosts] = useState(0);
-  const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(2);
-  console.log("totalPosts in state: ", totalPosts);
-  console.log("page in state: ", page);
-  console.log("sidebarData: ", sidebarData);
+  const [page, setPage] = useState(1);
+  console.log("page: ", page);
+  //console.log(sidebarData);
   let totalPages = Math.ceil(totalPosts / pageSize);
 
   useEffect(() => {
-    console.log("USEEFFECT RUN. location.search: ", location.search);
     const urlParams = new URLSearchParams(location.search);
     const searchTermFromUrl = urlParams.get("searchTerm");
     const sortFromUrl = urlParams.get("sort");
-    let pageSizeFromUrl = urlParams.get("pageSize");
+    const pageFromUrl = urlParams.get("page");
+    if (pageFromUrl) {
+      console.log("page in URL: ", pageFromUrl);
+      setPage(pageFromUrl);
+    }
+    console.log("pageFromUrl: ", pageFromUrl);
+    console.log("location.search: ", location.search);
 
-    if (searchTermFromUrl || sortFromUrl || pageSizeFromUrl) {
-      console.log(
-        "Setting setSidebarData from URL: ",
-        searchTermFromUrl,
-        sortFromUrl,
-        pageSizeFromUrl
-      );
+    if (searchTermFromUrl || sortFromUrl) {
       setSidebarData({
         ...sidebarData,
         searchTerm: searchTermFromUrl,
         sort: sortFromUrl,
-        pageSize: pageSizeFromUrl,
       });
-    }
-
-    if (pageSizeFromUrl) {
-      console.log("Setting pageSize from URL: ", pageSizeFromUrl);
-      setPageSize(pageSizeFromUrl);
-    } else {
-      console.log("no pageSizeFromUrl: ");
-    }
-
-    let pageFromUrl = urlParams.get("page");
-    if (pageFromUrl) {
-      console.log("page exists in URL. Setting page from URL: ", pageFromUrl);
-      setPage(pageFromUrl);
-    } else {
-      console.log("no page in URL: ");
     }
 
     const fetchPosts = async () => {
       setLoading(true);
-      let urlParams = new URLSearchParams(location.search);
-      let searchQuery = urlParams.toString();
+      const searchQuery = urlParams.toString();
       console.log("fetched: ", `/api/post/getposts?${searchQuery}`);
       const res = await fetch(`/api/post/getposts?${searchQuery}`);
       if (!res.ok) {
         setLoading(false);
-
         //add here error setting
-        const rese = await res.json();
-        console.log(" rese fetched: ", rese);
         return;
       }
       if (res.ok) {
         const data = await res.json();
         console.log(" data fetched: ", data);
-        let urlParams = new URLSearchParams(location.search);
-        let pageFromUrl = urlParams.get("page");
-        //if (pageFromUrl) {
-        if (data.page) {
-          console.log("  page exists in data: ", data.page);
-          console.log("SETTING posts and totalposts from data: ");
+        if (pageFromUrl) {
           setPosts(data.posts);
           setTotalPosts(data.totalPosts);
           setLoading(false);
         } else {
-          // console.log(" no page in URL upon fetch: ", data);
-          console.log(" no page exists in data: ", data);
-          let pageSizeFromUrl = urlParams.get("pageSize");
-          console.log(
-            " pageSizeFromUrl then setting totalPages for searchQuery: ",
-            //  pageSize
-            pageSizeFromUrl
-          );
-          //let totalPages2 = Math.ceil(data.totalPosts / pageSize);
-          let totalPages2 = Math.ceil(data.totalPosts / pageSizeFromUrl);
-          const urlParams2 = new URLSearchParams(location.search);
-          urlParams2.set("page", totalPages2);
-          let searchQuery3 = urlParams2.toString();
-          console.log(" setting searchQuery and navigate: ", searchQuery3);
-          navigate(`/search?${searchQuery3}`);
+          totalPages = Math.ceil(data.totalPosts / pageSize);
+          setPage(totalPages);
+          const urlParams = new URLSearchParams(location.search);
+          urlParams.set("page", totalPages);
+          const searchQuery = urlParams.toString();
+          navigate(`/search?${searchQuery}`);
+          setPosts(data.posts);
+          setTotalPosts(data.totalPosts);
+          setLoading(false);
+        }
+        // if (data.posts.length === 9) {//old
+        if (data.posts.length === pageSize) {
+          setShowMore(true);
+        } else {
+          setShowMore(false);
         }
       }
     };
@@ -117,10 +89,6 @@ export default function Search() {
       const order = e.target.value || "desc";
       setSidebarData({ ...sidebarData, sort: order });
     }
-    if (e.target.id === "pageSize") {
-      const pageSize1 = +e.target.value || 2;
-      setSidebarData({ ...sidebarData, pageSize: pageSize1 });
-    }
   };
 
   const handleSubmit = (e) => {
@@ -128,11 +96,30 @@ export default function Search() {
     const urlParams = new URLSearchParams(location.search);
     urlParams.set("searchTerm", sidebarData.searchTerm);
     urlParams.set("sort", sidebarData.sort);
-    urlParams.set("pageSize", sidebarData.pageSize);
-    urlParams.set("page", "");
-    let searchQuery2 = urlParams.toString();
-    console.log("APPLIED QUERRY FROM FORM: ", searchQuery2);
-    navigate(`/search?${searchQuery2}`);
+    const searchQuery = urlParams.toString();
+    navigate(`/search?${searchQuery}`);
+  };
+
+  const handleShowMore = async () => {
+    const numberOfPosts = posts.length;
+    const startIndex = numberOfPosts;
+    const urlParams = new URLSearchParams(location.search);
+    urlParams.set("startIndex", startIndex);
+    const searchQuery = urlParams.toString();
+    const res = await fetch(`/api/post/getposts?${searchQuery}`);
+    if (!res.ok) {
+      return;
+    }
+    if (res.ok) {
+      const data = await res.json();
+      setPosts([...posts, ...data.posts]);
+      //if (data.posts.length === 9) {//old
+      if (data.posts.length === pageSize) {
+        setShowMore(true);
+      } else {
+        setShowMore(false);
+      }
+    }
   };
 
   return (
@@ -158,17 +145,6 @@ export default function Search() {
               <option value="asc">Oldest</option>
             </Select>
           </div>
-          <div className="flex items-center gap-2">
-            <label className="font-semibold">pageSize:</label>
-            <Select
-              onChange={handleChange}
-              value={sidebarData.pageSize}
-              id="pageSize"
-            >
-              <option value="2">2</option>
-              <option value="3">3</option>
-            </Select>
-          </div>
           <Button type="submit" outline gradientDuoTone="purpleToBlue">
             Apply Filters
           </Button>
@@ -178,16 +154,13 @@ export default function Search() {
         <h1 className="text-3xl font-semibold sm:border-b border-gray-500 p-3 mt-5 ">
           Posts results:
         </h1>
-        <div className="p-2">
-          <p>Total number of posts: {totalPosts}</p>
-          <p>PageSize: {pageSize}</p>
-          <p>Total number of pages: {totalPages}</p>
-          <p>Page: {page}</p>
-          {totalPages > 1 && (
-            <PaginationBar currentPage={page} totalPages={totalPages} />
-          )}
-          <PaginationBar currentPage={15} totalPages={15} />
-        </div>
+        <p>Total number of posts: {totalPosts}</p>
+        <p>Total number of pages: {totalPages}</p>
+        <p>Page: {page}</p>
+        {totalPages > 1 && (
+          <PaginationBar currentPage={page} totalPages={totalPages} />
+        )}
+        <PaginationBar currentPage={15} totalPages={15} />
         <div className="p-7 flex flex-wrap gap-4">
           {!loading && posts.length === 0 && (
             <p className="text-xl text-gray-500">No posts found.</p>
@@ -201,6 +174,14 @@ export default function Search() {
           {!loading &&
             posts &&
             posts.map((post) => <PostCard key={post._id} post={post} />)}
+          {showMore && (
+            <button
+              onClick={handleShowMore}
+              className="text-teal-500 text-lg hover:underline p-7 w-full"
+            >
+              Show More
+            </button>
+          )}
         </div>
       </div>
     </div>
