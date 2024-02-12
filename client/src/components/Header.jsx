@@ -52,7 +52,7 @@ export default function Header() {
   //console.log(" currentUser from header: ", currentUser);
 
   return (
-    <Navbar className="m-auto    rounded">
+    <Navbar className="sm:border-b border-gray-500">
       <div className="flex flex-col w-full">
         <div className="flex w-full justify-between ">
           {/* <Navbar className="m-auto max-w-6xl max-w-[1200px]  border border-gray-400  rounded"></Navbar> */}

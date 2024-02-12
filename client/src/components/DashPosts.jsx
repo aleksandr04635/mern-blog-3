@@ -20,11 +20,13 @@ export default function DashPosts() {
         //console.log("currentUser._id: ", currentUser._id);
         const res = await fetch(`/api/post/getposts?userId=${currentUser._id}`); //limits to 9 posts by default
         const data = await res.json();
-        //console.log(" data: ", data);
+        console.log(" data: ", data);
         if (res.ok) {
-          setUserPosts(data.posts);
-          if (data.posts.length < 9) {
-            setShowMore(false);
+          if (data.posts) {
+            setUserPosts(data.posts);
+            if (data.posts.length < 9) {
+              setShowMore(false);
+            }
           }
         }
       } catch (error) {

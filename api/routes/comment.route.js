@@ -1,5 +1,5 @@
 import express from "express";
-import { connectDB, verifyToken } from "../utils/utils.js";
+import { connectDB, verifyToken, errorHandler } from "../utils/utils.js";
 
 import Comment from "../models/comment.model.js";
 
@@ -130,7 +130,7 @@ const editComment = async (req, res, next) => {
     if (!comment) {
       return next(errorHandler(404, "Comment not found"));
     }
-    if (comment.userId !== req.user.id && !req.user.isAdmin) {
+    if (comment.userId._id.toString() !== req.user.id && !req.user.isAdmin) {
       return next(
         errorHandler(403, "You are not allowed to edit this comment")
       );
@@ -156,7 +156,7 @@ const deleteComment = async (req, res, next) => {
     if (!comment) {
       return next(errorHandler(404, "Comment not found"));
     }
-    if (comment.userId !== req.user.id && !req.user.isAdmin) {
+    if (comment.userId._id.toString() !== req.user.id && !req.user.isAdmin) {
       return next(
         errorHandler(403, "You are not allowed to delete this comment")
       );

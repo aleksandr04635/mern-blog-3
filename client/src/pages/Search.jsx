@@ -27,11 +27,11 @@ export default function Search() {
   useEffect(() => {
     console.log("USEEFFECT RUN. location.search: ", location.search);
     const urlParams = new URLSearchParams(location.search);
-    const searchTermFromUrl = urlParams.get("searchTerm");
-    const sortFromUrl = urlParams.get("sort");
+    let searchTermFromUrl = urlParams.get("searchTerm");
+    let sortFromUrl = urlParams.get("sort");
     let pageSizeFromUrl = urlParams.get("pageSize");
 
-    if (searchTermFromUrl || sortFromUrl || pageSizeFromUrl) {
+    /*     if (searchTermFromUrl || sortFromUrl || pageSizeFromUrl) {
       console.log(
         "Setting setSidebarData from URL: ",
         searchTermFromUrl,
@@ -44,13 +44,37 @@ export default function Search() {
         sort: sortFromUrl,
         pageSize: pageSizeFromUrl,
       });
-    }
+    } */
 
     if (pageSizeFromUrl) {
       console.log("Setting pageSize from URL: ", pageSizeFromUrl);
+      setSidebarData({
+        ...sidebarData,
+        pageSize: pageSizeFromUrl,
+      });
       setPageSize(pageSizeFromUrl);
     } else {
       console.log("no pageSizeFromUrl: ");
+    }
+
+    if (searchTermFromUrl) {
+      console.log("Setting searchTermFromUrl from URL: ", searchTermFromUrl);
+      setSidebarData({
+        ...sidebarData,
+        searchTerm: searchTermFromUrl,
+      });
+    } else {
+      console.log("no searchTermFromUrl: ");
+    }
+
+    if (sortFromUrl) {
+      console.log("Setting sortFromUrl from URL: ", sortFromUrl);
+      setSidebarData({
+        ...sidebarData,
+        sort: sortFromUrl,
+      });
+    } else {
+      console.log("no sortFromUrl: ");
     }
 
     let pageFromUrl = urlParams.get("page");
@@ -96,6 +120,10 @@ export default function Search() {
             //  pageSize
             pageSizeFromUrl
           );
+          if (!pageSizeFromUrl) {
+            console.log("pageSizeFromUr doesn't exist, so I use 2 instead: ");
+            pageSizeFromUrl = 2;
+          }
           //let totalPages2 = Math.ceil(data.totalPosts / pageSize);
           let totalPages2 = Math.ceil(data.totalPosts / pageSizeFromUrl);
           const urlParams2 = new URLSearchParams(location.search);
@@ -153,16 +181,20 @@ export default function Search() {
           </div>
           <div className="flex items-center gap-2">
             <label className="font-semibold">Sort:</label>
-            <Select onChange={handleChange} value={sidebarData.sort} id="sort">
-              <option value="desc">Latest</option>
-              <option value="asc">Oldest</option>
+            <Select
+              onChange={handleChange}
+              value={sidebarData.sort || "desc"}
+              id="sort"
+            >
+              <option value="desc">Latest on top</option>
+              <option value="asc">Oldest on top</option>
             </Select>
           </div>
           <div className="flex items-center gap-2">
             <label className="font-semibold">pageSize:</label>
             <Select
               onChange={handleChange}
-              value={sidebarData.pageSize}
+              value={sidebarData.pageSize || 2}
               id="pageSize"
             >
               <option value="2">2</option>
@@ -175,9 +207,7 @@ export default function Search() {
         </form>
       </div>
       <div className="w-full">
-        <h1 className="text-3xl font-semibold sm:border-b border-gray-500 p-3 mt-5 ">
-          Posts results:
-        </h1>
+        <h3 className="text-xl font-semibold  p-2 mt-2 ">Querry results:</h3>
         <div className="p-2">
           <p>Total number of posts: {totalPosts}</p>
           <p>PageSize: {pageSize}</p>

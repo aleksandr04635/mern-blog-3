@@ -77,8 +77,12 @@ const getposts = async (req, res, next) => {
     }).countDocuments();
     console.log("totalPosts from getposts:", totalPosts);
 
-    console.log("!!req.query.page from getposts:", !!req.query.page);
-    if (!req.query.page) {
+    console.log("!+req.query.page from getposts:", !+req.query.page);
+    /*  console.log(
+      " req.query.hasOwnProperty('page') from getposts:",
+      req.query.hasOwnProperty("page")
+    ); */
+    if (!req.query.hasOwnProperty("page") || !+req.query.page) {
       console.log("from getposts send only totalPosts:", totalPosts);
       res.status(200).json({ totalPosts, page: 0 });
       return;
@@ -86,28 +90,29 @@ const getposts = async (req, res, next) => {
 
     const totalPages = Math.ceil(totalPosts / pageSize);
     console.log("totalPages from getposts:", totalPages);
-    if (page > totalPages || page < 0) {
+    if (page > totalPages) {
       return next(
         errorHandler(
           400,
-          `The page number${page} isn't in the correct range`
-          //"The page number is set larger than the total number of pages"
+          "The page number is set larger than the total number of pages"
         )
       );
     }
 
-    const skip = !!req.query.page
-      ? page == totalPages
-        ? 0
-        : (totalPages - 1 - page) * pageSize +
-          (totalPosts % pageSize || pageSize)
-      : startIndex;
+    const skip =
+      req.query.hasOwnProperty("page") || !+req.query.page
+        ? page == totalPages
+          ? 0
+          : (totalPages - 1 - page) * pageSize +
+            (totalPosts % pageSize || pageSize)
+        : startIndex;
     //console.log("skip from getposts:", skip);
-    const lim = !!req.query.page
-      ? page == totalPages
-        ? totalPosts % pageSize || pageSize
-        : pageSize
-      : limit;
+    const lim =
+      req.query.hasOwnProperty("page") || !+req.query.page
+        ? page == totalPages
+          ? totalPosts % pageSize || pageSize
+          : pageSize
+        : limit;
     //console.log("lim from getposts:", lim);
 
     const posts = await Post.find({

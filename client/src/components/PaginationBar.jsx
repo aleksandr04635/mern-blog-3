@@ -16,7 +16,7 @@ export default function PaginationBar({ currentPage, totalPages }) {
 
   const cName = (n) => {
     let cn = "A" + n;
-    if (n == +currentPage) {
+    if (n == currentPage) {
       cn = "A";
     }
 
@@ -30,7 +30,7 @@ export default function PaginationBar({ currentPage, totalPages }) {
     urlParams.set("page", page);
     let searchQuery = urlParams.toString();
     numberedPageItems.push(
-      +currentPage === page ? (
+      currentPage === page ? (
         <div key={page} className={cName(page)}>
           {page}
         </div>

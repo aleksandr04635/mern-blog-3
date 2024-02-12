@@ -33,7 +33,7 @@ export default function CreatePost() {
   const [tags, setTags] = useState([]); //array of objects
 
   const navigate = useNavigate();
-
+  console.log("formData.intro?.length :", formData.intro?.length);
   //console.log("tags :", tags);
   const deleteTag = (i) => {
     //console.log("tags before:", tags);
@@ -335,7 +335,7 @@ export default function CreatePost() {
             }
           />
           <p className="text-gray-500 p-1 text-xs">
-            {150 - formData.title?.length} characters remaining
+            {150 - (formData.title?.length ?? 0)} characters remaining
           </p>
         </div>
         {/* intro */}
@@ -348,7 +348,7 @@ export default function CreatePost() {
             className="p-1 text-base"
           />
           <Textarea
-            placeholder="Add a comment..."
+            placeholder="Write an introduction"
             maxLength="300"
             id="intro"
             color={formData.intro?.length > 5 ? "success" : "failure"}
@@ -362,7 +362,7 @@ export default function CreatePost() {
             }
           />
           <p className="text-gray-500 text-xs">
-            {300 - formData.intro?.length} characters remaining
+            {300 - (formData.intro?.length ?? 0)} characters remaining
           </p>
         </div>
         {/* Text */}
@@ -370,7 +370,7 @@ export default function CreatePost() {
         <ReactQuill
           theme="snow"
           value={formData.content || ""}
-          placeholder="Write something..."
+          placeholder="Write the main text"
           className="h-72 mb-12"
           required
           onChange={(value) => {

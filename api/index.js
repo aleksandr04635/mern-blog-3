@@ -10,6 +10,7 @@ import path from "path";
 import dotenv from "dotenv";
 dotenv.config();
 
+//console.log(!!undefined);
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URL);
