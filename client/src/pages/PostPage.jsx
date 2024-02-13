@@ -156,7 +156,7 @@ export default function PostPage() {
           <Link
             to={
               currentUser && post.userId._id == currentUser._id
-                ? "/dashboard?tab=posts"
+                ? `/dashboard?tab=posts&userId=${currentUser._id}`
                 : `/search?userId=${post.userId._id}`
             }
             className="text-gray-500 "

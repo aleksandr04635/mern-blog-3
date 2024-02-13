@@ -30,7 +30,8 @@ export default function CommentSection({ postId }) {
         const res = await fetch(`/api/comment/getPostComments/${postId}`);
         if (res.ok) {
           const data = await res.json();
-          setComments(data);
+          console.log("fetched date from CommentSection.jsx:", data);
+          setComments(data.com2);
           setCloader(false);
         }
       } catch (error) {

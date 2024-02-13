@@ -1,12 +1,25 @@
-import { Button, Select, TextInput, Spinner, Alert } from "flowbite-react";
+import {
+  Button,
+  Select,
+  TextInput,
+  Modal,
+  Spinner,
+  Alert,
+} from "flowbite-react";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import PostCard from "./PostCard";
 import PaginationBar from "./PaginationBar";
+import { useSelector } from "react-redux";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
 
 export default function PostList() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { currentUser } = useSelector((state) => state.user);
+
+  const [showModal, setShowModal] = useState(false);
+  const [postToDelete, setPostToDelete] = useState(null);
 
   const [errorMessage, setErrorMessage] = useState(null);
   const [posts, setPosts] = useState([]);
@@ -22,60 +35,65 @@ export default function PostList() {
   console.log("pageSize in state: ", pageSize);
   console.log("totalPages in state: ", totalPages);
 
-  useEffect(() => {
-    console.log("USEEFFECT RUN in PostList components. location: ", location);
-    const urlParams = new URLSearchParams(location.search);
-    const pageSizeFromUrl = urlParams.get("pageSize");
-    if (pageSizeFromUrl) {
-      console.log("Setting pageSize from URL: ", pageSizeFromUrl);
-      setPageSize(pageSizeFromUrl);
+  const fetchPostsByQuerryString = async (q) => {
+    setLoading(true);
+    console.log("fetched by function: ", `/api/post/getposts?${q}`);
+    const res = await fetch(`/api/post/getposts?${q}`);
+    if (!res.ok) {
+      setLoading(false);
+      const rese = await res.json();
+      console.log("error of fetching: ", rese);
+      setErrorMessage(rese.message);
+      return;
     }
+    if (res.ok) {
+      setLoading(false);
+      setErrorMessage(null);
+      const data = await res.json();
+      console.log(" data fetched: ", data);
+      console.log("checking if page exists in location.search ");
+      const urlParams5 = new URLSearchParams(location.search);
+      let pageFromUrl = parseInt(urlParams5.get("page"));
+      console.log("pageFromUrl: ", pageFromUrl);
+      if (pageFromUrl && pageFromUrl == data.page) {
+        console.log(
+          "page exists in URL and is equal to that in data. SETTING posts and totalposts from data"
+        );
+        setPosts(data.posts);
+        setTotalPosts(data.totalPosts);
+        setPageSize(data.pageSize);
+        setTotalPages(data.totalPages);
+        setPage(data.page);
+      } else {
+        console.log("no page exists in URL or is not equal to that in data. ");
+        const urlParams4 = new URLSearchParams(location.search);
+        urlParams4.set("page", data.page);
+        let searchQuery3 = urlParams4.toString();
+        console.log(
+          " setting searchQuery and navigate to: ",
+          `${location.pathname}?${searchQuery3}`
+        );
+        navigate(`${location.pathname}?${searchQuery3}`);
+      }
+    }
+  };
 
+  useEffect(() => {
     const fetchPosts = async () => {
-      setLoading(true);
+      console.log("USEEFFECT RUN in PostList components. location: ", location);
+      const urlParams = new URLSearchParams(location.search);
+      const pageSizeFromUrl = urlParams.get("pageSize");
+      if (pageSizeFromUrl) {
+        console.log("Setting pageSize from URL: ", pageSizeFromUrl);
+        setPageSize(pageSizeFromUrl);
+      }
       let urlParams2 = new URLSearchParams(location.search);
       let searchQuery = urlParams2.toString();
-      console.log("fetched: ", `/api/post/getposts?${searchQuery}`);
-      const res = await fetch(`/api/post/getposts?${searchQuery}`);
-      if (!res.ok) {
-        setLoading(false);
-        const rese = await res.json();
-        console.log("error of fetching: ", rese);
-        setErrorMessage(rese.message);
-        return;
-      }
-      if (res.ok) {
-        setLoading(false);
-        setErrorMessage(null);
-        const data = await res.json();
-        console.log(" data fetched: ", data);
-        console.log("checking if page exists in location.search ");
-        const urlParams5 = new URLSearchParams(location.search);
-        let pageFromUrl = parseInt(urlParams5.get("page"));
-        console.log("pageFromUrl: ", pageFromUrl);
-        if (pageFromUrl && pageFromUrl == data.page) {
-          console.log(
-            "page exists in URL and is equal to that in data. SETTING posts and totalposts from data"
-          );
-          setPosts(data.posts);
-          setTotalPosts(data.totalPosts);
-          setPageSize(data.pageSize);
-          setTotalPages(data.totalPages);
-          setPage(data.page);
-        } else {
-          console.log(
-            "no page exists in URL or is not equal to that in data. "
-          );
-          const urlParams4 = new URLSearchParams(location.search);
-          urlParams4.set("page", data.page);
-          let searchQuery3 = urlParams4.toString();
-          console.log(
-            " setting searchQuery and navigate to: ",
-            `${location.pathname}?${searchQuery3}`
-          );
-          navigate(`${location.pathname}?${searchQuery3}`);
-        }
-      }
+      console.log(
+        "given command to fetch: ",
+        `/api/post/getposts?${searchQuery}`
+      );
+      fetchPostsByQuerryString(searchQuery);
     };
     fetchPosts();
   }, [location.search]);
@@ -94,23 +112,55 @@ export default function PostList() {
     navigate(`${location.pathname}?${searchQuery2}`);
   };
 
+  const handleDeletePost = async () => {
+    setShowModal(false);
+    console.log(" from PostList DELETE a post: ", postToDelete);
+    try {
+      const res = await fetch(
+        `/api/post/deletepost/${postToDelete}/${currentUser?._id}`,
+        {
+          method: "DELETE",
+        }
+      );
+      const data = await res.json();
+      if (!res.ok) {
+        setLoading(false);
+        const rese = await res.json();
+        console.log("error of fetching: ", rese);
+        setErrorMessage(rese.message);
+        return;
+      } else {
+        const newTopPage = Math.floor((totalPosts - 1) / pageSize) || 1;
+        const urlParams3 = new URLSearchParams(location.search);
+        urlParams3.set("page", newTopPage);
+        let searchQuery3 = urlParams3.toString();
+        console.log(" calling fetchPostsQ with : ", searchQuery3);
+        fetchPostsByQuerryString(searchQuery3);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   function ControlBar() {
     return (
       <div className="flex justify-between items-center gap-2">
         <PaginationBar currentPage={page} totalPages={totalPages} />
         <div className="flex items-center gap-1">
           <label className="text-sm">page size:</label>
-          <Select
+          <select
             onChange={handleChange}
             value={pageSize || import.meta.env.VITE_FIREBASE_API_KEY}
             id="pageSize"
-            className=""
+            className="px-2 py-0 border rounded-lg border-teal-500   
+            dark:bg-slate-900 dark:hover:bg-stone-700 hover:bg-stone-100 
+             "
           >
             <option value="2">2</option>
             <option value="3">3</option>
             <option value="4">4</option>
             <option value="5">5</option>
-          </Select>
+          </select>
         </div>
       </div>
     );
@@ -121,8 +171,8 @@ export default function PostList() {
       <div className="  text-lg">
         {/*         <h3 className="text-xl font-semibold  py-1  ">Querry results:</h3> */}
         <p>Total number of posts found: {totalPosts}</p>
-        <p>Page size: {pageSize}</p>
-        {/*         <p>Total number of pages: {totalPages}</p>
+        {/*  <p>Page size: {pageSize}</p>
+              <p>Total number of pages: {totalPages}</p>
         <p>Page: {page}</p> */}
         <p className="pt-1 text-justify text-sm">
           Note that the number of posts on the topmost page varies depending on
@@ -146,7 +196,16 @@ export default function PostList() {
         )}
         {!loading &&
           posts &&
-          posts.map((post) => <PostCard key={post._id} post={post} />)}
+          posts.map((post) => (
+            <PostCard
+              onDelete={(postid) => {
+                setShowModal(true);
+                setPostToDelete(postid);
+              }}
+              key={post._id}
+              post={post}
+            />
+          ))}
         <ControlBar />
       </div>
       {errorMessage && (
@@ -155,6 +214,30 @@ export default function PostList() {
           {errorMessage}
         </Alert>
       )}
+      <Modal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        popup
+        size="md"
+      >
+        <Modal.Header />
+        <Modal.Body>
+          <div className="text-center">
+            <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
+            <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-400">
+              Are you sure you want to delete this post?
+            </h3>
+            <div className="flex justify-center gap-4">
+              <Button color="failure" onClick={handleDeletePost}>
+                Delete
+              </Button>
+              <Button color="gray" onClick={() => setShowModal(false)}>
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 }

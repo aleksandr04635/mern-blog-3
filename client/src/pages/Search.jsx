@@ -9,7 +9,6 @@ export default function Search() {
   const [sidebarData, setSidebarData] = useState({
     searchTerm: "",
     sort: "desc",
-    pageSize: 2,
   });
 
   console.log("sidebarData: ", sidebarData);
@@ -20,20 +19,17 @@ export default function Search() {
     const urlParams = new URLSearchParams(location.search);
     const searchTermFromUrl = urlParams.get("searchTerm");
     const sortFromUrl = urlParams.get("sort");
-    const pageSizeFromUrl = urlParams.get("pageSize");
 
-    if (searchTermFromUrl || sortFromUrl || pageSizeFromUrl) {
+    if (searchTermFromUrl || sortFromUrl) {
       console.log(
         "Setting setSidebarData from URL: ",
         searchTermFromUrl,
-        sortFromUrl,
-        pageSizeFromUrl
+        sortFromUrl
       );
       setSidebarData({
         ...sidebarData,
         searchTerm: searchTermFromUrl,
         sort: sortFromUrl,
-        pageSize: pageSizeFromUrl,
       });
     }
 
@@ -80,10 +76,6 @@ export default function Search() {
       const order = e.target.value || "desc";
       setSidebarData({ ...sidebarData, sort: order });
     }
-    if (e.target.id === "pageSize") {
-      const pageSize1 = +e.target.value || 2;
-      setSidebarData({ ...sidebarData, pageSize: pageSize1 });
-    }
   };
 
   const handleSubmit = (e) => {
@@ -91,7 +83,6 @@ export default function Search() {
     const urlParams = new URLSearchParams(location.search);
     urlParams.set("searchTerm", sidebarData.searchTerm);
     urlParams.set("sort", sidebarData.sort);
-    urlParams.set("pageSize", sidebarData.pageSize);
     urlParams.set("page", "");
     let searchQuery2 = urlParams.toString();
     console.log("APPLIED QUERRY FROM FORM: ", searchQuery2);
@@ -100,7 +91,7 @@ export default function Search() {
 
   return (
     <div className="flex flex-col md:flex-row">
-      <div className="p-3 w-full sm:flex-none sm:w-[300px] md:border-r sm:min-h-screen border-gray-500">
+      <div className="p-3 w-full bg-slate-50 sm:flex-none sm:w-[300px] md:border-r sm:min-h-screen border-gray-500">
         <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
           <div className="flex   items-center gap-2">
             <label className="whitespace-nowrap font-semibold">
@@ -123,19 +114,6 @@ export default function Search() {
             >
               <option value="desc">Latest on top</option>
               <option value="asc">Oldest on top</option>
-            </Select>
-          </div>
-          <div className="flex items-center gap-2">
-            <label className="font-semibold">pageSize:</label>
-            <Select
-              onChange={handleChange}
-              value={sidebarData.pageSize || 2}
-              id="pageSize"
-            >
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
             </Select>
           </div>
           <Button type="submit" outline gradientDuoTone="purpleToBlue">

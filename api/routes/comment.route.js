@@ -2,6 +2,7 @@ import express from "express";
 import { connectDB, verifyToken, errorHandler } from "../utils/utils.js";
 
 import Comment from "../models/comment.model.js";
+import Post from "../models/post.model.js";
 
 const createComment = async (req, res, next) => {
   connectDB();
@@ -20,9 +21,16 @@ const createComment = async (req, res, next) => {
       userId,
     });
     //console.log("newComment : ", newComment);
-    //await newComment.save();
-    const sent = await newComment.save();
-    const sent2 = await sent.populate("userId", [
+    const nc = await newComment.save();
+    //console.log("newComment : ", nc);
+    //console.log("newComment post : ", nc.post._id.toString());
+
+    const commentedPost = await Post.findById(postId);
+    //console.log("commentedPost : ", commentedPost);
+    commentedPost.comments.push(nc._id);
+    await commentedPost.save();
+    //console.log("commentedPost2 : ", commentedPost);
+    const sent2 = await nc.populate("userId", [
       "username",
       "_id",
       "profilePicture",
@@ -45,7 +53,18 @@ const getPostComments = async (req, res, next) => {
       .sort({
         createdAt: -1,
       });
-    res.status(200).json(comments);
+
+    const commentedPost = await Post.findById(req.params.postId).populate({
+      path: "comments",
+      populate: { path: "userId", select: " -password" },
+    });
+    //  .populate("userId", ["username", "_id", "profilePicture"]);
+    console.log("commentedPost : ", commentedPost);
+
+    //console.log("commentedPost : ", commentedPost);
+    //console.log("comIndexInPosts : ", comIndexInPosts);
+    // commentedPost.comments.splice(comIndexInPosts, 1);
+    res.status(200).json({ comments, com2: commentedPost.comments });
   } catch (error) {
     next(error);
   }
@@ -161,7 +180,16 @@ const deleteComment = async (req, res, next) => {
         errorHandler(403, "You are not allowed to delete this comment")
       );
     }
-    await Comment.findByIdAndDelete(req.params.commentId);
+    await Comment.findByIdAndDelete(req.params.commentId); //old
+    const commentedPost = await Post.findById(comment.post._id.toString());
+    const comIndexInPosts = commentedPost.comments.indexOf(
+      req.params.commentId
+    );
+    //console.log("commentedPost : ", commentedPost);
+    //console.log("comIndexInPosts : ", comIndexInPosts);
+    commentedPost.comments.splice(comIndexInPosts, 1);
+    // console.log("commentedPost : ", commentedPost);
+    await commentedPost.save();
     res.status(200).json("Comment has been deleted");
   } catch (error) {
     next(error);

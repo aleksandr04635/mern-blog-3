@@ -30,9 +30,12 @@ const create = async (req, res, next) => {
 };
 
 const getposts = async (req, res, next) => {
-  connectDB();
-  console.log("req.query from getposts:", req.query);
   try {
+    connectDB();
+    if (req.headers.referer.indexOf("dashboard?tab=posts") != -1) {
+      console.log("from dashboard to getposts:");
+    }
+    console.log("req.query from getposts:", req.query);
     const sortDirection = req.query.sort === "asc" ? 1 : -1;
     const pageSize =
       parseInt(req.query.pageSize) || parseInt(process.env.DEFAULT_PAGE_SIZE);
@@ -159,9 +162,12 @@ const deletepost = async (req, res, next) => {
     return next(errorHandler(403, "You are not allowed to delete this post"));
   }
   try {
+    console.log(" deletepost: ", req.params.postId);
     await Post.findByIdAndDelete(req.params.postId);
+    console.log(" The post has been deleted");
     res.status(200).json("The post has been deleted");
   } catch (error) {
+    console.log(" The post has not been deleted - error");
     next(error);
   }
 };

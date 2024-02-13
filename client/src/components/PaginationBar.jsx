@@ -6,7 +6,11 @@ export default function PaginationBar({ currentPage, totalPages }) {
   //console.log("currentPage: ", currentPage);
   //console.log("totalPages: ", totalPages);
   if (totalPages <= 1) {
-    return <></>;
+    return (
+      <>
+        <span></span>
+      </>
+    );
   }
 
   const cName = (n) => {
@@ -15,7 +19,7 @@ export default function PaginationBar({ currentPage, totalPages }) {
       cn += " dark:bg-cyan-900 bg-cyan-50";
     }
     if (n != currentPage) {
-      cn += " dark:hover:bg-stone-700 hover:bg-stone-200 ";
+      cn += " dark:bg-slate-900 dark:hover:bg-stone-700 hover:bg-stone-100 ";
     }
     if (n == totalPages) {
       cn += " rounded-l-lg ";

@@ -19,6 +19,8 @@ export default function DashSidebar() {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
   const [tab, setTab] = useState("");
+  console.log("currentUser:", currentUser);
+
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const tabFromUrl = urlParams.get("tab");
@@ -42,7 +44,7 @@ export default function DashSidebar() {
     }
   };
   return (
-    <Sidebar className="w-full md:w-56">
+    <Sidebar className="w-full ">
       <Sidebar.Items>
         <Sidebar.ItemGroup className="flex flex-col gap-1">
           <Link to="/dashboard?tab=profile">
@@ -74,7 +76,8 @@ export default function DashSidebar() {
             </Link>
           )}
           {/* {currentUser.isAdmin && ( */}
-          <Link to="/dashboard?tab=posts">
+          {/* <Link to="/dashboard?tab=posts"> */}
+          <Link to={`/dashboard?tab=posts&userId=${currentUser._id}`}>
             <Sidebar.Item
               active={tab === "posts"}
               icon={HiDocumentText}
