@@ -77,42 +77,48 @@ const getposts = async (req, res, next) => {
     }).countDocuments();
     console.log("totalPosts from getposts:", totalPosts);
 
-    console.log("!+req.query.page from getposts:", !+req.query.page);
-    /*  console.log(
-      " req.query.hasOwnProperty('page') from getposts:",
-      req.query.hasOwnProperty("page")
-    ); */
-    if (!req.query.hasOwnProperty("page") || !+req.query.page) {
+    console.log("!!req.query.page from getposts:", !!req.query.page);
+    if (!req.query.page) {
       console.log("from getposts send only totalPosts:", totalPosts);
       res.status(200).json({ totalPosts, page: 0 });
       return;
     }
 
-    const totalPages = Math.ceil(totalPosts / pageSize);
+    const totalPages = Math.floor(totalPosts / pageSize) || 1; // Math.ceil(totalPosts / pageSize);
     console.log("totalPages from getposts:", totalPages);
-    if (page > totalPages) {
+    if (page > totalPages || page < 0) {
       return next(
         errorHandler(
           400,
-          "The page number is set larger than the total number of pages"
+          `The page number ${page} isn't in the correct range`
+          //"The page number is set larger than the total number of pages"
         )
       );
     }
 
-    const skip =
-      req.query.hasOwnProperty("page") || !+req.query.page
-        ? page == totalPages
-          ? 0
-          : (totalPages - 1 - page) * pageSize +
-            (totalPosts % pageSize || pageSize)
-        : startIndex;
+    const numOnTopPage = pageSize + (totalPosts % pageSize);
+    const skip = !!req.query.page
+      ? page == totalPages
+        ? 0
+        : (totalPages - page - 1) * pageSize + numOnTopPage
+      : startIndex;
+    /*     const skip = !!req.query.page
+      ? page == totalPages
+        ? 0
+        : (totalPages - 1 - page) * pageSize +
+          (totalPosts % pageSize || pageSize)
+      : startIndex; */
     //console.log("skip from getposts:", skip);
-    const lim =
-      req.query.hasOwnProperty("page") || !+req.query.page
-        ? page == totalPages
-          ? totalPosts % pageSize || pageSize
-          : pageSize
-        : limit;
+    const lim = !!req.query.page
+      ? page == totalPages
+        ? numOnTopPage
+        : pageSize
+      : limit;
+    /*     const lim = !!req.query.page
+      ? page == totalPages
+        ? totalPosts % pageSize || pageSize
+        : pageSize
+      : limit; */
     //console.log("lim from getposts:", lim);
 
     const posts = await Post.find({
@@ -153,7 +159,16 @@ const getposts = async (req, res, next) => {
    lastMonthPosts,
     });*/
 
-    res.status(200).json({ posts, totalPosts, page, skip, limit, lim });
+    res.status(200).json({
+      posts,
+      totalPosts,
+      pageSize,
+      totalPages,
+      page,
+      skip,
+      limit,
+      lim,
+    });
   } catch (error) {
     next(error);
   }
@@ -290,6 +305,33 @@ const likePost = async (req, res, next) => {
   }
 };
 
+const countTags = async (req, res, next) => {
+  connectDB();
+  try {
+    const posts = await Post.find();
+    const tagData = [];
+    posts.forEach((p) => {
+      p.tags.forEach((tag) => {
+        let found = false;
+        tagData.forEach((td) => {
+          if (td.slug == tag.slug) {
+            td.count++;
+            found = true;
+          }
+        });
+        if (found == false) {
+          tagData.push({ slug: tag.slug, count: 1 });
+        }
+      });
+    });
+    tagData.sort((a, b) => b.count - a.count);
+    // console.log("tagData", tagData);
+    res.status(200).json(tagData);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const router = express.Router();
 
 router.post("/create", verifyToken, create);
@@ -297,5 +339,6 @@ router.get("/getposts", getposts);
 router.delete("/deletepost/:postId/:userId", verifyToken, deletepost);
 router.put("/updatepost/:postId/:userId", verifyToken, updatepost);
 router.put("/likePost/:postId", verifyToken, likePost);
+router.get("/counttags", countTags);
 
 export default router;

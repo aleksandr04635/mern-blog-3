@@ -5,8 +5,7 @@ import PostCard from "../components/PostCard";
 import PaginationBar from "../components/PaginationBar";
 
 export default function Search() {
-  const navigate = useNavigate();
-  const location = useLocation();
+  //const pageSize = 2;
   const [sidebarData, setSidebarData] = useState({
     searchTerm: "",
     sort: "desc",
@@ -15,40 +14,43 @@ export default function Search() {
   const [errorMessage, setErrorMessage] = useState(null);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [pageSize, setPageSize] = useState(2);
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const [totalPosts, setTotalPosts] = useState(0);
   const [page, setPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
+  const [pageSize, setPageSize] = useState(2);
   console.log("totalPosts in state: ", totalPosts);
   console.log("page in state: ", page);
   console.log("pageSize in state: ", pageSize);
-  console.log("totalPages in state: ", totalPages);
   console.log("sidebarData: ", sidebarData);
+  // let totalPages = Math.ceil(totalPosts / pageSize);
+  let totalPages = Math.floor(totalPosts / pageSize) || 1;
 
   useEffect(() => {
-    //const fetchPosts = async () => {
-    console.log("USEEFFECT RUN. location.search: ", location.search);
-    const urlParams = new URLSearchParams(location.search);
-    const searchTermFromUrl = urlParams.get("searchTerm");
-    const sortFromUrl = urlParams.get("sort");
-    const pageSizeFromUrl = urlParams.get("pageSize");
+    const fetchPosts = async () => {
+      console.log("USEEFFECT RUN. location.search: ", location.search);
+      const urlParams = new URLSearchParams(location.search);
+      const searchTermFromUrl = urlParams.get("searchTerm");
+      const sortFromUrl = urlParams.get("sort");
+      const pageSizeFromUrl = urlParams.get("pageSize");
 
-    if (searchTermFromUrl || sortFromUrl || pageSizeFromUrl) {
-      console.log(
-        "Setting setSidebarData from URL: ",
-        searchTermFromUrl,
-        sortFromUrl,
-        pageSizeFromUrl
-      );
-      setSidebarData({
-        ...sidebarData,
-        searchTerm: searchTermFromUrl,
-        sort: sortFromUrl,
-        pageSize: pageSizeFromUrl,
-      });
-    }
+      if (searchTermFromUrl || sortFromUrl || pageSizeFromUrl) {
+        console.log(
+          "Setting setSidebarData from URL: ",
+          searchTermFromUrl,
+          sortFromUrl,
+          pageSizeFromUrl
+        );
+        setSidebarData({
+          ...sidebarData,
+          searchTerm: searchTermFromUrl,
+          sort: sortFromUrl,
+          pageSize: pageSizeFromUrl,
+        });
+      }
 
-    /*  if (pageSizeFromUrl) {
+      /*  if (pageSizeFromUrl) {
         //if (searchTermFromUrl || sortFromUrl || pageSizeFromUrl) {
         console.log("Setting pageSize from URL: ", pageSizeFromUrl);
         setSidebarData({
@@ -57,10 +59,12 @@ export default function Search() {
           sort: sortFromUrl,
           pageSize: pageSizeFromUrl,
         });
+
         setPageSize(pageSizeFromUrl);
       } else {
         console.log("no pageSizeFromUrl: ");
       }
+
       if (searchTermFromUrl) {
         console.log("Setting searchTermFromUrl from URL: ", searchTermFromUrl);
         setSidebarData({
@@ -70,6 +74,7 @@ export default function Search() {
       } else {
         console.log("no searchTermFromUrl: ");
       }
+
       if (sortFromUrl) {
         console.log("Setting sortFromUrl from URL: ", sortFromUrl);
         setSidebarData({
@@ -80,7 +85,15 @@ export default function Search() {
         console.log("no sortFromUrl: ");
       } */
 
-    const fetchPosts = async () => {
+      let pageFromUrl = urlParams.get("page");
+      if (pageFromUrl) {
+        console.log("page exists in URL. Setting page from URL: ", pageFromUrl);
+        setPage(pageFromUrl);
+      } else {
+        console.log("no page in URL: ");
+      }
+
+      // const fetchPosts = async () => {
       setLoading(true);
       let urlParams2 = new URLSearchParams(location.search);
       let searchQuery = urlParams2.toString();
@@ -88,40 +101,48 @@ export default function Search() {
       const res = await fetch(`/api/post/getposts?${searchQuery}`);
       if (!res.ok) {
         setLoading(false);
+
+        //add here error setting
         const rese = await res.json();
-        console.log("error of fetching: ", rese);
+        console.log(" rese fetched: ", rese);
         setErrorMessage(rese.message);
         return;
       }
       if (res.ok) {
-        setLoading(false);
-        setErrorMessage(null);
         const data = await res.json();
         console.log(" data fetched: ", data);
-        console.log("checking if page exists in location.search ");
-        const urlParams5 = new URLSearchParams(location.search);
-        let pageFromUrl = parseInt(urlParams5.get("page"));
-        console.log("pageFromUrl: ", pageFromUrl);
-        if (pageFromUrl && pageFromUrl == data.page) {
-          console.log(
-            "page exists in URL and is equal to that in data. SETTING posts and totalposts from data"
-          );
+        setErrorMessage(null);
+        let urlParams3 = new URLSearchParams(location.search);
+        //let pageFromUrl = urlParams3.get("page");
+        //if (pageFromUrl) {
+        if (data.page) {
+          console.log("  page exists in data: ", data.page);
+          console.log("SETTING posts and totalposts from data: ");
           setPosts(data.posts);
           setTotalPosts(data.totalPosts);
           setPageSize(data.pageSize);
-          setTotalPages(data.totalPages);
-          setPage(data.page);
+          setLoading(false);
         } else {
+          // console.log(" no page in URL upon fetch: ", data);
+          console.log(" no page exists in data: ", data);
+          let pageSizeFromUrl2 = urlParams3.get("pageSize");
           console.log(
-            "no page exists in URL or is not equal to that in data. "
+            " pageSizeFromUrl then setting totalPages for searchQuery: ",
+            //  pageSize
+            pageSizeFromUrl2
           );
+          if (!pageSizeFromUrl2) {
+            console.log("pageSizeFromUr doesn't exist, so I use 2 instead: ");
+            pageSizeFromUrl2 = 2;
+          }
+          //setPageSize(pageSizeFromUrl2);
+          //totalPages2 = Math.floor(data.totalPosts/ pageSize) || 1;
+          //let totalPages2 = Math.ceil(data.totalPosts / pageSize);
+          let totalPages2 = Math.floor(data.totalPosts / pageSizeFromUrl2) || 1;
           const urlParams4 = new URLSearchParams(location.search);
-          urlParams4.set("page", data.page);
+          urlParams4.set("page", totalPages2);
           let searchQuery3 = urlParams4.toString();
-          console.log(
-            " setting searchQuery and navigate to: ",
-            `/search?${searchQuery3}`
-          );
+          console.log(" setting searchQuery and navigate: ", searchQuery3);
           navigate(`/search?${searchQuery3}`);
         }
       }
@@ -192,8 +213,6 @@ export default function Search() {
             >
               <option value="2">2</option>
               <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
             </Select>
           </div>
           <Button type="submit" outline gradientDuoTone="purpleToBlue">
@@ -208,8 +227,8 @@ export default function Search() {
         <div className="px-3 py-1 text-lg">
           <p>Total number of posts: {totalPosts}</p>
           <p>PageSize: {pageSize}</p>
-          <p>Total number of pages: {totalPages}</p>
-          <p>Page: {page}</p>
+          {/*       <p>Total number of pages: {totalPages}</p>
+          <p>Page: {page}</p> */}
           <p className="pt-1 text-sm">
             Note that the number of posts on the topmost page varies depending
             on their total number and querry to ensure that a specific URL will
@@ -220,7 +239,7 @@ export default function Search() {
         <div className="px-3 py-2">
           {totalPages > 1 && (
             <PaginationBar
-              currentPage={page}
+              currentPage={+page}
               totalPages={totalPages}
             /> /* I have no idea why this + changes the behaviour from link to div */
           )}
@@ -244,7 +263,7 @@ export default function Search() {
         <div className=" px-3 py-2">
           {totalPages > 1 && (
             <PaginationBar
-              currentPage={page}
+              currentPage={+page}
               totalPages={totalPages}
             /> /* I have no idea why this + changes the behaviour from link to div */
           )}

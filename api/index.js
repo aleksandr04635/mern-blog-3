@@ -28,6 +28,35 @@ const connectDB = async () => {
 };
 //connectDB();//for vercel deploy
 
+/* import Post from "./models/post.model.js";
+const countTags = async (req, res) => {
+  connectDB();
+  try {
+    const posts = await Post.find();
+    const tagData = [];
+    posts.forEach((p) => {
+      p.tags.forEach((tag) => {
+        let found = false;
+        tagData.forEach((td) => {
+          if (td.slug == tag.slug) {
+            td.count++;
+            found = true;
+          }
+        });
+        if (found == false) {
+          tagData.push({ slug: tag.slug, count: 1 });
+        }
+      });
+    });
+    tagData.sort((a, b) => b.count - a.count);
+    console.log("tagData", tagData);
+    //res.status(200).json("The post has been deleted");
+  } catch (error) {
+    console.log(error);
+  }
+};
+countTags();
+ */
 /* mongoose
   .connect(process.env.MONGO)
   .then(() => {
