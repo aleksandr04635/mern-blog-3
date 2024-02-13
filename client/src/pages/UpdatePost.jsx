@@ -188,6 +188,7 @@ export default function UpdatePost() {
               <FileInput
                 type="file"
                 accept="image/*"
+                color="gray"
                 onChange={(e) => setFile(e.target.files[0])}
               />
               <Button
@@ -224,7 +225,7 @@ export default function UpdatePost() {
           {/* tags */}
           <div className="flex flex-col">
             <h3 className="p-1 text-base">Tags list (optional):</h3>
-            <div className="flex items-center space-x-4 md:space-x-8">
+            <div className="flex items-center space-x-4 md:space-x-2">
               <TextInput
                 value={tag}
                 onChange={(e) => setTag(e.target.value)}
@@ -233,23 +234,31 @@ export default function UpdatePost() {
                 /* color="success" */
                 type="text"
               />
-              <div
+              {/*              <div
                 onClick={addTag}
                 className="bg-teal-500 rounded-lg text-white px-4 py-2 font-semibold cursor-pointer"
               >
                 Add
-              </div>
+              </div> */}
+              <Button
+                onClick={addTag}
+                outline
+                gradientDuoTone="purpleToBlue"
+                className="w-[70px]"
+              >
+                Add
+              </Button>
             </div>
             <div className="flex flex-wrap px-4 mt-3">
               {tags?.map((t, i) => (
                 <div
                   key={i}
-                  className="flex justify-center items-center space-x-2 mr-4 bg-gray-200 px-2 py-1 rounded-lg"
+                  className="flex justify-center dark:text-gray-200 items-center space-x-2 mr-4 dark:bg-gray-700 bg-gray-200 px-2 py-1 rounded-lg"
                 >
                   <p>{t.name}</p>
                   <p
                     onClick={() => deleteTag(i)}
-                    className="text-white bg-teal-500 rounded-full cursor-pointer p-1 text-sm"
+                    className="text-white bg-gray-500 rounded-full cursor-pointer p-1 text-sm"
                   >
                     <ImCross />
                   </p>

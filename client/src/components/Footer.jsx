@@ -73,13 +73,13 @@ export default function FooterCom() {
           </div>
         </div> 
         <Footer.Divider />*/}
-        <div className="w-full sm:flex sm:items-center sm:justify-between">
+        <div className="w-full flex items-center justify-between">
           <Footer.Copyright
             href="#"
             by="My blog"
             year={new Date().getFullYear()}
           />
-          <div className="flex gap-6 sm:mt-0 mt-4 sm:justify-center">
+          <div className="flex gap-6  sm:justify-center">
             <Footer.Icon
               href="https://github.com/aleksandr04635"
               icon={BsGithub}

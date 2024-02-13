@@ -23,6 +23,24 @@ export default function CommentSection({ postId }) {
   const [commentToDelete, setCommentToDelete] = useState(null);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const getComments = async () => {
+      setCloader(true);
+      try {
+        const res = await fetch(`/api/comment/getPostComments/${postId}`);
+        if (res.ok) {
+          const data = await res.json();
+          setComments(data);
+          setCloader(false);
+        }
+      } catch (error) {
+        setCloader(true);
+        console.log(error.message);
+      }
+    };
+    getComments();
+  }, [postId]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (comment.length > 200) {
@@ -51,24 +69,6 @@ export default function CommentSection({ postId }) {
       setCommentError(error.message);
     }
   };
-
-  useEffect(() => {
-    const getComments = async () => {
-      setCloader(true);
-      try {
-        const res = await fetch(`/api/comment/getPostComments/${postId}`);
-        if (res.ok) {
-          const data = await res.json();
-          setComments(data);
-          setCloader(false);
-        }
-      } catch (error) {
-        setCloader(true);
-        console.log(error.message);
-      }
-    };
-    getComments();
-  }, [postId]);
 
   const handleLike = async (commentId, type, ac) => {
     try {
@@ -142,7 +142,7 @@ export default function CommentSection({ postId }) {
         <div>
           {currentUser ? (
             <div className="flex items-center gap-1 my-5 text-gray-500 text-sm">
-              <p>You are signed in as:</p>
+              <p>You are signed in as: </p>
               <img
                 className="h-5 w-5 object-cover rounded-full"
                 src={currentUser.profilePicture}
@@ -152,7 +152,7 @@ export default function CommentSection({ postId }) {
                 to={"/dashboard?tab=profile"}
                 className="text-xs text-cyan-600 hover:underline"
               >
-                @{currentUser.username}
+                {currentUser.username}
               </Link>
             </div>
           ) : (

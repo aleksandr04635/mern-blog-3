@@ -23,7 +23,7 @@ import { initializeApp } from "firebase/app";
   appId: "1:1067161397327:web:670c2adb7f6a2ff346a23a",
 }; */
 const firebaseConfig = {
-  apiKey: "AIzaSyDUvxFA7Vv_FHmhzmxLsWs-Iw5BNdpHFuw",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: "mern-blog-1c1f6.firebaseapp.com",
   projectId: "mern-blog-1c1f6",
   storageBucket: "mern-blog-1c1f6.appspot.com",

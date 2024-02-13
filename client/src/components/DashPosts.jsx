@@ -20,7 +20,7 @@ export default function DashPosts() {
         //console.log("currentUser._id: ", currentUser._id);
         const res = await fetch(`/api/post/getposts?userId=${currentUser._id}`); //limits to 9 posts by default
         const data = await res.json();
-        console.log(" data: ", data);
+        console.log(" data in DashPosts.jsx: ", data);
         if (res.ok) {
           if (data.posts) {
             setUserPosts(data.posts);

@@ -1,8 +1,7 @@
 import { Button, Select, TextInput, Spinner, Alert } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import PostCard from "../components/PostCard";
-import PaginationBar from "../components/PaginationBar";
+import PostList from "../components/PostList";
 
 export default function Search() {
   const navigate = useNavigate();
@@ -12,22 +11,12 @@ export default function Search() {
     sort: "desc",
     pageSize: 2,
   });
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [pageSize, setPageSize] = useState(2);
-  const [totalPosts, setTotalPosts] = useState(0);
-  const [page, setPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
-  console.log("totalPosts in state: ", totalPosts);
-  console.log("page in state: ", page);
-  console.log("pageSize in state: ", pageSize);
-  console.log("totalPages in state: ", totalPages);
+
   console.log("sidebarData: ", sidebarData);
 
   useEffect(() => {
-    //const fetchPosts = async () => {
     console.log("USEEFFECT RUN. location.search: ", location.search);
+    console.log("location: ", location);
     const urlParams = new URLSearchParams(location.search);
     const searchTermFromUrl = urlParams.get("searchTerm");
     const sortFromUrl = urlParams.get("sort");
@@ -80,53 +69,6 @@ export default function Search() {
         console.log("no sortFromUrl: ");
       } */
 
-    const fetchPosts = async () => {
-      setLoading(true);
-      let urlParams2 = new URLSearchParams(location.search);
-      let searchQuery = urlParams2.toString();
-      console.log("fetched: ", `/api/post/getposts?${searchQuery}`);
-      const res = await fetch(`/api/post/getposts?${searchQuery}`);
-      if (!res.ok) {
-        setLoading(false);
-        const rese = await res.json();
-        console.log("error of fetching: ", rese);
-        setErrorMessage(rese.message);
-        return;
-      }
-      if (res.ok) {
-        setLoading(false);
-        setErrorMessage(null);
-        const data = await res.json();
-        console.log(" data fetched: ", data);
-        console.log("checking if page exists in location.search ");
-        const urlParams5 = new URLSearchParams(location.search);
-        let pageFromUrl = parseInt(urlParams5.get("page"));
-        console.log("pageFromUrl: ", pageFromUrl);
-        if (pageFromUrl && pageFromUrl == data.page) {
-          console.log(
-            "page exists in URL and is equal to that in data. SETTING posts and totalposts from data"
-          );
-          setPosts(data.posts);
-          setTotalPosts(data.totalPosts);
-          setPageSize(data.pageSize);
-          setTotalPages(data.totalPages);
-          setPage(data.page);
-        } else {
-          console.log(
-            "no page exists in URL or is not equal to that in data. "
-          );
-          const urlParams4 = new URLSearchParams(location.search);
-          urlParams4.set("page", data.page);
-          let searchQuery3 = urlParams4.toString();
-          console.log(
-            " setting searchQuery and navigate to: ",
-            `/search?${searchQuery3}`
-          );
-          navigate(`/search?${searchQuery3}`);
-        }
-      }
-    };
-    fetchPosts();
     //console.log("sidebarData: ", sidebarData);
   }, [location.search]);
 
@@ -158,7 +100,7 @@ export default function Search() {
 
   return (
     <div className="flex flex-col md:flex-row">
-      <div className="p-5  md:border-r md:min-h-screen border-gray-500">
+      <div className="p-3 w-full sm:flex-none sm:w-[300px] md:border-r sm:min-h-screen border-gray-500">
         <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
           <div className="flex   items-center gap-2">
             <label className="whitespace-nowrap font-semibold">
@@ -201,61 +143,8 @@ export default function Search() {
           </Button>
         </form>
       </div>
-      <div className="w-full">
-        <h3 className="text-xl font-semibold  px-3 py-1 mt-2 ">
-          Querry results:
-        </h3>
-        <div className="px-3 py-1 text-lg">
-          <p>Total number of posts: {totalPosts}</p>
-          <p>PageSize: {pageSize}</p>
-          <p>Total number of pages: {totalPages}</p>
-          <p>Page: {page}</p>
-          <p className="pt-1 text-sm">
-            Note that the number of posts on the topmost page varies depending
-            on their total number and querry to ensure that a specific URL will
-            correspond to the concrete set of posts in the future, when other
-            posts are added
-          </p>
-        </div>
-        <div className="px-3 py-2">
-          {totalPages > 1 && (
-            <PaginationBar
-              currentPage={page}
-              totalPages={totalPages}
-            /> /* I have no idea why this + changes the behaviour from link to div */
-          )}
-          {/*   <PaginationBar currentPage={11} totalPages={15} /> */}
-        </div>
-        <div className="px-3 py-2 flex flex-wrap gap-4">
-          {!loading && posts.length === 0 && (
-            <p className="text-xl text-gray-500">No posts found.</p>
-          )}
-          {/* <div className="flex justify-center items-center min-h-screen"> */}
-          {loading && (
-            <div className="flex justify-center items-center ">
-              <Spinner size="xl" />
-              <p className="text-xl text-gray-500">Loading...</p>
-            </div>
-          )}
-          {!loading &&
-            posts &&
-            posts.map((post) => <PostCard key={post._id} post={post} />)}
-        </div>
-        <div className=" px-3 py-2">
-          {totalPages > 1 && (
-            <PaginationBar
-              currentPage={page}
-              totalPages={totalPages}
-            /> /* I have no idea why this + changes the behaviour from link to div */
-          )}
-          {/*   <PaginationBar currentPage={11} totalPages={15} /> */}
-        </div>
-        {errorMessage && (
-          <Alert className={`mt-5 text-justify w-60`} color="failure">
-            {/* it can be failure or success */}
-            {errorMessage}
-          </Alert>
-        )}
+      <div className="p-3">
+        <PostList />
       </div>
     </div>
   );

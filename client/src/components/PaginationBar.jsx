@@ -1,26 +1,21 @@
 import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 export default function PaginationBar({ currentPage, totalPages }) {
+  const location = useLocation();
   //console.log("currentPage: ", currentPage);
   //console.log("totalPages: ", totalPages);
-  //const maxPage = Math.min(totalPages, Math.max(currentPage + 4, 10));
-  //const minPage = Math.max(1, Math.min(currentPage - 5, maxPage - 9));
-  const maxPage = Math.min(totalPages, Math.max(currentPage + 3, 6));
-  const minPage = Math.max(1, Math.min(currentPage - 3, maxPage - 5));
-  /* 
-  const urlParams = new URLSearchParams(location.search);
-        urlParams.set("sort", sidebarData.sort);
-    const searchQuery = urlParams.toString();
-    navigate(`/search?${searchQuery}`);
- */
+  if (totalPages <= 1) {
+    return <></>;
+  }
 
   const cName = (n) => {
-    let cn = "  border border-slate-500 px-2 ";
+    let cn = "  border border-teal-500 px-2 ";
     if (n == currentPage) {
       cn += " dark:bg-cyan-900 bg-cyan-50";
     }
     if (n != currentPage) {
-      cn += " dark:hover:bg-stone-700 hover:bg-stone-100 ";
+      cn += " dark:hover:bg-stone-700 hover:bg-stone-200 ";
     }
     if (n == totalPages) {
       cn += " rounded-l-lg ";
@@ -31,6 +26,10 @@ export default function PaginationBar({ currentPage, totalPages }) {
     return cn;
   };
 
+  //const maxPage = Math.min(totalPages, Math.max(currentPage + 4, 10));
+  //const minPage = Math.max(1, Math.min(currentPage - 5, maxPage - 9));
+  const maxPage = Math.min(totalPages, Math.max(currentPage + 3, 6));
+  const minPage = Math.max(1, Math.min(currentPage - 3, maxPage - 5));
   const numberedPageItems = [];
   //for (let page = minPage; page <= maxPage; page++) {
   for (let page = maxPage; page >= minPage; page--) {
@@ -43,7 +42,11 @@ export default function PaginationBar({ currentPage, totalPages }) {
           {page}
         </div>
       ) : (
-        <Link key={page} to={`/search?${searchQuery}`} className="">
+        <Link
+          key={page}
+          to={`${location.pathname}?${searchQuery}`}
+          className=""
+        >
           <div className={cName(page)}>{page}</div>
         </Link>
       )
@@ -62,7 +65,7 @@ export default function PaginationBar({ currentPage, totalPages }) {
       {/* <div className=" hidden sm:block"> */}
       <div className="flex flex-row">
         {maxPage < totalPages && (
-          <Link to={`/search?${searchQueryLast}`} key={totalPages}>
+          <Link to={`${location.pathname}?${searchQueryLast}`} key={totalPages}>
             <div className={cName(totalPages)}>{totalPages}</div>
           </Link>
         )}
@@ -70,7 +73,7 @@ export default function PaginationBar({ currentPage, totalPages }) {
         {numberedPageItems}
         {minPage > 2 && <div className="px-2 ">...</div>}
         {minPage > 1 && (
-          <Link to={`/search?${searchQueryFirst}`} key={1}>
+          <Link to={`${location.pathname}?${searchQueryFirst}`} key={1}>
             <div className={cName(1)}>{1}</div>
           </Link>
         )}

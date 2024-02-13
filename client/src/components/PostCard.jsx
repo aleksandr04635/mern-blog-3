@@ -19,18 +19,26 @@ export default function PostCard({ post }) {
         </div>
       )}
       {/*  className="max-h-[260px] w-[360px] min-w-full sm:min-w-[360px]  object-cover " */}
-      <div className="pl-2 flex flex-col justify-around">
+      <div className="sm:pl-2 flex flex-col justify-around">
         <span className="pt-1 text-sm px-2">
           {formatISO9075(new Date(post.createdAt))}
         </span>
         <Link to={`/post/${post.slug}`}>
           <h2
+            className="text-xl text-justify px-2
+           text-stone-800 dark:text-violet-400 dark:hover:text-blue-400 hover:text-blue-800 
+           py-1 font-semibold "
+          >
+            {post.title}
+          </h2>
+          {/*           line-clamp-2
+<h2
             className="text-xl px-2
            text-stone-800 dark:text-violet-400 dark:hover:text-blue-400 hover:text-blue-800 
            py-1 font-semibold line-clamp-2"
           >
             {post.title}
-          </h2>
+          </h2> */}
         </Link>
         <div className="px-2  ">
           {/* <span> By </span> */}
@@ -59,13 +67,13 @@ export default function PostCard({ post }) {
             </div>
           </Link>
         </div>
-        {post.intro && <div className="px-2  ">{post.intro}</div>}
+        {post.intro && <div className="px-2 text-justify ">{post.intro}</div>}
         <div className="flex flex-wrap gap-1 px-2 py-1 ">
           {post.tags?.map((t, i) => (
             <Link
               key={i}
               to={`/search?tag=${t.slug}`}
-              className="hover:text-blue-800 text-sm border rounded  px-2 py-1"
+              className="dark:hover:bg-stone-700 hover:bg-stone-200 text-sm border rounded  px-2 py-1"
             >
               {t.name}
             </Link>

@@ -144,7 +144,7 @@ export default function PostPage() {
               <Link
                 key={i}
                 to={`/search?tag=${t.slug}`}
-                className="hover:text-blue-800 border rounded my-1 px-2 py-1"
+                className="dark:hover:bg-stone-700 hover:bg-stone-200 border rounded my-1 px-2 py-1"
               >
                 {t.name}
               </Link>
