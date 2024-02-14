@@ -10,13 +10,17 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import PostCard from "./PostCard";
 import PaginationBar from "./PaginationBar";
-import { useSelector } from "react-redux";
+import { changePageSize } from "../redux/pageSize/pageSizeSlice";
+import { useSelector, useDispatch } from "react-redux";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 
 export default function PostList() {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
+  const { pageSize: pageSizeStore } = useSelector((state) => state.pageSize);
+  console.log("pageSizeStore in PostList: ", pageSizeStore);
 
   const [showModal, setShowModal] = useState(false);
   const [postToDelete, setPostToDelete] = useState(null);
@@ -25,7 +29,7 @@ export default function PostList() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [pageSize, setPageSize] = useState(
-    import.meta.env.VITE_DEFAULT_PAGE_SIZE
+    pageSizeStore || import.meta.env.VITE_DEFAULT_PAGE_SIZE
   );
   const [totalPosts, setTotalPosts] = useState(0);
   const [page, setPage] = useState(0);
@@ -51,13 +55,20 @@ export default function PostList() {
       setErrorMessage(null);
       const data = await res.json();
       console.log(" data fetched: ", data);
-      console.log("checking if page exists in location.search ");
+      console.log("checking if page and pageSize exist in location.search ");
       const urlParams5 = new URLSearchParams(location.search);
       let pageFromUrl = parseInt(urlParams5.get("page"));
+      let pageSizeFromUrl = parseInt(urlParams5.get("pageSize"));
       console.log("pageFromUrl: ", pageFromUrl);
-      if (pageFromUrl && pageFromUrl == data.page) {
+      console.log("pageSizeFromUrl: ", pageSizeFromUrl);
+      if (
+        pageFromUrl &&
+        pageFromUrl == data.page &&
+        pageSizeFromUrl &&
+        pageSizeFromUrl == data.pageSize
+      ) {
         console.log(
-          "page exists in URL and is equal to that in data. SETTING posts and totalposts from data"
+          "page and pageSize exist in URL and are equal to that in data. SETTING posts and totalposts from data"
         );
         setPosts(data.posts);
         setTotalPosts(data.totalPosts);
@@ -65,9 +76,12 @@ export default function PostList() {
         setTotalPages(data.totalPages);
         setPage(data.page);
       } else {
-        console.log("no page exists in URL or is not equal to that in data. ");
+        console.log(
+          "no page or pageSize exist in URL or are not equal to that in data. "
+        );
         const urlParams4 = new URLSearchParams(location.search);
         urlParams4.set("page", data.page);
+        urlParams4.set("pageSize", data.pageSize);
         let searchQuery3 = urlParams4.toString();
         console.log(
           " setting searchQuery and navigate to: ",
@@ -81,13 +95,26 @@ export default function PostList() {
   useEffect(() => {
     const fetchPosts = async () => {
       console.log("USEEFFECT RUN in PostList components. location: ", location);
+      let pageSizel;
+      if (pageSizeStore) {
+        console.log(
+          "Setting pageSize to querry function from Store: ",
+          pageSizeStore
+        );
+        pageSizel = pageSizeStore;
+      }
       const urlParams = new URLSearchParams(location.search);
       const pageSizeFromUrl = urlParams.get("pageSize");
-      if (pageSizeFromUrl) {
-        console.log("Setting pageSize from URL: ", pageSizeFromUrl);
+      if (pageSizeFromUrl && !pageSizeStore) {
+        console.log(
+          "pageSize from Store not exist. Setting pageSize to state and querry from URL: ",
+          pageSizeFromUrl
+        );
         setPageSize(pageSizeFromUrl);
+        pageSizel = pageSizeFromUrl;
       }
       let urlParams2 = new URLSearchParams(location.search);
+      urlParams2.set("pageSize", pageSizel);
       let searchQuery = urlParams2.toString();
       console.log(
         "given command to fetch: ",
@@ -98,8 +125,17 @@ export default function PostList() {
     fetchPosts();
   }, [location.search]);
 
+  useEffect(() => {
+    const ef = async () => {
+      console.log(" setting pageSize from store to: ", pageSizeStore);
+      setPageSize(pageSizeStore);
+    };
+    ef();
+  }, [pageSizeStore]);
+
   const handleChange = (e) => {
     console.log(" pageSize changed to to: ", +e.target.value);
+    dispatch(changePageSize(+e.target.value));
     setPageSize(+e.target.value);
     const urlParams = new URLSearchParams(location.search);
     urlParams.set("pageSize", +e.target.value);
