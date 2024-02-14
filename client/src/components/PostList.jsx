@@ -25,7 +25,7 @@ export default function PostList() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [pageSize, setPageSize] = useState(
-    import.meta.env.VITE_FIREBASE_API_KEY
+    import.meta.env.VITE_DEFAULT_PAGE_SIZE
   );
   const [totalPosts, setTotalPosts] = useState(0);
   const [page, setPage] = useState(0);

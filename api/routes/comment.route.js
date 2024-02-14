@@ -8,13 +8,11 @@ const createComment = async (req, res, next) => {
   connectDB();
   try {
     const { content, postId, userId } = req.body;
-
     if (userId !== req.user.id) {
       return next(
         errorHandler(403, "You are not allowed to create this comment")
       );
     }
-
     const newComment = new Comment({
       content,
       post: postId,
@@ -54,10 +52,14 @@ const getPostComments = async (req, res, next) => {
         createdAt: -1,
       });
 
-    const commentedPost = await Post.findById(req.params.postId).populate({
-      path: "comments",
-      populate: { path: "userId", select: " -password" },
-    });
+    const commentedPost = await Post.findById(req.params.postId)
+      .populate({
+        path: "comments",
+        populate: { path: "userId", select: " -password" },
+      })
+      .sort({
+        createdAt: -1,
+      });
     //  .populate("userId", ["username", "_id", "profilePicture"]);
     console.log("commentedPost : ", commentedPost);
 

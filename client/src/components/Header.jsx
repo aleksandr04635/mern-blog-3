@@ -15,14 +15,24 @@ export default function Header() {
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
   const [searchTerm, setSearchTerm] = useState("");
+  const [pageSize, setPageSize] = useState(
+    import.meta.env.VITE_DEFAULT_PAGE_SIZE
+  );
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
+    console.log("urlParams in header: ", urlParams);
     const searchTermFromUrl = urlParams.get("searchTerm");
     if (searchTermFromUrl) {
       setSearchTerm(searchTermFromUrl);
     }
-  }, [location.search]);
+    const pageSizeFromUrl = urlParams.get("pageSize");
+    if (pageSizeFromUrl) {
+      console.log("Setting pageSize from URL in header: ", pageSizeFromUrl);
+      setPageSize(pageSizeFromUrl);
+    }
+  }, [location]);
+  // }, [location.search]);
 
   const handleSignout = async () => {
     try {
@@ -51,6 +61,12 @@ export default function Header() {
 
   //console.log(" currentUser from header: ", currentUser);
 
+  console.log("pageSize from header: ", pageSize);
+  //let urlParams2 = new URLSearchParams(location.search);
+  let urlParams2 = new URLSearchParams();
+  urlParams2.set("pageSize", pageSize);
+  let searchQuery2 = urlParams2.toString();
+
   return (
     <Navbar className="sm:border-b border-gray-500">
       <div className="flex flex-col w-full">
@@ -78,7 +94,7 @@ export default function Header() {
           </Button> 
           active:outline-none
           */}
-          <Link className="" to="/">
+          <Link className="" to={`/?${searchQuery2}`}>
             <Button
               outline
               gradientDuoTone="purpleToBlue"

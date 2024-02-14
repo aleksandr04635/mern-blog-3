@@ -9,7 +9,10 @@ const commentSchema = new Schema(
     post: {
       type: Schema.Types.ObjectId,
       ref: "Post",
-      required: true,
+    },
+    tocomment: {
+      type: Schema.Types.ObjectId,
+      ref: "Comment",
     },
     userId: {
       type: Schema.Types.ObjectId,
@@ -32,6 +35,7 @@ const commentSchema = new Schema(
       type: Number,
       default: 0,
     },
+    comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
   },
   { timestamps: true }
 );
