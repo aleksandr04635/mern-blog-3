@@ -48,17 +48,10 @@ const postSchema = new Schema(
       type: Number,
       default: 0,
     },
+    comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
   },
   { timestamps: true }
 );
-
-postSchema.virtual("comments", {
-  ref: "Comment",
-  localField: "_id",
-  foreignField: "post",
-});
-//const post = await Post.findOne().populate('comments');
-//https://mongoosejs.com/docs/populate.html#deep-populate
 
 const Post = mongoose.model("Post", postSchema);
 

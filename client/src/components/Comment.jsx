@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { Button, Textarea } from "flowbite-react";
+import CommentSection from "./CommentSection";
 
 export default function Comment({ comment, onLike, onEdit, onDelete }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -157,6 +158,7 @@ export default function Comment({ comment, onLike, onEdit, onDelete }) {
             </div>
           </>
         )}
+        <CommentSection key={comment._id} toPost={false} postId={comment._id} />
       </div>
     </div>
   );

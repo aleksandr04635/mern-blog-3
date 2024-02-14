@@ -7,26 +7,39 @@ import Post from "../models/post.model.js";
 const createComment = async (req, res, next) => {
   connectDB();
   try {
-    const { content, postId, userId } = req.body;
+    console.log("req.body to newComment : ", req.body);
+    const { content, postId, commentId, userId } = req.body;
     if (userId !== req.user.id) {
       return next(
         errorHandler(403, "You are not allowed to create this comment")
       );
     }
-    const newComment = new Comment({
-      content,
-      post: postId,
-      userId,
-    });
+    console.log("postId exist newComment : ", postId);
+    let comObj;
+    if (postId) {
+      comObj = {
+        content,
+        post: postId,
+        userId,
+      };
+    }
+    if (commentId) {
+      comObj = {
+        content,
+        commentto: commentId,
+        userId,
+      };
+    }
+    const newComment = new Comment(comObj);
     //console.log("newComment : ", newComment);
     const nc = await newComment.save();
-    //console.log("newComment : ", nc);
+    console.log("newComment : ", nc);
     //console.log("newComment post : ", nc.post._id.toString());
 
-    const commentedPost = await Post.findById(postId);
+    // const commentedPost = await Post.findById(postId);
     //console.log("commentedPost : ", commentedPost);
-    commentedPost.comments.push(nc._id);
-    await commentedPost.save();
+    // commentedPost.comments.push(nc._id);
+    // await commentedPost.save();
     //console.log("commentedPost2 : ", commentedPost);
     const sent2 = await nc.populate("userId", [
       "username",
@@ -41,8 +54,6 @@ const createComment = async (req, res, next) => {
   }
 };
 
-//for a comment tree a recursive function is needed
-//which takes the _Id and returns a comment with a list of _Id's of comments to it, calling itself for each
 const getPostComments = async (req, res, next) => {
   connectDB();
   try {
@@ -51,22 +62,42 @@ const getPostComments = async (req, res, next) => {
       .sort({
         createdAt: -1,
       });
-
-    const commentedPost = await Post.findById(req.params.postId)
+    // virtual WORKS
+    //const post = await Post.findById(req.params.postId).populate("comments");
+    //console.log("comments to commented Post from a virtual: ", post.comments);
+    /*     const commentedPost = await Post.findById(req.params.postId)
       .populate({
         path: "comments",
         populate: { path: "userId", select: " -password" },
       })
       .sort({
         createdAt: -1,
-      });
+      }); */
     //  .populate("userId", ["username", "_id", "profilePicture"]);
-    console.log("commentedPost : ", commentedPost);
+    //console.log("commentedPost : ", commentedPost);
 
     //console.log("commentedPost : ", commentedPost);
     //console.log("comIndexInPosts : ", comIndexInPosts);
     // commentedPost.comments.splice(comIndexInPosts, 1);
-    res.status(200).json({ comments, com2: commentedPost.comments });
+    //res.status(200).json({ comments, com2: commentedPost.comments });
+    res.status(200).json({ comments });
+  } catch (error) {
+    next(error);
+  }
+};
+
+//for a comment tree a recursive function is needed
+//which takes the _Id and returns a comment with a list of _Id's of comments to it, calling itself for each
+const getCommentComments = async (req, res, next) => {
+  connectDB();
+  try {
+    const comments = await Comment.find({ commentto: req.params.commentId })
+      .populate("userId", ["username", "_id", "profilePicture"])
+      .sort({
+        createdAt: -1,
+      });
+
+    res.status(200).json({ comments });
   } catch (error) {
     next(error);
   }
@@ -183,15 +214,15 @@ const deleteComment = async (req, res, next) => {
       );
     }
     await Comment.findByIdAndDelete(req.params.commentId); //old
-    const commentedPost = await Post.findById(comment.post._id.toString());
+    /*     const commentedPost = await Post.findById(comment.post._id.toString());
     const comIndexInPosts = commentedPost.comments.indexOf(
       req.params.commentId
-    );
+    ); */
     //console.log("commentedPost : ", commentedPost);
     //console.log("comIndexInPosts : ", comIndexInPosts);
-    commentedPost.comments.splice(comIndexInPosts, 1);
+    // commentedPost.comments.splice(comIndexInPosts, 1);
     // console.log("commentedPost : ", commentedPost);
-    await commentedPost.save();
+    //await commentedPost.save();
     res.status(200).json("Comment has been deleted");
   } catch (error) {
     next(error);
@@ -229,6 +260,7 @@ const getcomments = async (req, res, next) => {
 const router = express.Router();
 router.post("/create", verifyToken, createComment);
 router.get("/getPostComments/:postId", getPostComments);
+router.get("/getCommentComments/:commentId", getCommentComments);
 router.put("/likeComment/:commentId", verifyToken, likeComment);
 router.put("/editComment/:commentId", verifyToken, editComment);
 router.delete("/deleteComment/:commentId", verifyToken, deleteComment);

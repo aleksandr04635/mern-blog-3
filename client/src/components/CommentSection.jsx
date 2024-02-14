@@ -12,10 +12,11 @@ import { Link, useNavigate } from "react-router-dom";
 import Comment from "./Comment";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 
-export default function CommentSection({ postId }) {
+export default function CommentSection({ toPost, postId }) {
   const { currentUser } = useSelector((state) => state.user);
   const [comment, setComment] = useState("");
   const [commentError, setCommentError] = useState(null);
+  const [commentsError, setCommentsError] = useState(null);
   const [comments, setComments] = useState([]);
   const [tocomment, setTocomment] = useState(false);
   const [cloader, setCloader] = useState(false);
@@ -23,20 +24,28 @@ export default function CommentSection({ postId }) {
   const [commentToDelete, setCommentToDelete] = useState(null);
   const navigate = useNavigate();
 
+  console.log("toPost, postId  from CommentSection.jsx:", toPost, postId);
+
   useEffect(() => {
     const getComments = async () => {
       setCloader(true);
       try {
-        const res = await fetch(`/api/comment/getPostComments/${postId}`);
+        const qs = `/api/comment/get${
+          toPost ? `Post` : `Comment`
+        }Comments/${postId}`;
+        console.log("qs from CommentSection.jsx:", qs);
+        const res = await fetch(qs);
         if (res.ok) {
           const data = await res.json();
-          console.log("fetched date from CommentSection.jsx:", data);
-          setComments(data.com2);
+          console.log("fetched data from CommentSection.jsx:", data);
+          //setComments(data.com2);
+          setComments(data.comments);
           setCloader(false);
         }
       } catch (error) {
-        setCloader(true);
+        setCloader(false);
         console.log(error.message);
+        setCommentsError(error.message);
       }
     };
     getComments();
@@ -48,16 +57,23 @@ export default function CommentSection({ postId }) {
       return;
     }
     try {
+      const reqO = toPost
+        ? {
+            content: comment,
+            postId,
+            userId: currentUser._id,
+          }
+        : {
+            content: comment,
+            commentId: postId,
+            userId: currentUser._id,
+          };
       const res = await fetch("/api/comment/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          content: comment,
-          postId,
-          userId: currentUser._id,
-        }),
+        body: JSON.stringify(reqO),
       });
       const data = await res.json();
       if (res.ok) {
@@ -218,7 +234,7 @@ export default function CommentSection({ postId }) {
           <Spinner size="xl" />
         </div>
       ) : (
-        <div>
+        <div className="flex flex-col">
           {comments.length === 0 ? (
             <p className="text-sm my-5">No comments yet</p>
           ) : (
@@ -242,6 +258,11 @@ export default function CommentSection({ postId }) {
                 />
               ))}
             </>
+          )}
+          {commentsError && (
+            <Alert color="failure" className="mt-5">
+              {commentsError}
+            </Alert>
           )}
         </div>
       )}

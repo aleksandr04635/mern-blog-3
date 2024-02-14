@@ -10,7 +10,7 @@ const commentSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Post",
     },
-    commentto: {
+    tocomment: {
       type: Schema.Types.ObjectId,
       ref: "Comment",
     },
@@ -35,6 +35,7 @@ const commentSchema = new Schema(
       type: Number,
       default: 0,
     },
+    comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
   },
   { timestamps: true }
 );

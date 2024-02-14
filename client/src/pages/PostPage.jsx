@@ -255,7 +255,7 @@ export default function PostPage() {
               </Button>
             </div>
           )}
-        <CommentSection postId={post._id} />
+        <CommentSection key={post._id} toPost={true} postId={post._id} />
 
         <Modal
           show={showModal}
