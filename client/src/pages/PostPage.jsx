@@ -20,7 +20,7 @@ export default function PostPage() {
   const [post, setPost] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [tocomment, setTocomment] = useState(false);
-  const [sw, setSw] = useState(false);
+  const [reloadSwitch, setReloadSwitch] = useState(false);
   const navigate = useNavigate();
   //console.log("post: ", post);
   //console.log(" currentUser : ", currentUser);
@@ -123,13 +123,13 @@ export default function PostPage() {
     );
 
   return (
-    <main className="p-3   max-w-6xl mx-auto min-h-screen">
-      <div className="flex flex-col max-w-2xl w-full mx-auto items-center   ">
+    <main className="px-1 sm:p-3   max-w-6xl mx-auto min-h-screen">
+      <div className="flex flex-col max-w-3xl w-full mx-auto items-center   ">
         {post && post.image && (
           <img
             src={post && post.image}
             alt={post && post.title}
-            className="mt-2 p-3    object-contain "
+            className=" p-3    object-contain "
           />
         )}
         <div className="flex justify-between p-3 border-b border-slate-500  w-full text-xs">
@@ -139,7 +139,7 @@ export default function PostPage() {
             {post && (post.content.length / 1000).toFixed(0)} mins read
           </span>
         </div>
-        <div className="flex max-w-2xl w-full items-center mt-2  font-semibold">
+        <div className="flex  w-full items-center mt-2  font-semibold">
           <div className="flex flex-wrap items-center space-x-2 ">
             <span>Tags: </span>
             {post.tags?.map((t, i) => (
@@ -163,7 +163,7 @@ export default function PostPage() {
             }
             className="text-gray-500 "
           >
-            <div className="group flex max-w-full ">
+            <div className="group flex  ">
               <div className="relative w-10 h-10 self-center shadow-md overflow-hidden rounded-full">
                 <img
                   src={post.userId.profilePicture}
@@ -184,14 +184,14 @@ export default function PostPage() {
         <h1 className="text-3xl  p-1 text-center font-serif  lg:text-3xl">
           {post && post.title}
         </h1>
-        <div className=" p-2  text-lg max-w-2xl mx-auto w-full post-content ">
+        <div className=" p-2  text-lg  mx-auto w-full post-content ">
           {post && post.intro}
         </div>
         <div
-          className="p-2 max-w-2xl mx-auto w-full post-content"
+          className="p-2  mx-auto w-full post-content"
           dangerouslySetInnerHTML={{ __html: post && post.content }}
         ></div>
-        <div className="flex flex-col border-l-2  border-teal-500 sm:flex-row items-center justify-between w-full">
+        <div className="flex flex-col border-l-0  border-teal-500 sm:flex-row items-center justify-between w-full">
           {/* Likes sm:w-[150px] flex-col sm: */}
           <div className="flex flex-col  sm:flex-row items-center justify-between w-full">
             <div className="flex h-[50px] w-full p-2 text-lg items-center dark:border-gray-700  gap-2">
@@ -277,12 +277,8 @@ export default function PostPage() {
           <CommentingEditor
             toPost={true}
             postId={post._id}
-            setReload={() => {
-              console.log(
-                " giving commant to REFETCH comments from: ",
-                post._id
-              );
-              setSw(!sw);
+            commandReload={() => {
+              setReloadSwitch(!reloadSwitch);
             }}
             onClose={() => {
               setTocomment(false);
@@ -292,9 +288,12 @@ export default function PostPage() {
         <CommentSection
           key={post._id}
           lev={1}
-          sw={sw}
+          reloadSwitch={reloadSwitch}
           toPost={true}
           postId={post._id}
+          reloadParentSection={() => {
+            console.log("reloaded post's comments");
+          }}
         />
 
         <Modal

@@ -6,12 +6,19 @@ import { Button, Textarea } from "flowbite-react";
 import CommentSection from "./CommentSection";
 import CommentingEditor from "./CommentingEditor";
 
-export default function Comment({ lev, comment, onLike, onEdit, onDelete }) {
+export default function Comment({
+  lev,
+  comment,
+  onLike,
+  onEdit,
+  onDelete,
+  reloadParentSection,
+}) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(comment.content);
   const { currentUser } = useSelector((state) => state.user);
   const [tocomment, setTocomment] = useState(false);
-  const [sw, setSw] = useState(false);
+  const [reloadSwitch, setReloadSwitch] = useState(false);
   //console.log("comment: ", comment);
   //console.log("lev  from Comment.jsx:", lev);
 
@@ -20,7 +27,7 @@ export default function Comment({ lev, comment, onLike, onEdit, onDelete }) {
     setEditedContent(comment.content);
   };
 
-  const handleSave = async () => {
+  const handleSaveUponEditing = async (con) => {
     try {
       const res = await fetch(`/api/comment/editComment/${comment._id}`, {
         method: "PUT",
@@ -28,12 +35,12 @@ export default function Comment({ lev, comment, onLike, onEdit, onDelete }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          content: editedContent,
+          content: con,
         }),
       });
       if (res.ok) {
         setIsEditing(false);
-        onEdit(comment, editedContent);
+        onEdit(comment, con);
       }
     } catch (error) {
       console.log(error.message);
@@ -43,8 +50,8 @@ export default function Comment({ lev, comment, onLike, onEdit, onDelete }) {
   return (
     /*  <div className="flex p-4 border-b dark:border-gray-600 text-sm"></div> */
     <div
-      className={` flex flex-col w-full pt-2 pl-2 pb-0 pr-0 border-l border-b  rounded-bl-lg ${
-        lev % 2 == 0 ? `border-fuchsia-500` : `border-teal-500`
+      className={` flex flex-col w-full pt-2 pl-1 sm:pl-2 pb-0 pr-0  border-b  rounded-bl-lg ${
+        lev % 2 == 0 ? `border-purple-500` : `border-teal-500`
       }`}
     >
       <div>
@@ -72,29 +79,43 @@ export default function Comment({ lev, comment, onLike, onEdit, onDelete }) {
             </div>
             {isEditing ? (
               <>
-                <Textarea
-                  className="mb-2"
-                  value={editedContent}
-                  onChange={(e) => setEditedContent(e.target.value)}
+                <CommentingEditor
+                  toPost={false}
+                  postId={comment._id}
+                  initialContent={comment.content}
+                  mode={"edit"}
+                  onClose={() => {
+                    setIsEditing(false);
+                  }}
+                  onEdit={(con) => handleSaveUponEditing(con)}
                 />
-                <div className="flex justify-end gap-2 text-xs">
-                  <Button
-                    type="button"
-                    size="sm"
-                    gradientDuoTone="purpleToBlue"
-                    onClick={handleSave}
-                  >
-                    Save
-                  </Button>
-                  <Button
-                    type="button"
-                    size="sm"
-                    gradientDuoTone="purpleToBlue"
-                    outline
-                    onClick={() => setIsEditing(false)}
-                  >
-                    Cancel
-                  </Button>
+                <div>
+                  <Textarea
+                    className="mb-2"
+                    value={editedContent}
+                    onChange={(e) => setEditedContent(e.target.value)}
+                  />
+                  <div className="flex justify-end gap-2 text-xs">
+                    <Button
+                      type="button"
+                      size="sm"
+                      gradientDuoTone="purpleToBlue"
+                      onClick={() => {
+                        handleSaveUponEditing(editedContent);
+                      }}
+                    >
+                      Save
+                    </Button>
+                    <Button
+                      type="button"
+                      size="sm"
+                      gradientDuoTone="purpleToBlue"
+                      outline
+                      onClick={() => setIsEditing(false)}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
                 </div>
               </>
             ) : (
@@ -194,12 +215,9 @@ export default function Comment({ lev, comment, onLike, onEdit, onDelete }) {
           <CommentingEditor
             toPost={false}
             postId={comment._id}
-            setReload={() => {
-              console.log(
-                " giving commant to REFETCH comments from: ",
-                comment._id
-              );
-              setSw(!sw);
+            mode={"create"}
+            commandReload={() => {
+              setReloadSwitch(!reloadSwitch);
             }}
             onClose={() => {
               setTocomment(false);
@@ -208,10 +226,13 @@ export default function Comment({ lev, comment, onLike, onEdit, onDelete }) {
         )}
         <CommentSection
           lev={lev + 1}
-          sw={sw}
+          reloadSwitch={reloadSwitch}
           key={comment._id}
           toPost={false}
           postId={comment._id}
+          reloadParentSection={() => {
+            reloadParentSection();
+          }}
         />
       </div>
     </div>

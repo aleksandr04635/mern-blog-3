@@ -213,7 +213,57 @@ const deleteComment = async (req, res, next) => {
         errorHandler(403, "You are not allowed to delete this comment")
       );
     }
+    //console.log("comment to delete in deleteComment: ", comment);
+
+    //comments to this comment
+    const comments = await Comment.find({ commentto: req.params.commentId });
+    console.log("comments to this comment in deleteComment: ", comments);
+    if (comments.length !== 0) {
+      //only edit comment
+      /*       const editedComment = await Comment.findByIdAndUpdate(
+        req.params.commentId,        {          content: req.body.content,        },
+        { new: true }
+      ).populate("userId", ["username", "_id", "profilePicture"]);
+      res.status(200).json(editedComment); */
+      comment.deleted = true;
+      comment.content =
+        "This comment is deleted by its author and will be completely deleted then all the comments to it will be deleted";
+      await comment.save();
+      console.log("only edited a comment in deleteComment: ", comment);
+      res.status(200).json("Comment has been set to be deleted");
+      return;
+    }
+
+    //if this comment is to a comment and not to a post
+    if (comment.commentto) {
+      //comment to which this one is commented
+      /*       console.log(
+        "Id of comment to which this one is commented in deleteComment: ",
+        comment.commentto.toString()
+      ); */
+      const commentTo = await Comment.findById(comment.commentto.toString());
+      console.log("commentTo found in deleteComment: ", commentTo);
+      if (commentTo.deleted) {
+        console.log("commentTo has deleted status in deleteComment: ");
+        const commentsTocommentTo = await Comment.find({
+          commentto: comment.commentto.toString(),
+        });
+        console.log(
+          "comments to a comment this comment is to in deleteComment: ",
+          commentsTocommentTo
+        );
+        if (commentsTocommentTo.length < 2) {
+          console.log(
+            "deleting commentTo that has deleted status in deleteComment: "
+          );
+          //delete commentTo
+          await Comment.findByIdAndDelete(comment.commentto.toString());
+        }
+      }
+    }
+    console.log("finally delete the comment in deleteComment: ");
     await Comment.findByIdAndDelete(req.params.commentId); //old
+
     /*     const commentedPost = await Post.findById(comment.post._id.toString());
     const comIndexInPosts = commentedPost.comments.indexOf(
       req.params.commentId

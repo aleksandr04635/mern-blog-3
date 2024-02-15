@@ -11,21 +11,31 @@ import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function CommentingEditor({
-  setReload,
+  initialContent,
+  mode,
+  commandReload,
   toPost,
   postId,
+  onEdit,
   onClose,
 }) {
   const { currentUser } = useSelector((state) => state.user);
-  const [comment, setComment] = useState("");
+  const [comment, setComment] = useState(initialContent || "");
   const [commentError, setCommentError] = useState(null);
 
+  //console.log("content in CommentingEditor.jsx", comment);
   // const [comments, setComments] = useState([]);
   // const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (comment.length > 200) {
+    if (comment.length > 400) {
+      return;
+    }
+    if (mode == "edit") {
+      console.log("called to edit from CommentingEditor.jsx", comment);
+      onEdit(comment);
+      onClose();
       return;
     }
     try {
@@ -52,7 +62,11 @@ export default function CommentingEditor({
         setComment("");
         onClose();
         setCommentError(null);
-        setReload();
+        console.log(
+          ` giving command to comment section to REFETCH comments from editor from: `,
+          postId
+        );
+        commandReload();
         //setComments([data, ...comments]);
       } else {
         const rese = await res.json();
@@ -103,11 +117,11 @@ export default function CommentingEditor({
           />
           <div className="flex justify-between items-center mt-5">
             <p className="text-gray-500 text-xs">
-              {200 - comment.length} characters remaining
+              {400 - comment.length ?? 0} characters remaining
             </p>
             <div className="flex justify-between gap-2">
               <Button gradientDuoTone="purpleToBlue" type="submit">
-                Submit
+                {mode == "edit" ? "Edit" : "Comment"}
               </Button>{" "}
               <Button
                 onClick={onClose}
