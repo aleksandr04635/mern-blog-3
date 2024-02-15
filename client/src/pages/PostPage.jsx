@@ -191,9 +191,9 @@ export default function PostPage() {
           className="p-2 max-w-2xl mx-auto w-full post-content"
           dangerouslySetInnerHTML={{ __html: post && post.content }}
         ></div>
-        <div className="flex flex-col sm:flex-row items-center justify-between w-full">
+        <div className="flex flex-col border-l-2  border-teal-500 sm:flex-row items-center justify-between w-full">
           {/* Likes sm:w-[150px] flex-col sm: */}
-          <div className="flex flex-col sm:flex-row items-center justify-between w-full">
+          <div className="flex flex-col  sm:flex-row items-center justify-between w-full">
             <div className="flex h-[50px] w-full p-2 text-lg items-center dark:border-gray-700  gap-2">
               <button
                 type="button"
@@ -291,6 +291,7 @@ export default function PostPage() {
         )}
         <CommentSection
           key={post._id}
+          lev={1}
           sw={sw}
           toPost={true}
           postId={post._id}

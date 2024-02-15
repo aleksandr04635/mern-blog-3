@@ -12,7 +12,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Comment from "./Comment";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 
-export default function CommentSection({ toPost, postId, sw }) {
+export default function CommentSection({ lev, toPost, postId, sw }) {
   const { currentUser } = useSelector((state) => state.user);
   const [commentsError, setCommentsError] = useState(null);
   const [comments, setComments] = useState([]);
@@ -22,6 +22,7 @@ export default function CommentSection({ toPost, postId, sw }) {
   const [commentToDelete, setCommentToDelete] = useState(null);
   const navigate = useNavigate();
 
+  //console.log("lev  from CommentSection.jsx:", lev);
   //console.log("toPost, postId  from CommentSection.jsx:", toPost, postId);
 
   useEffect(() => {
@@ -122,14 +123,23 @@ export default function CommentSection({ toPost, postId, sw }) {
           <Spinner size="xl" />
         </div>
       ) : (
-        <div className="flex flex-col border-l">
+        /*   <div className="flex flex-col border-l"> */
+        <div className="flex flex-col">
           {comments.length === 0 ? (
             <></>
           ) : (
             /*  <p className="text-sm my-1">No comments yet</p> */
-            <>
+            <div
+              className={`mb-1 w-full border-l border-b rounded-bl-lg ${
+                lev % 2 == 0 ? `border-fuchsia-500` : `border-teal-500`
+              }`}
+            >
               {comments.length > 2 && (
-                <div className="text-sm my-1 flex items-center gap-1">
+                <div
+                  className={` text-sm pl-2 py-1 flex items-center gap-1 w-full border-l  ${
+                    lev % 2 == 0 ? `border-fuchsia-500` : `border-teal-500`
+                  }`}
+                >
                   <div className=" py-1  ">
                     <p>{comments.length}</p>
                   </div>
@@ -139,6 +149,7 @@ export default function CommentSection({ toPost, postId, sw }) {
               {comments.map((comment) => (
                 <Comment
                   key={comment._id}
+                  lev={lev}
                   comment={comment}
                   onLike={handleLike}
                   onEdit={handleEdit}
@@ -148,7 +159,7 @@ export default function CommentSection({ toPost, postId, sw }) {
                   }}
                 />
               ))}
-            </>
+            </div>
           )}
           {commentsError && (
             <Alert color="failure" className="mt-3">
