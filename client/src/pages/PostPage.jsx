@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 import CommentSection from "../components/CommentSection";
-import PostCard from "../components/PostCard";
+import CommentingEditor from "../components/CommentingEditor";
+
 import { useSelector } from "react-redux";
 import { Modal, Table } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
@@ -18,7 +19,8 @@ export default function PostPage() {
   const [error, setError] = useState(false);
   const [post, setPost] = useState(null);
   const [showModal, setShowModal] = useState(false);
-
+  const [tocomment, setTocomment] = useState(false);
+  const [sw, setSw] = useState(false);
   const navigate = useNavigate();
   //console.log("post: ", post);
   //console.log(" currentUser : ", currentUser);
@@ -106,7 +108,7 @@ export default function PostPage() {
       if (!res.ok) {
         console.log(data.message);
       } else {
-        navigate(`/dashboard?tab=posts`);
+        navigate(`/dashboard?tab=posts&userId=${currentUser._id}`);
       }
     } catch (error) {
       console.log(error.message);
@@ -189,73 +191,110 @@ export default function PostPage() {
           className="p-2 max-w-2xl mx-auto w-full post-content"
           dangerouslySetInnerHTML={{ __html: post && post.content }}
         ></div>
-        {/* Likes */}
-        <div className="flex h-[50px] w-full p-2 text-lg  dark:border-gray-700  gap-2">
-          <button
-            type="button"
-            onClick={() =>
-              onLike("l", post.likes.includes(currentUser._id) ? "-" : "+")
-            }
-            className={`text-gray-400 hover:text-blue-500 ${
-              currentUser &&
-              post.likes.includes(currentUser._id) &&
-              "!text-blue-500"
-            }`}
-          >
-            <FaThumbsUp className="text-lg" />
-          </button>
-          <p className="text-gray-400">
-            {post.numberOfLikes > 0 &&
-              post.numberOfLikes +
-                " " +
-                (post.numberOfLikes === 1 ? "like" : "likes")}
-          </p>
-          <button
-            type="button"
-            onClick={() =>
-              onLike("d", post.dislikes.includes(currentUser._id) ? "-" : "+")
-            }
-            className={`text-gray-400 hover:text-blue-500 ${
-              currentUser &&
-              post.dislikes.includes(currentUser._id) &&
-              "!text-blue-500"
-            }`}
-          >
-            <FaThumbsDown className="text-lg" />
-          </button>
-          <p className="text-gray-400">
-            {post.numberOfDislikes > 0 &&
-              post.numberOfDislikes +
-                " " +
-                (post.numberOfDislikes === 1 ? "dislike" : "dislikes")}
-          </p>
-        </div>
-        {currentUser &&
-          (post.userId._id == currentUser._id || currentUser.isAdmin) && (
-            <div className="flex justify-around gap-2 w-full max-w-2xl mx-auto mb-4">
-              <Button
-                outline
-                gradientDuoTone="purpleToBlue"
-                className="w-[150px]"
-                onClick={() => {
-                  navigate(`/update-post/${post._id}`);
-                }}
+        <div className="flex flex-col sm:flex-row items-center justify-between w-full">
+          {/* Likes sm:w-[150px] flex-col sm: */}
+          <div className="flex flex-col sm:flex-row items-center justify-between w-full">
+            <div className="flex h-[50px] w-full p-2 text-lg items-center dark:border-gray-700  gap-2">
+              <button
+                type="button"
+                onClick={() =>
+                  onLike("l", post.likes.includes(currentUser._id) ? "-" : "+")
+                }
+                className={`text-gray-400 hover:text-blue-500 ${
+                  currentUser &&
+                  post.likes.includes(currentUser._id) &&
+                  "!text-blue-500"
+                }`}
               >
-                Edit
-              </Button>
-              <Button
-                outline
-                gradientDuoTone="pinkToOrange"
-                className="w-[150px]"
-                onClick={() => {
-                  setShowModal(true);
-                }}
+                <FaThumbsUp className="text-lg" />
+              </button>
+              <p className="text-gray-400">
+                {post.numberOfLikes > 0 &&
+                  post.numberOfLikes +
+                    " " +
+                    (post.numberOfLikes === 1 ? "like" : "likes")}
+              </p>
+              <button
+                type="button"
+                onClick={() =>
+                  onLike(
+                    "d",
+                    post.dislikes.includes(currentUser._id) ? "-" : "+"
+                  )
+                }
+                className={`text-gray-400 hover:text-blue-500 ${
+                  currentUser &&
+                  post.dislikes.includes(currentUser._id) &&
+                  "!text-blue-500"
+                }`}
               >
-                Delete
-              </Button>
+                <FaThumbsDown className="text-lg" />
+              </button>
+              <p className="text-gray-400">
+                {post.numberOfDislikes > 0 &&
+                  post.numberOfDislikes +
+                    " " +
+                    (post.numberOfDislikes === 1 ? "dislike" : "dislikes")}
+              </p>
             </div>
-          )}
-        <CommentSection key={post._id} toPost={true} postId={post._id} />
+            <Button
+              onClick={() => setTocomment(!tocomment)}
+              outline
+              gradientDuoTone="purpleToBlue"
+              type="submit"
+              className="w-[150px] "
+            >
+              {tocomment ? "Cancel" : "Comment"}
+            </Button>
+          </div>
+          {currentUser &&
+            (post.userId._id == currentUser._id || currentUser.isAdmin) && (
+              <div className="flex justify-around sm:justify-end gap-2 w-full items-center  ">
+                <Button
+                  outline
+                  gradientDuoTone="purpleToBlue"
+                  className="w-[120px] "
+                  onClick={() => {
+                    navigate(`/update-post/${post._id}`);
+                  }}
+                >
+                  Edit
+                </Button>
+                <Button
+                  outline
+                  gradientDuoTone="pinkToOrange"
+                  className="w-[120px]"
+                  onClick={() => {
+                    setShowModal(true);
+                  }}
+                >
+                  Delete
+                </Button>
+              </div>
+            )}
+        </div>
+        {tocomment && (
+          <CommentingEditor
+            toPost={true}
+            postId={post._id}
+            setReload={() => {
+              console.log(
+                " giving commant to REFETCH comments from: ",
+                post._id
+              );
+              setSw(!sw);
+            }}
+            onClose={() => {
+              setTocomment(false);
+            }}
+          />
+        )}
+        <CommentSection
+          key={post._id}
+          sw={sw}
+          toPost={true}
+          postId={post._id}
+        />
 
         <Modal
           show={showModal}
