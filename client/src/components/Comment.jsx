@@ -7,7 +7,7 @@ import CommentSection from "./CommentSection";
 import CommentingEditor from "./CommentingEditor";
 
 export default function Comment({
-  lev,
+  level,
   comment,
   onLike,
   onEdit,
@@ -20,11 +20,15 @@ export default function Comment({
   const [tocomment, setTocomment] = useState(false);
   const [reloadSwitch, setReloadSwitch] = useState(false);
   //console.log("comment: ", comment);
-  //console.log("lev  from Comment.jsx:", lev);
+  //console.log("level  from Comment.jsx:", level);
 
   const handleEdit = () => {
-    setIsEditing(true);
-    setEditedContent(comment.content);
+    if (!isEditing) {
+      setIsEditing(true);
+      setEditedContent(comment.content);
+    } else {
+      setIsEditing(false);
+    }
   };
 
   const handleSaveUponEditing = async (con) => {
@@ -51,7 +55,7 @@ export default function Comment({
     /*  <div className="flex p-4 border-b dark:border-gray-600 text-sm"></div> */
     <div
       className={` flex flex-col w-full pt-2 pl-1 sm:pl-2 pb-0 pr-0  border-b  rounded-bl-lg ${
-        lev % 2 == 0 ? `border-purple-500` : `border-teal-500`
+        level % 2 == 0 ? `border-purple-500` : `border-teal-500`
       }`}
     >
       <div>
@@ -78,49 +82,19 @@ export default function Comment({
               </div>
             </div>
             {isEditing ? (
-              <>
-                <CommentingEditor
-                  toPost={false}
-                  postId={comment._id}
-                  initialContent={comment.content}
-                  mode={"edit"}
-                  onClose={() => {
-                    setIsEditing(false);
-                  }}
-                  onEdit={(con) => handleSaveUponEditing(con)}
-                />
-                <div>
-                  <Textarea
-                    className="mb-2"
-                    value={editedContent}
-                    onChange={(e) => setEditedContent(e.target.value)}
-                  />
-                  <div className="flex justify-end gap-2 text-xs">
-                    <Button
-                      type="button"
-                      size="sm"
-                      gradientDuoTone="purpleToBlue"
-                      onClick={() => {
-                        handleSaveUponEditing(editedContent);
-                      }}
-                    >
-                      Save
-                    </Button>
-                    <Button
-                      type="button"
-                      size="sm"
-                      gradientDuoTone="purpleToBlue"
-                      outline
-                      onClick={() => setIsEditing(false)}
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                </div>
-              </>
+              <CommentingEditor
+                toPost={false}
+                postId={comment._id}
+                initialContent={comment.content}
+                mode={"edit"}
+                onClose={() => {
+                  setIsEditing(false);
+                }}
+                onEdit={(con) => handleSaveUponEditing(con)}
+              />
             ) : (
               <>
-                <p className=" text-justify p-1">{comment.content}</p>
+                <p className=" text-justify px-2 p-1">{comment.content}</p>
               </>
             )}
           </div>
@@ -196,7 +170,7 @@ export default function Comment({
                     onClick={handleEdit}
                     className="text-gray-400 hover:text-blue-500"
                   >
-                    Edit
+                    {isEditing ? "Cancel" : "Edit"}
                   </button>
                   <button
                     type="button"
@@ -225,7 +199,7 @@ export default function Comment({
           />
         )}
         <CommentSection
-          lev={lev + 1}
+          level={level + 1}
           reloadSwitch={reloadSwitch}
           key={comment._id}
           toPost={false}

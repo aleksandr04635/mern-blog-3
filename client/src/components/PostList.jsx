@@ -34,14 +34,17 @@ export default function PostList() {
   const [totalPosts, setTotalPosts] = useState(0);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  console.log("totalPosts in state: ", totalPosts);
+  /*   console.log("totalPosts in state: ", totalPosts);
   console.log("page in state: ", page);
   console.log("pageSize in state: ", pageSize);
-  console.log("totalPages in state: ", totalPages);
+  console.log("totalPages in state: ", totalPages); */
 
   const fetchPostsByQuerryString = async (q) => {
     setLoading(true);
-    console.log("fetched by function: ", `/api/post/getposts?${q}`);
+    console.log(
+      "fetched by fetchPostsByQuerryString: ",
+      `/api/post/getposts?${q}`
+    );
     const res = await fetch(`/api/post/getposts?${q}`);
     if (!res.ok) {
       setLoading(false);
@@ -59,8 +62,8 @@ export default function PostList() {
       const urlParams5 = new URLSearchParams(location.search);
       let pageFromUrl = parseInt(urlParams5.get("page"));
       let pageSizeFromUrl = parseInt(urlParams5.get("pageSize"));
-      console.log("pageFromUrl: ", pageFromUrl);
-      console.log("pageSizeFromUrl: ", pageSizeFromUrl);
+      //console.log("pageFromUrl: ", pageFromUrl);
+      //console.log("pageSizeFromUrl: ", pageSizeFromUrl);
       if (
         pageFromUrl &&
         pageFromUrl == data.page &&
@@ -84,7 +87,7 @@ export default function PostList() {
         urlParams4.set("pageSize", data.pageSize);
         let searchQuery3 = urlParams4.toString();
         console.log(
-          " setting searchQuery and navigate to: ",
+          "in fetchPostsByQuerryString setting searchQuery and navigate to: ",
           `${location.pathname}?${searchQuery3}`
         );
         navigate(`${location.pathname}?${searchQuery3}`);
@@ -127,12 +130,16 @@ export default function PostList() {
 
   useEffect(() => {
     const ef = async () => {
-      console.log(" setting pageSize from store to: ", pageSizeStore);
+      console.log(
+        "pageSizeStore changed. Setting pageSize from store to: ",
+        pageSizeStore
+      );
       setPageSize(pageSizeStore);
     };
     ef();
   }, [pageSizeStore]);
 
+  //change pageSize
   const handleChange = (e) => {
     console.log(" pageSize changed to to: ", +e.target.value);
     dispatch(changePageSize(+e.target.value));
@@ -142,7 +149,7 @@ export default function PostList() {
     urlParams.set("page", Math.floor(totalPosts / +e.target.value) || 1);
     let searchQuery2 = urlParams.toString();
     console.log(
-      " setting searchQuery and navigate to: ",
+      "from change pageSize setting searchQuery and navigate to: ",
       `${location.pathname}?${searchQuery2}`
     );
     navigate(`${location.pathname}?${searchQuery2}`);
@@ -170,7 +177,10 @@ export default function PostList() {
         const urlParams3 = new URLSearchParams(location.search);
         urlParams3.set("page", newTopPage);
         let searchQuery3 = urlParams3.toString();
-        console.log(" calling fetchPostsQ with : ", searchQuery3);
+        console.log(
+          " calling fetchPostsQ from  handleDeletePost  with : ",
+          searchQuery3
+        );
         fetchPostsByQuerryString(searchQuery3);
       }
     } catch (error) {
@@ -194,8 +204,8 @@ export default function PostList() {
           >
             <option value="2">2</option>
             <option value="3">3</option>
-            <option value="4">4</option>
             <option value="5">5</option>
+            <option value="10">10</option>
           </select>
         </div>
       </div>

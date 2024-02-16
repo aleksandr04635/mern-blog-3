@@ -13,7 +13,7 @@ import Comment from "./Comment";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 
 export default function CommentSection({
-  lev,
+  level,
   toPost,
   postId,
   reloadSwitch,
@@ -28,7 +28,7 @@ export default function CommentSection({
   const [commentToDelete, setCommentToDelete] = useState(null);
   const navigate = useNavigate();
 
-  //console.log("lev  from CommentSection.jsx:", lev);
+  //console.log("level  from CommentSection.jsx:", level);
   //console.log("toPost, postId  from CommentSection.jsx:", toPost, postId);
 
   const getComments = async () => {
@@ -146,7 +146,7 @@ export default function CommentSection({
             /*  <p className="text-sm my-1">No comments yet</p> */
             <div
               className={`mb-1 w-full border-l  rounded-bl-lg ${
-                lev % 2 == 0 ? `border-purple-500` : `border-teal-500`
+                level % 2 == 0 ? `border-purple-500` : `border-teal-500`
               }`}
             >
               {comments.length > 2 && (
@@ -162,7 +162,7 @@ export default function CommentSection({
               {comments.map((comment) => (
                 <Comment
                   key={comment._id}
-                  lev={lev}
+                  level={level}
                   comment={comment}
                   onLike={handleLike}
                   onEdit={handleEdit}

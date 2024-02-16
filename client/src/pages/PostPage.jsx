@@ -287,7 +287,7 @@ export default function PostPage() {
         )}
         <CommentSection
           key={post._id}
-          lev={1}
+          level={1}
           reloadSwitch={reloadSwitch}
           toPost={true}
           postId={post._id}

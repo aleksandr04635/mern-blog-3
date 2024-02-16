@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export default function PaginationBar({ currentPage, totalPages }) {
   const location = useLocation();
+  const { pageSize: pageSizeStore } = useSelector((state) => state.pageSize);
   //console.log("currentPage: ", currentPage);
   //console.log("totalPages: ", totalPages);
   if (totalPages <= 1) {
@@ -30,6 +32,13 @@ export default function PaginationBar({ currentPage, totalPages }) {
     return cn;
   };
 
+  const makeQuery = (page) => {
+    let urlParams = new URLSearchParams(location.search);
+    urlParams.set("page", page);
+    urlParams.set("pageSize", pageSizeStore);
+    return urlParams.toString();
+  };
+
   //const maxPage = Math.min(totalPages, Math.max(currentPage + 4, 10));
   //const minPage = Math.max(1, Math.min(currentPage - 5, maxPage - 9));
   const maxPage = Math.min(totalPages, Math.max(currentPage + 3, 6));
@@ -37,9 +46,6 @@ export default function PaginationBar({ currentPage, totalPages }) {
   const numberedPageItems = [];
   //for (let page = minPage; page <= maxPage; page++) {
   for (let page = maxPage; page >= minPage; page--) {
-    let urlParams = new URLSearchParams(location.search);
-    urlParams.set("page", page);
-    let searchQuery = urlParams.toString();
     numberedPageItems.push(
       currentPage === page ? (
         <div key={page} className={cName(page)}>
@@ -48,7 +54,7 @@ export default function PaginationBar({ currentPage, totalPages }) {
       ) : (
         <Link
           key={page}
-          to={`${location.pathname}?${searchQuery}`}
+          to={`${location.pathname}?${makeQuery(page)}`}
           className=""
         >
           <div className={cName(page)}>{page}</div>
@@ -57,19 +63,15 @@ export default function PaginationBar({ currentPage, totalPages }) {
     );
   }
 
-  let urlParamsFirst = new URLSearchParams(location.search);
-  urlParamsFirst.set("page", 1);
-  let searchQueryFirst = urlParamsFirst.toString();
-  let urlParamsLast = new URLSearchParams(location.search);
-  urlParamsLast.set("page", totalPages);
-  let searchQueryLast = urlParamsLast.toString();
-
   return (
     <>
       {/* <div className=" hidden sm:block"> */}
       <div className="flex flex-row">
         {maxPage < totalPages && (
-          <Link to={`${location.pathname}?${searchQueryLast}`} key={totalPages}>
+          <Link
+            to={`${location.pathname}?${makeQuery(totalPages)}`}
+            key={totalPages}
+          >
             <div className={cName(totalPages)}>{totalPages}</div>
           </Link>
         )}
@@ -77,7 +79,7 @@ export default function PaginationBar({ currentPage, totalPages }) {
         {numberedPageItems}
         {minPage > 2 && <div className="px-2 ">...</div>}
         {minPage > 1 && (
-          <Link to={`${location.pathname}?${searchQueryFirst}`} key={1}>
+          <Link to={`${location.pathname}?${makeQuery(1)}`} key={1}>
             <div className={cName(1)}>{1}</div>
           </Link>
         )}
