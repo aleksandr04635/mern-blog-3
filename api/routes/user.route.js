@@ -10,9 +10,7 @@ const test = (req, res) => {
 const updateUser = async (req, res, next) => {
   connectDB();
   //console.log("req.user from updateUser: ", req.user);
-  //console.log("req.body from updateUser: ", req.body);
-  // console.log("req.body from updateUser: ", req.body);
-
+  console.log("req.body from updateUser: ", req.body);
   if (req.user.id !== req.params.userId) {
     return next(errorHandler(403, "You are not allowed to update this user"));
   }
@@ -68,6 +66,7 @@ const updateUser = async (req, res, next) => {
         $set: {
           username: req.body.username,
           email: req.body.email,
+          description: req.body.description,
           profilePicture: req.body.profilePicture,
           password: password2,
         },

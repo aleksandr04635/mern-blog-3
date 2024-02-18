@@ -3,6 +3,7 @@ import {
   Button,
   Modal,
   ModalBody,
+  Textarea,
   TextInput,
   Label,
   Spinner,
@@ -66,6 +67,7 @@ export default function DashProfile() {
       setFormData({
         username: currentUser.username,
         email: currentUser.email,
+        description: currentUser.description || "",
         password: "",
       });
       setLoadingPage(false);
@@ -146,7 +148,7 @@ export default function DashProfile() {
       setUpdateUserError("No changes made");
       return;
     }
-    //console.log("sent formData:", formData);
+    console.log("sent formData:", formData);
     if (imageFileUploading) {
       setUpdateUserError("Please wait for image to upload");
       return;
@@ -217,10 +219,10 @@ export default function DashProfile() {
   }
 
   return (
-    <div className="max-w-lg mx-auto p-3 w-full">
-      <h1 className="my-4 text-center font-semibold text-3xl">Profile</h1>
+    <div className="max-w-lg mx-auto px-3 w-full">
+      <h1 className="my-2 text-center font-semibold text-xl">Profile</h1>
       <h3 className=" my-1 text-center  text-base">
-        Here you can change your avatar image or data. Don't enter data you
+        Here you can change your avatar image or data. Don't enter the data you
         don't want to change
       </h3>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -326,6 +328,28 @@ export default function DashProfile() {
             value={formData.email}
             color={validateEmail(formData?.email) ? "success" : "failure"}
             helperText={validateEmail(formData?.email) ? "" : "enter an email"}
+          />
+        </div>
+        <div>
+          <Label htmlFor="description" value="Write briefly about yourself:" />
+          {/*           <TextInput
+            type="description"
+            placeholder="Your short description"
+            id="description"
+            onChange={handleChange}
+            value={formData.description}
+          /> */}
+          <Textarea
+            placeholder="Your short description"
+            maxLength="300"
+            id="description"
+            color="success"
+            onChange={handleChange}
+            className="h-[160px] sm:h-[80px]"
+            value={formData.description}
+            /*               helperText={
+                formData.intro?.length > 5 ? "" : "minimum 5 characters"
+              } */
           />
         </div>
         <div className="relative">

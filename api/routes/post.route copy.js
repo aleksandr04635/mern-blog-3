@@ -1,7 +1,6 @@
 import express from "express";
 import { connectDB, errorHandler, verifyToken } from "../utils/utils.js";
 import Post from "../models/post.model.js";
-import User from "../models/user.model.js";
 
 const create = async (req, res, next) => {
   console.log("req.body from create:", req.body);
@@ -40,10 +39,6 @@ const getposts = async (req, res, next) => {
     }
     console.log("req.query from getposts:", req.query);
     const sortDirection = req.query.sort === "asc" ? 1 : -1;
-    const sortObj = !!req.query.userId
-      ? { importance: -1, createdAt: sortDirection }
-      : { createdAt: sortDirection };
-    //console.log("sortObj from getposts:", sortObj);
     const pageSize =
       parseInt(req.query.pageSize) || parseInt(process.env.DEFAULT_PAGE_SIZE);
     const pageFromQuerry = parseInt(req.query.page);
@@ -66,7 +61,9 @@ const getposts = async (req, res, next) => {
             { content: { $regex: req.query.searchTerm, $options: "i" } },
           ],
         }),
-      }).populate("userId", ["username", "_id", "profilePicture"]);
+      })
+        .sort({ createdAt: sortDirection })
+        .populate("userId", ["username", "_id", "profilePicture"]);
       res.status(200).json({ posts });
       return;
     }
@@ -93,18 +90,18 @@ const getposts = async (req, res, next) => {
     let page;
     if (!pageFromQuerry) {
       console.log(
-        "no page was querried to totalPosts. pageFromQuerry:",
+        "no page querried to totalPosts. pageFromQuerry:",
         pageFromQuerry
       );
       page = totalPages;
     } else {
       console.log(
-        "a page was querried to totalPosts. pageFromQuerry:",
+        "a page querried to totalPosts. pageFromQuerry:",
         pageFromQuerry
       );
       page = pageFromQuerry;
     }
-    //console.log("page from getposts:", page);
+    console.log("page from getposts:", page);
 
     if (page > totalPages || page < 0) {
       return next(
@@ -139,13 +136,13 @@ const getposts = async (req, res, next) => {
         ],
       }),
     })
-      .sort(sortObj)
+      .sort({ createdAt: sortDirection })
       .skip(skip)
       .limit(lim)
       .populate("userId", ["username", "_id", "profilePicture"]);
     //console.log("posts from getposts: ", posts);
 
-    const resObj = {
+    res.status(200).json({
       totalPosts,
       pageSize,
       totalPages,
@@ -154,13 +151,7 @@ const getposts = async (req, res, next) => {
       lim,
       sortDirection,
       posts,
-    };
-    if (req.query.userId) {
-      const user = await User.findById(req.query.userId);
-      const { password, ...rest } = user._doc;
-      resObj.user = rest;
-    }
-    res.status(200).json(resObj);
+    });
   } catch (error) {
     next(error);
   }
@@ -301,7 +292,6 @@ const likePost = async (req, res, next) => {
 };
 
 const countTags = async (req, res, next) => {
-  //console.log("called countTags :");
   connectDB();
   try {
     const posts = await Post.find();
@@ -321,7 +311,7 @@ const countTags = async (req, res, next) => {
       });
     });
     tagData.sort((a, b) => b.count - a.count);
-    //console.log("tagData", tagData);
+    // console.log("tagData", tagData);
     res.status(200).json(tagData);
   } catch (error) {
     next(error);

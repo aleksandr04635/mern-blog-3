@@ -26,14 +26,19 @@ export default function PostCard({ post, onDelete }) {
       )}
       {/*  className="max-h-[260px] w-[360px] min-w-full sm:min-w-[360px]  object-cover " */}
       <div className="sm:pl-2 flex flex-col grow justify-around">
-        <span className="pt-1 text-sm px-2">
-          {formatISO9075(new Date(post.createdAt))}
-        </span>
+        <div className="flex justify-between pt-1 px-2  border-slate-500  w-full text-sm">
+          <span>{formatISO9075(new Date(post.createdAt))}</span>
+          {/*         <span>{new Date(post.createdAt).toUTCString()}</span> */}
+          {post && <span>importance: {post.importance}</span>}
+          <span className="italic">
+            {post && (post.content.length / 1000).toFixed(0)} mins read
+          </span>
+        </div>
         <Link to={`/post/${post.slug}`}>
           <h2
-            className="text-xl text-justify px-2
+            className="text-2xl text-justify px-2
            text-stone-800 dark:text-violet-400 dark:hover:text-blue-400 hover:text-blue-800 
-           py-1 font-semibold "
+           font-semibold "
           >
             {post.title}
           </h2>
@@ -85,9 +90,9 @@ export default function PostCard({ post, onDelete }) {
             </Link>
           ))}
         </div>
-        <div className="flex items-center justify-between w-full">
+        <div className=" flex items-center justify-between w-full">
           {/*  Likes */}
-          <div className="flex  items-center h-[40px] w-full p-2 text-lg  dark:border-gray-700  gap-2">
+          <div className="relative group flex  items-center h-[40px] w-full p-2 text-lg  dark:border-gray-700  gap-2">
             <button
               type="button"
               className={`text-gray-500 cursor-default ${
@@ -115,7 +120,11 @@ export default function PostCard({ post, onDelete }) {
             <p className="text-gray-500">
               {post.numberOfDislikes > 0 && post.numberOfDislikes}
             </p>
+            <div className="hidden group-hover:block text-sm text-orange-500 absolute z-50 bottom-[1px] left-[90px]">
+              You can upvote a post only after reading it
+            </div>
           </div>
+
           {/*  Controls */}
           {currentUser &&
             (post.userId._id == currentUser._id || currentUser.isAdmin) && (

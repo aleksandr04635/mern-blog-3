@@ -1,4 +1,4 @@
-import { Button, Spinner } from "flowbite-react";
+import { Alert, Button, Spinner } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
@@ -16,33 +16,51 @@ export default function PostPage() {
   const { postSlug } = useParams();
   const { currentUser } = useSelector((state) => state.user);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState("");
   const [post, setPost] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [tocomment, setTocomment] = useState(false);
   const [reloadSwitch, setReloadSwitch] = useState(false);
   const navigate = useNavigate();
-  //console.log("post: ", post);
+  console.log("loading: ", loading);
+  console.log("post: ", post);
+  console.log("error: ", error);
   //console.log(" currentUser : ", currentUser);
 
   useEffect(() => {
     const fetchPost = async () => {
       try {
         setLoading(true);
+        setError("");
+        console.log("fetching: ", `/api/post/getposts?slug=${postSlug}`);
         const res = await fetch(`/api/post/getposts?slug=${postSlug}`);
         const data = await res.json();
+        console.log("data: ", data);
+
         if (!res.ok) {
-          setError(true);
+          //const data = await res.json();
+          //if (!res.ok) {
+          //setPublishError(data.message);
+          setError(data.message);
+          console.log("!res.ok ", error);
           setLoading(false);
           return;
         }
         if (res.ok) {
-          setPost(data.posts[0]);
           setLoading(false);
-          setError(false);
+          console.log("res.ok ", error);
+          console.log("data.posts.length: ", data.posts.length);
+          if (data.posts.length == 0) {
+            setError("No posts found");
+            console.log("No posts found");
+            return;
+          }
+          console.log("res.ok.data.posts[0]: ", data.posts[0]);
+          setPost(data.posts[0]);
+          setError("");
         }
       } catch (error) {
-        setError(true);
+        setError(error);
         setLoading(false);
       }
     };
@@ -124,203 +142,214 @@ export default function PostPage() {
 
   return (
     <main className="px-1 sm:p-3   max-w-6xl mx-auto min-h-screen">
-      <div className="flex flex-col max-w-3xl w-full mx-auto items-center   ">
-        {post && post.image && (
-          <img
-            src={post && post.image}
-            alt={post && post.title}
-            className=" p-3    object-contain "
-          />
-        )}
-        <div className="flex justify-between p-3 border-b border-slate-500  w-full text-xs">
-          <span>{formatISO9075(new Date(post.createdAt))}</span>;
-          {/*         <span>{new Date(post.createdAt).toUTCString()}</span> */}
-          <span className="italic">
-            {post && (post.content.length / 1000).toFixed(0)} mins read
-          </span>
-        </div>
-        <div className="flex  w-full items-center mt-2  font-semibold">
-          <div className="flex flex-wrap items-center space-x-2 ">
-            <span>Tags: </span>
-            {post.tags?.map((t, i) => (
-              <Link
-                key={i}
-                to={`/search?tag=${t.slug}`}
-                className="dark:hover:bg-stone-700 hover:bg-stone-200 border rounded my-1 px-2 py-1"
-              >
-                {t.name}
-              </Link>
-            ))}
+      {post && (
+        <div className="flex flex-col max-w-3xl w-full mx-auto items-center   ">
+          {post && post.image && (
+            <img
+              src={post && post.image}
+              alt={post && post.title}
+              className=" p-3    object-contain "
+            />
+          )}
+          <div className="flex justify-between p-3 border-b border-slate-500  w-full text-xs">
+            <span>{formatISO9075(new Date(post.createdAt))}</span>
+            {/*         <span>{new Date(post.createdAt).toUTCString()}</span> */}
+            {post && <span>importance: {post.importance}</span>}
+            <span className="italic">
+              {post && (post.content.length / 1000).toFixed(0)} mins read
+            </span>
           </div>
-        </div>
+          <div className="flex  w-full items-center mt-2  font-semibold">
+            <div className="flex flex-wrap items-center space-x-2 ">
+              <span>Tags: </span>
+              {post.tags?.map((t, i) => (
+                <Link
+                  key={i}
+                  to={`/search?tag=${t.slug}`}
+                  className="dark:hover:bg-stone-700 hover:bg-stone-200 border rounded my-1 px-2 py-1"
+                >
+                  {t.name}
+                </Link>
+              ))}
+            </div>
+          </div>
 
-        {post && post.userId.username && (
-          <Link
-            to={
-              currentUser && post.userId._id == currentUser._id
-                ? `/dashboard?tab=posts&userId=${currentUser._id}`
-                : `/search?userId=${post.userId._id}`
-            }
-            className="text-gray-500 "
-          >
-            <div className="group flex  ">
-              <div className="relative w-10 h-10 self-center shadow-md overflow-hidden rounded-full">
-                <img
-                  src={post.userId.profilePicture}
-                  alt="user"
-                  className={`rounded-full w-full h-full object-cover border-2 group-hover:border-blue-800
-                   dark:border-purple-800 dark:group-hover:border-blue-400 border-[lightgray] `}
-                />
-              </div>
-              <h1
-                className="text-xl  text-slate-800 hover:text-blue-800 
-               dark:text-purple-400 dark:group-hover:text-blue-400 p-1 my-1 text-center font-serif  "
-              >
-                {post.userId.username}
-              </h1>
-            </div>
-          </Link>
-        )}
-        <h1 className="text-3xl  p-1 text-center font-serif  lg:text-3xl">
-          {post && post.title}
-        </h1>
-        <div className=" p-2  text-lg  mx-auto w-full post-content ">
-          {post && post.intro}
-        </div>
-        <div
-          className="p-2  mx-auto w-full post-content"
-          dangerouslySetInnerHTML={{ __html: post && post.content }}
-        ></div>
-        <div className="flex flex-col border-l-0  border-teal-500 sm:flex-row items-center justify-between w-full">
-          {/* Likes sm:w-[150px] flex-col sm: */}
-          <div className="flex flex-col  sm:flex-row items-center justify-between w-full">
-            <div className="flex h-[50px] w-full p-2 text-lg items-center dark:border-gray-700  gap-2">
-              <button
-                type="button"
-                onClick={() =>
-                  onLike("l", post.likes.includes(currentUser._id) ? "-" : "+")
-                }
-                className={`text-gray-400 hover:text-blue-500 ${
-                  currentUser &&
-                  post.likes.includes(currentUser._id) &&
-                  "!text-blue-500"
-                }`}
-              >
-                <FaThumbsUp className="text-lg" />
-              </button>
-              <p className="text-gray-400">
-                {post.numberOfLikes > 0 &&
-                  post.numberOfLikes +
-                    " " +
-                    (post.numberOfLikes === 1 ? "like" : "likes")}
-              </p>
-              <button
-                type="button"
-                onClick={() =>
-                  onLike(
-                    "d",
-                    post.dislikes.includes(currentUser._id) ? "-" : "+"
-                  )
-                }
-                className={`text-gray-400 hover:text-blue-500 ${
-                  currentUser &&
-                  post.dislikes.includes(currentUser._id) &&
-                  "!text-blue-500"
-                }`}
-              >
-                <FaThumbsDown className="text-lg" />
-              </button>
-              <p className="text-gray-400">
-                {post.numberOfDislikes > 0 &&
-                  post.numberOfDislikes +
-                    " " +
-                    (post.numberOfDislikes === 1 ? "dislike" : "dislikes")}
-              </p>
-            </div>
-            <Button
-              onClick={() => setTocomment(!tocomment)}
-              outline
-              gradientDuoTone="purpleToBlue"
-              type="submit"
-              className="w-[150px] "
+          {post && post.userId.username && (
+            <Link
+              to={
+                currentUser && post.userId._id == currentUser._id
+                  ? `/dashboard?tab=posts&userId=${currentUser._id}`
+                  : `/search?userId=${post.userId._id}`
+              }
+              className="text-gray-500 "
             >
-              {tocomment ? "Cancel" : "Comment"}
-            </Button>
-          </div>
-          {currentUser &&
-            (post.userId._id == currentUser._id || currentUser.isAdmin) && (
-              <div className="flex justify-around sm:justify-end gap-2 w-full items-center  ">
-                <Button
-                  outline
-                  gradientDuoTone="purpleToBlue"
-                  className="w-[120px] "
-                  onClick={() => {
-                    navigate(`/update-post/${post._id}`);
-                  }}
+              <div className="group flex  ">
+                <div className="relative w-10 h-10 self-center shadow-md overflow-hidden rounded-full">
+                  <img
+                    src={post.userId.profilePicture}
+                    alt="user"
+                    className={`rounded-full w-full h-full object-cover border-2 group-hover:border-blue-800
+                   dark:border-purple-800 dark:group-hover:border-blue-400 border-[lightgray] `}
+                  />
+                </div>
+                <h1
+                  className="text-xl  text-slate-800 hover:text-blue-800 
+               dark:text-purple-400 dark:group-hover:text-blue-400 p-1 my-1 text-center font-serif  "
                 >
-                  Edit
-                </Button>
-                <Button
-                  outline
-                  gradientDuoTone="pinkToOrange"
-                  className="w-[120px]"
-                  onClick={() => {
-                    setShowModal(true);
-                  }}
-                >
-                  Delete
-                </Button>
+                  {post.userId.username}
+                </h1>
               </div>
-            )}
-        </div>
-        {tocomment && (
-          <CommentingEditor
+            </Link>
+          )}
+          <h1 className="text-3xl  p-1 text-center font-serif  lg:text-3xl">
+            {post && post.title}
+          </h1>
+          <div className=" p-2  text-lg  mx-auto w-full post-content ">
+            {post && post.intro}
+          </div>
+          <div
+            className="p-2  mx-auto w-full post-content"
+            dangerouslySetInnerHTML={{ __html: post && post.content }}
+          ></div>
+          <div className="flex flex-col border-l-0  border-teal-500 sm:flex-row items-center justify-between w-full">
+            {/* Likes sm:w-[150px] flex-col sm: */}
+            <div className="flex flex-col  sm:flex-row items-center justify-between w-full">
+              <div className="flex h-[50px] w-full p-2 text-lg items-center dark:border-gray-700  gap-2">
+                <button
+                  type="button"
+                  onClick={() =>
+                    onLike(
+                      "l",
+                      post.likes.includes(currentUser._id) ? "-" : "+"
+                    )
+                  }
+                  className={`text-gray-400 hover:text-blue-500 ${
+                    currentUser &&
+                    post.likes.includes(currentUser._id) &&
+                    "!text-blue-500"
+                  }`}
+                >
+                  <FaThumbsUp className="text-lg" />
+                </button>
+                <p className="text-gray-400">
+                  {post.numberOfLikes > 0 &&
+                    post.numberOfLikes +
+                      " " +
+                      (post.numberOfLikes === 1 ? "like" : "likes")}
+                </p>
+                <button
+                  type="button"
+                  onClick={() =>
+                    onLike(
+                      "d",
+                      post.dislikes.includes(currentUser._id) ? "-" : "+"
+                    )
+                  }
+                  className={`text-gray-400 hover:text-blue-500 ${
+                    currentUser &&
+                    post.dislikes.includes(currentUser._id) &&
+                    "!text-blue-500"
+                  }`}
+                >
+                  <FaThumbsDown className="text-lg" />
+                </button>
+                <p className="text-gray-400">
+                  {post.numberOfDislikes > 0 &&
+                    post.numberOfDislikes +
+                      " " +
+                      (post.numberOfDislikes === 1 ? "dislike" : "dislikes")}
+                </p>
+              </div>
+              <Button
+                onClick={() => setTocomment(!tocomment)}
+                outline
+                gradientDuoTone="purpleToBlue"
+                type="submit"
+                className="w-[150px] "
+              >
+                {tocomment ? "Cancel" : "Comment"}
+              </Button>
+            </div>
+            {currentUser &&
+              (post.userId._id == currentUser._id || currentUser.isAdmin) && (
+                <div className="flex justify-around sm:justify-end gap-2 w-full items-center  ">
+                  <Button
+                    outline
+                    gradientDuoTone="purpleToBlue"
+                    className="w-[120px] "
+                    onClick={() => {
+                      navigate(`/update-post/${post._id}`);
+                    }}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    outline
+                    gradientDuoTone="pinkToOrange"
+                    className="w-[120px]"
+                    onClick={() => {
+                      setShowModal(true);
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </div>
+              )}
+          </div>
+          {tocomment && (
+            <CommentingEditor
+              toPost={true}
+              postId={post._id}
+              commandReload={() => {
+                setReloadSwitch(!reloadSwitch);
+              }}
+              onClose={() => {
+                setTocomment(false);
+              }}
+            />
+          )}
+          <CommentSection
+            key={post._id}
+            level={1}
+            reloadSwitch={reloadSwitch}
             toPost={true}
             postId={post._id}
-            commandReload={() => {
-              setReloadSwitch(!reloadSwitch);
-            }}
-            onClose={() => {
-              setTocomment(false);
+            reloadParentSection={() => {
+              console.log("reloaded post's comments");
             }}
           />
-        )}
-        <CommentSection
-          key={post._id}
-          level={1}
-          reloadSwitch={reloadSwitch}
-          toPost={true}
-          postId={post._id}
-          reloadParentSection={() => {
-            console.log("reloaded post's comments");
-          }}
-        />
 
-        <Modal
-          show={showModal}
-          onClose={() => setShowModal(false)}
-          popup
-          size="md"
-        >
-          <Modal.Header />
-          <Modal.Body>
-            <div className="text-center">
-              <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
-              <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-400">
-                Are you sure you want to delete this post?
-              </h3>
-              <div className="flex justify-center gap-4">
-                <Button color="failure" onClick={handleDeletePost}>
-                  Delete
-                </Button>
-                <Button color="gray" onClick={() => setShowModal(false)}>
-                  Cancel
-                </Button>
+          <Modal
+            show={showModal}
+            onClose={() => setShowModal(false)}
+            popup
+            size="md"
+          >
+            <Modal.Header />
+            <Modal.Body>
+              <div className="text-center">
+                <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
+                <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-400">
+                  Are you sure you want to delete this post?
+                </h3>
+                <div className="flex justify-center gap-4">
+                  <Button color="failure" onClick={handleDeletePost}>
+                    Delete
+                  </Button>
+                  <Button color="gray" onClick={() => setShowModal(false)}>
+                    Cancel
+                  </Button>
+                </div>
               </div>
-            </div>
-          </Modal.Body>
-        </Modal>
-      </div>
+            </Modal.Body>
+          </Modal>
+        </div>
+      )}
+      {error && (
+        <Alert color="failure" className={`mt-5 text-justify `}>
+          {error}
+        </Alert>
+      )}
     </main>
   );
 }

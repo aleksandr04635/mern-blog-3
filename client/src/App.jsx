@@ -14,6 +14,15 @@ import PostPage from "./pages/PostPage";
 import ScrollToTop from "./components/ScrollToTop";
 import Search from "./pages/Search";
 
+const NotFound = () => {
+  return (
+    <div className="p-3">
+      <h1 className="text-xl">404 - Page Not Found</h1>
+      <p>Sorry, the page you are looking for could not be found.</p>
+    </div>
+  );
+};
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -36,6 +45,7 @@ export default function App() {
         </Route> */}
 
         <Route path="/post/:postSlug" element={<PostPage />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
     </BrowserRouter>

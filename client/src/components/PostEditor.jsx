@@ -47,7 +47,7 @@ export default function PostEditor({ mode, postId }) {
         if (mode == "edit") {
           const res = await fetch(`/api/post/getposts?postId=${postId}`);
           const data = await res.json();
-          //console.log("formData upon fetch: ", formData);
+          console.log("formData upon fetch: ", formData);
           if (!res.ok) {
             console.log(data.message);
             setPublishError(data.message);
@@ -62,6 +62,8 @@ export default function PostEditor({ mode, postId }) {
             setTags(data.posts[0].tags);
             setLoading(false);
           }
+        } else {
+          setLoading(false);
         }
       } catch (error) {
         console.log(error.message);
@@ -144,7 +146,7 @@ export default function PostEditor({ mode, postId }) {
     e.preventDefault();
     formData.tags = tags;
     //formData._id = postData._id; //it gets lost
-    //console.log("formData from handleSubmit: ", formData);
+    console.log("formData from handleSubmit: ", formData);
     try {
       const res = await fetch(
         // `/api/post/updatepost/${formData._id}/${currentUser._id}`,//old
@@ -154,7 +156,7 @@ export default function PostEditor({ mode, postId }) {
             : "/api/post/create"
         }`, //my
         {
-          method: "PUT",
+          method: `${mode == "edit" ? "PUT" : "POST"}`,
           headers: {
             "Content-Type": "application/json",
           },
@@ -166,7 +168,6 @@ export default function PostEditor({ mode, postId }) {
         setPublishError(data.message);
         return;
       }
-
       if (res.ok) {
         setPublishError(null);
         navigate(`/post/${data.slug}`);
@@ -179,8 +180,10 @@ export default function PostEditor({ mode, postId }) {
   //create
 
   return (
-    <div className="p-2 max-w-3xl mx-auto min-h-screen">
-      <h1 className="text-center text-3xl my-3 font-semibold">Update post</h1>
+    <div className="p-1 max-w-3xl mx-auto min-h-screen">
+      <h1 className="text-center text-xl my-2 font-semibold">
+        {mode == "edit" ? "Update a post" : "Create a post"}
+      </h1>
       {loading ? (
         <div className="h-[80vh] flex justify-center items-center w-full">
           <Spinner size="xl" />
@@ -272,6 +275,48 @@ export default function PostEditor({ mode, postId }) {
               ))}
             </div>
           </div>
+
+          {/* importance */}
+          <div className="flex items-center gap-1">
+            <div className="text-sm px-1">importance:</div>
+            <div className="text-lg">{formData.importance || 1}</div>
+            <div className="flex flex-col   text-sm">
+              <button
+                className=" relative border items-center text-center rounded-t-lg w-[15px] h-[12px]"
+                type="button"
+                onClick={() =>
+                  setFormData({
+                    ...formData,
+                    importance: (formData.importance || 1) + 1,
+                  })
+                }
+              >
+                <p className="top-[-5px] right-[2px] absolute align-middle ">
+                  +
+                </p>
+              </button>
+              <button
+                className=" relative border items-center text-center rounded-b-lg w-[15px] h-[12px]"
+                type="button"
+                onClick={() => {
+                  !!formData.importance & (formData.importance > 1) &&
+                    setFormData({
+                      ...formData,
+                      importance: (formData.importance || 1) - 1,
+                    });
+                }}
+              >
+                <p className="top-[-6px] right-[4px] absolute align-middle ">
+                  -
+                </p>
+              </button>
+            </div>
+            <div className="text-sm px-2">
+              Your posts will be sorted by this importance on your page. Not set
+              it above 1 without real purpose
+            </div>
+          </div>
+
           {/* title */}
           <div className="flex flex-col  justify-between">
             {/* <h3 className="p-1">Title (minimum 5 characters):</h3> */}

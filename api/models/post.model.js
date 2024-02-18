@@ -32,6 +32,10 @@ const postSchema = new Schema(
       required: true,
       unique: true,
     },
+    importance: {
+      type: Number,
+      default: 1,
+    },
     likes: {
       type: Array,
       default: [],

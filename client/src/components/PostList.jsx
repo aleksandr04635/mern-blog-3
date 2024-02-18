@@ -20,7 +20,7 @@ export default function PostList() {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
   const { pageSize: pageSizeStore } = useSelector((state) => state.pageSize);
-  console.log("pageSizeStore in PostList: ", pageSizeStore);
+  //console.log("pageSizeStore in PostList: ", pageSizeStore);
 
   const [showModal, setShowModal] = useState(false);
   const [postToDelete, setPostToDelete] = useState(null);
@@ -34,6 +34,9 @@ export default function PostList() {
   const [totalPosts, setTotalPosts] = useState(0);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [tagInfo, setTagInfo] = useState("");
+  const [userInfo, setUserInfo] = useState({});
+  console.log("userInfo in PostList: ", userInfo);
   /*   console.log("totalPosts in state: ", totalPosts);
   console.log("page in state: ", page);
   console.log("pageSize in state: ", pageSize);
@@ -78,6 +81,9 @@ export default function PostList() {
         setPageSize(data.pageSize);
         setTotalPages(data.totalPages);
         setPage(data.page);
+        if (data.user) {
+          setUserInfo(data.user);
+        }
       } else {
         console.log(
           "no page or pageSize exist in URL or are not equal to that in data. "
@@ -216,6 +222,27 @@ export default function PostList() {
     <div className="flex flex-col  gap-2 ">
       <div className="  text-lg">
         {/*         <h3 className="text-xl font-semibold  py-1  ">Querry results:</h3> */}
+        {userInfo.username && (
+          <div className=" flex flex-col max-w-full ">
+            <div className=" items-center flex max-w-full ">
+              <p>Posts by </p>
+              <h1 className="text-xl  p-1 my-1 text-center font-serif  ">
+                {userInfo.username}
+              </h1>
+            </div>
+            <div className=" items-center flex max-w-full ">
+              <div className=" relative w-20 h-20 self-center shadow-md overflow-hidden rounded-full">
+                <img
+                  src={userInfo.profilePicture}
+                  alt="user"
+                  className={`rounded-full w-full h-full object-cover border-2 
+                    border-gray-300 dark:border-purple-500`}
+                />
+              </div>
+              <p className="pl-3">{userInfo.description}</p>
+            </div>
+          </div>
+        )}
         <p>Total number of posts found: {totalPosts}</p>
         {/*  <p>Page size: {pageSize}</p>
               <p>Total number of pages: {totalPages}</p>
