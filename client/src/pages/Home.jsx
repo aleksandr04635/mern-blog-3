@@ -6,7 +6,7 @@ import TagsTable from "../components/TagsTable";
 export default function Home() {
   return (
     <div className="flex flex-row justify-center gap-5">
-      <div className="py-5 pl-5">
+      <div className="py-10 pl-5">
         <TagsTable />
       </div>
       <div className="flex flex-col gap-3 py-3 px-3 max-w-6xl  ">

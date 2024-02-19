@@ -24,6 +24,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { ImCross } from "react-icons/im";
 
+import TinyMCEEditor from "../components/TinyMCEEditor";
+
 export default function PostEditor({ mode, postId }) {
   const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
@@ -39,7 +41,7 @@ export default function PostEditor({ mode, postId }) {
   const [loading, setLoading] = useState(true);
 
   //console.log("PostEditor(mode, postId) : ", mode, postId);
-  console.log("formData in PostEditor : ", formData);
+  //console.log("formData in PostEditor : ", formData);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -154,7 +156,7 @@ export default function PostEditor({ mode, postId }) {
           mode == "edit"
             ? `/api/post/updatepost/${formData._id}/${currentUser._id}`
             : "/api/post/create"
-        }`, //my
+        }`,
         {
           method: `${mode == "edit" ? "PUT" : "POST"}`,
           headers: {
@@ -375,7 +377,7 @@ export default function PostEditor({ mode, postId }) {
           </div>
           {/* Text */}
           <h3 className="p-1">Main content (necessary):</h3>
-          <ReactQuill
+          {/*           <ReactQuill
             theme="snow"
             value={formData.content || ""}
             placeholder="Write the main text"
@@ -384,7 +386,15 @@ export default function PostEditor({ mode, postId }) {
             onChange={(value) => {
               setFormData({ ...formData, content: value });
             }}
+          /> */}
+
+          <TinyMCEEditor
+            value2={formData.content || ""}
+            onChange={(value3) => {
+              setFormData({ ...formData, content: value3 });
+            }}
           />
+
           {/* Controls */}
           <div className="flex gap-2 items-center justify-around  ">
             <Button
