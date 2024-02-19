@@ -24,16 +24,17 @@ export default function TinyMCEEditor({ value2, onChange }) {
   return (
     <>
       <Editor
+        className=" text-base text-justify"
         //apiKey="uloldf7z9pe592lrmjoh9s32tjjx7ylnar853dybeypiebee"
         //apiKey="your-api-key"
         //tinymceScriptSrc={process.env.PUBLIC_URL + '/tinymce/tinymce.min.js'}
         tinymceScriptSrc="/tinymce/tinymce.min.js"
         onInit={(evt, editor) => (editorRef.current = editor)}
         onEditorChange={(e) => onChange(e)}
+        //onEditorChange={()=>setCont(editorRef.current.getContent())}
         //initialValue="<p>This is the initial content of the editor.</p>"
         //initialValue={value2}
         value={value2}
-        //onEditorChange={()=>setCont(editorRef.current.getContent())}
         init={{
           //REMOVES TINY WARNING!!!:
           /*           init_instance_callback: function (editor) {
@@ -49,6 +50,7 @@ export default function TinyMCEEditor({ value2, onChange }) {
           promotion: false, //a note about update
           height: 600,
           //content_css: '/myLayout.css',
+          content_css: "/index.css",
           //browser_spellcheck: true,
           language: "en",
           image_title: true,

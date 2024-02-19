@@ -19,3 +19,5 @@ https://github.com/aleksandr04635/mern-blog-3
 deployed to
 https://oleksandrs-mern-blog.vercel.app/
 
+https://www.tiny.cloud/docs/tinymce/6/react-ref/
+

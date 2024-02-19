@@ -365,7 +365,7 @@ export default function PostEditor({ mode, postId }) {
               onChange={(e) =>
                 setFormData({ ...formData, intro: e.target.value })
               }
-              className="h-[160px] sm:h-[80px]"
+              className="h-[160px] sm:h-[80px] text-justify text-sm "
               value={formData.intro || ""}
               helperText={
                 formData.intro?.length > 5 ? "" : "minimum 5 characters"

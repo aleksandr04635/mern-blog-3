@@ -1,37 +1,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* These styles are for the shown content, not that in the editor */
+/* These styles are only for the content in the editor */
 body {
   box-sizing: border-box;
   min-height: 100vh;
 }
 
-.ql-editor {
+/* .ql-editor {
   font-size: 1.05rem;
 }
 
-.post-content p,
-.comment-content p {
+.post-content p {
   margin-bottom: 0.5rem;
-  font-size: 1rem;
-}
-.post-content,
-.comment-content {
   text-align: justify;
 }
-
-.post-content h1,
-.comment-content h1 {
+.post-content {
+  text-align: justify;
+}
+.post-content h1 {
   font-size: 1.5rem;
   font-weight: 600;
   font-family: sans-serif;
   margin: 1.5rem 0;
 }
 
-.post-content h2,
-.comment-content h2 {
+.post-content h2 {
   font-size: 1.4rem;
   font-family: sans-serif;
   margin: 1.5rem 0;
@@ -43,6 +37,11 @@ body {
   text-decoration: none;
 }
 
+.comment-content {
+  color: rgb(73, 149, 199);
+  text-decoration: none;
+}
+
 .post-content a:hover,
 .comment-content a:hover {
   text-decoration: underline;
@@ -50,12 +49,24 @@ body {
 
 .dark .post-content a {
   color: red;
-}
+} */
 
-/* .mce-content-body {
+.mce-content-body {
   text-align: justify;
 }
 tox-edit-area__iframe {
   text-align: justify;
 }
- */
+.mce-content-body {
+  max-width: 46rem;
+  margin: auto;
+  padding-right: 3rem;
+  padding-left: 3rem;
+  min-height: 200px;
+}
+.tox-edit-area {
+  max-width: 44rem;
+  margin: auto;
+  padding-right: 3rem;
+  padding-left: 3rem;
+}

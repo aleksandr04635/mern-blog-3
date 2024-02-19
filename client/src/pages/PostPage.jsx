@@ -201,14 +201,14 @@ export default function PostPage() {
               </div>
             </Link>
           )}
-          <h1 className="text-3xl  p-1 text-center font-serif  lg:text-3xl">
+          <h1 className="text-3xl  p-1 text-center font-serif  lg:text-2xl">
             {post && post.title}
           </h1>
-          <div className=" p-2  text-lg  mx-auto w-full post-content ">
+          <div className=" p-2  text-base  mx-auto w-full post-content ">
             {post && post.intro}
           </div>
           <div
-            className="p-2  mx-auto w-full post-content"
+            className="p-2  text-base mx-auto w-full post-content"
             dangerouslySetInnerHTML={{ __html: post && post.content }}
           ></div>
           <div className="flex flex-col border-l-0  border-teal-500 sm:flex-row items-center justify-between w-full">

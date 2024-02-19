@@ -9,6 +9,7 @@ import {
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import TinyMCEEditor from "../components/TinyMCEEditor";
 
 export default function CommentingEditor({
   initialContent,
@@ -106,15 +107,21 @@ export default function CommentingEditor({
       {currentUser && (
         <form
           onSubmit={handleSubmit}
-          className="border border-teal-500 rounded-md p-3"
+          className=" border border-teal-500 rounded-md p-3"
         >
-          <Textarea
+          <TinyMCEEditor
+            value2={comment}
+            onChange={(value3) => {
+              setComment(value3);
+            }}
+          />
+          {/*           <Textarea
             placeholder="Add a comment..."
             rows="3"
             maxLength="200"
             onChange={(e) => setComment(e.target.value)}
             value={comment}
-          />
+          /> */}
           <div className="flex justify-between items-center mt-5">
             <p className="text-gray-500 text-xs">
               {400 - comment.length ?? 0} characters remaining
