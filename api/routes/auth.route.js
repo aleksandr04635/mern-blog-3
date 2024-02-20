@@ -3,6 +3,7 @@ import User from "../models/user.model.js";
 import bcryptjs from "bcryptjs";
 import { connectDB, errorHandler } from "../utils/utils.js";
 import jwt from "jsonwebtoken";
+import nodemailer from "nodemailer";
 
 const signup = async (req, res, next) => {
   connectDB();
@@ -74,7 +75,7 @@ const signin = async (req, res, next) => {
       return next(
         errorHandler(
           400,
-          "Invalid password. If you forgot the password use send it to email functionality"
+          "Invalid password. If you forgot the password use reset it functionality"
         )
       );
     }
@@ -89,6 +90,107 @@ const signin = async (req, res, next) => {
         httpOnly: true,
       })
       .json(rest);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const ForgotPassword = async (req, res, next) => {
+  connectDB();
+  const { email } = req.body;
+  console.log("req.body from ForgotPassword: ", req.body);
+  if (!email) {
+    next(errorHandler(400, "Email is required"));
+  }
+  try {
+    const validUser = await User.findOne({ email });
+    if (!validUser) {
+      return next(errorHandler(404, "User with this email not found"));
+    }
+    //console.log("validUser:", validUser);
+    const token = jwt.sign(
+      { id: validUser._id, email },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1d",
+      }
+    );
+    //let fullUrl = req.protocol + "://" + req.get("host") + req.originalUrl;
+    //console.log("fullUrl:", fullUrl);
+    const loc = req.protocol + "://" + req.get("host");
+    const link = `${loc}/reset-password/${validUser._id}/${token}`;
+    console.log("link:", link);
+    var transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_SERVER_USER,
+        pass: process.env.EMAIL_SERVER_PASSWORD,
+      },
+    });
+    var mailOptions = {
+      from: ` ${process.env.EMAIL_FROM}`,
+      to: email,
+      subject: "Reset Password Link",
+      text: link,
+    };
+    transporter.sendMail(mailOptions, function (error, info) {
+      console.log("Email sent: ", info);
+      console.log("Email sent: " + info.response);
+      if (error) {
+        console.log(error);
+      } else {
+        return res.status(200).send({ message: "Success" });
+      }
+    });
+    /*   
+    res
+      .status(200)
+      .cookie("access_token", token, {
+        httpOnly: true,
+      })
+      .json(rest); */
+    res.status(200).json({ message: "Success" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const ResetPassword = async (req, res, next) => {
+  connectDB();
+  //const { email } = req.body;
+  console.log("req.body from ResetPassword: ", req.body);
+  try {
+    jwt.verify(req.body.token, process.env.JWT_SECRET, async (err, decoded) => {
+      if (err) {
+        return next(errorHandler(401, "Invalid Token"));
+        // res.status(401).send({ message: "Invalid Token" });
+      } else {
+        console.log("decoded from ResetPassword: ", decoded);
+        const user = await User.findOne({ _id: decoded.id });
+        // const user = await User.findOne({ resetToken: req.body.token });
+        if (user) {
+          console.log("user from ResetPassword: ", user);
+          if (req.body.password) {
+            user.password = bcryptjs.hashSync(req.body.password, 10);
+            await user.save();
+            return res
+              .status(200)
+              .json({ message: "Password reseted successfully" });
+          }
+        } else {
+          return next(errorHandler(404, "User not found"));
+          //res.status(404).send({ message: "User not found" });
+        }
+      }
+    });
+    /*   
+    res
+      .status(200)
+      .cookie("access_token", token, {
+        httpOnly: true,
+      })
+      .json(rest); */
+    //res.status(200).json({ message: "Success" });
   } catch (error) {
     next(error);
   }
@@ -145,6 +247,8 @@ const google = async (req, res, next) => {
 const router = express.Router();
 router.post("/signup", signup);
 router.post("/signin", signin);
+router.post("/forgot-password", ForgotPassword);
+router.post("/reset-password", ResetPassword);
 router.post("/google", google);
 
 export default router;

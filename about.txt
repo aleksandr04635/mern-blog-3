@@ -21,3 +21,14 @@ https://oleksandrs-mern-blog.vercel.app/
 
 https://www.tiny.cloud/docs/tinymce/6/react-ref/
 
+email sending is based on
+new4/next-supabase-im-up-db-auth-google-email-vacation
+
+https://www.youtube.com/watch?v=EirJor7TgXQ
+https://github.com/basir/mern-amazona/blob/master/frontend/src/screens/ResetPasswordScreen.js
+
+https://www.youtube.com/watch?v=YXjORp170Lg
+https://codewithyousaf.blogspot.com/2023/07/forgot-password-and-reset-password-in.html
+
+https://www.youtube.com/watch?v=AClnCg_WCJk
+https://github.com/the-debug-arena/login-registration-server-node/blob/main/app.js

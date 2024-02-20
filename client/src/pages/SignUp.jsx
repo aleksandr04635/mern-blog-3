@@ -98,7 +98,7 @@ export default function SignUp() {
         </h3>
         <div className="flex-1">
           <form
-            className="flex flex-col w-[250px] mx-auto gap-4"
+            className="flex flex-col w-[300px] mx-auto gap-4"
             onSubmit={handleSubmit}
           >
             <div>
@@ -174,6 +174,12 @@ export default function SignUp() {
               <span>Already have an account?</span>
               <Link to="/sign-in" className="text-blue-500">
                 Sign In
+              </Link>
+            </div>
+            <div className="flex gap-2 text-sm ">
+              <span>Forgot&nbsp;the&nbsp;password?</span>
+              <Link to="/forgot-password" className="text-blue-500">
+                Reset&nbsp;the&nbsp;password
               </Link>
             </div>
           </form>

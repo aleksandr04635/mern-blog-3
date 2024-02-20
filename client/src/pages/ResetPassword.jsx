@@ -1,6 +1,6 @@
 import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   signInStart,
@@ -11,12 +11,19 @@ import { BsEyeSlash } from "react-icons/bs";
 import { BsEye } from "react-icons/bs";
 import OAuth from "../components/OAuth";
 
-export default function SignIn() {
+export default function ResetPassword() {
+  const { id, token } = useParams();
+  const { currentUser } = useSelector((state) => state.user);
+
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
   const [formData, setFormData] = useState({});
   const [visible, setVisible] = useState(false);
-  const [visibleEr, setVisibleEr] = useState(true);
-  const { loading, error: errorMessage } = useSelector((state) => state.user);
-  const dispatch = useDispatch();
+  //const [visibleEr, setVisibleEr] = useState(true);
+  const { loading: load2, error: errorMessage2 } = useSelector(
+    (state) => state.user
+  );
+  //const dispatch = useDispatch();
   const navigate = useNavigate();
 
   //console.log("visibleEr: ", visibleEr);
@@ -24,41 +31,44 @@ export default function SignIn() {
   //console.log("formData.password: ", formData.password);
   //console.log("formData.password.length: ", formData.password?.length);
   const handleChange = (e) => {
-    setVisibleEr(false);
+    // setVisibleEr(false);
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
   };
 
-  const validateEmail = (email) => {
-    return !!String(email)
-      .toLowerCase()
-      .match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      );
-  };
+  useEffect(() => {
+    if (currentUser || !token) {
+      navigate("/");
+    }
+  }, [navigate, currentUser, token]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setVisibleEr(true);
-    if (!formData.email || !formData.password) {
-      return dispatch(signInFailure("Please fill all the fields"));
+    formData.token = token;
+    if (!formData.conpassword || !formData.password) {
+      return setErrorMessage("Please fill out all fields.");
     }
     try {
-      dispatch(signInStart());
-      const res = await fetch("/api/auth/signin", {
+      setLoading(true);
+      setErrorMessage(null);
+      const res = await fetch("/api/auth/reset-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
       const data = await res.json();
+      console.log("data received in ResetPassword: ", data);
       if (data.success === false) {
-        dispatch(signInFailure(data.message));
+        setLoading(false); //my
+
+        return setErrorMessage(data.message);
       }
+      setLoading(false);
       if (res.ok) {
-        dispatch(signInSuccess(data));
-        navigate("/");
+        navigate("/sign-in");
       }
     } catch (error) {
-      dispatch(signInFailure(error.message));
+      setErrorMessage(error.message);
+      setLoading(false);
     }
   };
 
@@ -73,20 +83,6 @@ export default function SignIn() {
             className="flex flex-col w-[300px] mx-auto gap-4"
             onSubmit={handleSubmit}
           >
-            <div>
-              <Label htmlFor="email" value="Your email:" />
-              <TextInput
-                type="email"
-                placeholder="name@company.com"
-                id="email"
-                onChange={handleChange}
-                value={formData.email || ""}
-                color={validateEmail(formData?.email) ? "success" : "failure"}
-                helperText={
-                  validateEmail(formData?.email) ? "" : "enter an email"
-                }
-              />
-            </div>
             <div className="relative">
               <Label htmlFor="password" value="Your password:" />
               <TextInput
@@ -107,14 +103,39 @@ export default function SignIn() {
                 {visible ? <BsEyeSlash /> : <BsEye />}
               </p>
             </div>
+            <div className="relative">
+              <Label htmlFor="conpassword" value="Confirm your password:" />
+              <TextInput
+                type={visible ? "text" : "password"}
+                placeholder="Confirm your password"
+                id="conpassword"
+                value={formData.conpassword || ""}
+                onChange={handleChange}
+                color={
+                  formData.conpassword == formData.password
+                    ? "success"
+                    : "failure"
+                }
+                helperText={
+                  formData.conpassword == formData.password
+                    ? ""
+                    : "Confirmation of the password is wrong"
+                }
+              />
+              <p
+                onClick={() => setVisible(!visible)}
+                className="cursor-pointer border-none w-12 h-10 absolute text-xl top-[35px] right-[-21px]"
+              >
+                {visible ? <BsEyeSlash /> : <BsEye />}
+              </p>
+            </div>
             <Button
               outline
               gradientDuoTone="purpleToBlue"
               type="submit"
               disabled={
-                loading ||
-                !validateEmail(formData.email) ||
-                formData.password?.length < 6
+                formData.password?.length < 6 ||
+                formData.conpassword !== formData.password
               }
             >
               {loading ? (
@@ -143,7 +164,7 @@ export default function SignIn() {
           {errorMessage && (
             <Alert
               /* hidden={!visibleEr} */
-              className={`mt-5 text-justify ${!visibleEr && "hidden"}`}
+              className={`mt-5 text-justify `}
               color="failure"
             >
               {/* it can be failure or success */}
