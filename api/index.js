@@ -7,9 +7,12 @@ import commentRoutes from "./routes/comment.route.js";
 import imageRoutes from "./routes/image.route.js";
 import cookieParser from "cookie-parser";
 import path from "path";
+import bcryptjs from "bcryptjs";
 
 import dotenv from "dotenv";
 dotenv.config();
+
+//console.log(bcryptjs.hashSync("", 10));
 
 //console.log(!!undefined);
 /* const totalPosts = 6;

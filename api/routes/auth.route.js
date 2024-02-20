@@ -120,26 +120,32 @@ const ForgotPassword = async (req, res, next) => {
     const loc = req.protocol + "://" + req.get("host");
     const link = `${loc}/reset-password/${validUser._id}/${token}`;
     console.log("link:", link);
-    var transporter = nodemailer.createTransport({
+    let transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
         user: process.env.EMAIL_SERVER_USER,
         pass: process.env.EMAIL_SERVER_PASSWORD,
       },
     });
-    var mailOptions = {
+    console.log("transporter: ", transporter);
+    let mailOptions = {
       from: ` ${process.env.EMAIL_FROM}`,
       to: email,
       subject: "Reset Password Link",
       text: link,
     };
+    console.log("mailOptions: ", mailOptions);
     transporter.sendMail(mailOptions, function (error, info) {
+      console.log("Email sent: ");
       console.log("Email sent: ", info);
       console.log("Email sent: " + info.response);
       if (error) {
         console.log(error);
+        return next(errorHandler(404, "error"));
       } else {
-        return res.status(200).send({ message: "Success" });
+        return res
+          .status(200)
+          .send({ message: "Success from transporter.sendMail" });
       }
     });
     /*   
@@ -165,11 +171,11 @@ const ResetPassword = async (req, res, next) => {
         return next(errorHandler(401, "Invalid Token"));
         // res.status(401).send({ message: "Invalid Token" });
       } else {
-        console.log("decoded from ResetPassword: ", decoded);
+        //console.log("decoded from ResetPassword: ", decoded);
         const user = await User.findOne({ _id: decoded.id });
         // const user = await User.findOne({ resetToken: req.body.token });
         if (user) {
-          console.log("user from ResetPassword: ", user);
+          //console.log("user from ResetPassword: ", user);
           if (req.body.password) {
             user.password = bcryptjs.hashSync(req.body.password, 10);
             await user.save();
