@@ -150,7 +150,7 @@ const ForgotPassword = async (req, res, next) => {
       to: email,
       subject: "Reset Password Link",
       text: link,
-      html: `Click on the link to reset the password ${message}`, //new
+      html: `Click on the link to reset the password ${link}`, //new
     };
     console.log("mailOptions: ", mailOptions);
 
