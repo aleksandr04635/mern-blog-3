@@ -166,6 +166,9 @@ const ForgotPassword = async (req, res, next) => {
           // res          .status(200)          .send({ message: "Success from transporter.sendMail" });
           console.log(info);
           resolve(info);
+          res
+            .status(200)
+            .send({ message: "Success from transporter.sendMail" });
         }
       });
     });
@@ -190,7 +193,7 @@ const ForgotPassword = async (req, res, next) => {
         httpOnly: true,
       })
       .json(rest); */
-    res.status(200).json({ message: "Success" });
+    res.status(200).json({ message: "Success from outside of transporter" });
   } catch (error) {
     next(error);
   }

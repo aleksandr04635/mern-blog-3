@@ -26,6 +26,8 @@ export default function ResetPassword() {
   //const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  console.log("id : ", id);
+  console.log("token : ", token);
   //console.log("visibleEr: ", visibleEr);
   //console.log("formData: ", formData);
   //console.log("formData.password: ", formData.password);
@@ -35,11 +37,11 @@ export default function ResetPassword() {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
   };
 
-  useEffect(() => {
+  /*   useEffect(() => {
     if (currentUser || !token) {
       navigate("/");
     }
-  }, [navigate, currentUser, token]);
+  }, [navigate, currentUser, token]); */
 
   const handleSubmit = async (e) => {
     e.preventDefault();
