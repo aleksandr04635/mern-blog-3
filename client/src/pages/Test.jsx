@@ -11,8 +11,8 @@ import { BsEyeSlash } from "react-icons/bs";
 import { BsEye } from "react-icons/bs";
 import OAuth from "../components/OAuth";
 
-export default function ResetPassword() {
-  const { id, token } = useParams();
+export default function Test() {
+  const { id } = useParams();
   const { currentUser } = useSelector((state) => state.user);
 
   const [loading, setLoading] = useState(false);
@@ -27,7 +27,7 @@ export default function ResetPassword() {
   const navigate = useNavigate();
 
   console.log("id : ", id);
-  console.log("token : ", token);
+  //console.log("token : ", token);
   //console.log("visibleEr: ", visibleEr);
   //console.log("formData: ", formData);
   //console.log("formData.password: ", formData.password);
@@ -43,7 +43,7 @@ export default function ResetPassword() {
     }
   }, [navigate, currentUser, token]); */
 
-  const handleSubmit = async (e) => {
+  /* const handleSubmit = async (e) => {
     e.preventDefault();
     formData.token = token;
     if (!formData.conpassword || !formData.password) {
@@ -72,7 +72,7 @@ export default function ResetPassword() {
       setErrorMessage(error.message);
       setLoading(false);
     }
-  };
+  }; */
 
   return (
     <div className="min-h-screen sm:mt-20">
@@ -80,8 +80,9 @@ export default function ResetPassword() {
         <h3 className="text-lg font-semibold text-center">
           Enter your new password.
         </h3>
+        {id ? <div>id: {id}</div> : <div>No id</div>}
         <div className="flex-1">
-          <form
+          {/*        <form
             className="flex flex-col w-[300px] mx-auto gap-4"
             onSubmit={handleSubmit}
           >
@@ -162,7 +163,7 @@ export default function ResetPassword() {
                 Reset&nbsp;the&nbsp;password
               </Link>
             </div>
-          </form>
+          </form> */}
           {errorMessage && (
             <Alert
               /* hidden={!visibleEr} */
