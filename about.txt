@@ -32,3 +32,6 @@ https://codewithyousaf.blogspot.com/2023/07/forgot-password-and-reset-password-i
 
 https://www.youtube.com/watch?v=AClnCg_WCJk
 https://github.com/the-debug-arena/login-registration-server-node/blob/main/app.js
+
+about problems with nodemailer on vercel
+https://stackoverflow.com/questions/65631481/nodemailer-in-vercel-not-sending-email-in-production

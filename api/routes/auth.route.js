@@ -120,22 +120,57 @@ const ForgotPassword = async (req, res, next) => {
     const loc = req.protocol + "://" + req.get("host");
     const link = `${loc}/reset-password/${validUser._id}/${token}`;
     console.log("link:", link);
-    let transporter = nodemailer.createTransport({
-      service: "gmail",
+    const transporter = nodemailer.createTransport({
+      service: "gmail", //old
+      port: 465, //new
+      host: "smtp.gmail.com", //new
+      secure: true, //new
       auth: {
         user: process.env.EMAIL_SERVER_USER,
         pass: process.env.EMAIL_SERVER_PASSWORD,
       },
     });
-    console.log("transporter: ", transporter);
+    //console.log("transporter: ", transporter);
+    await new Promise((resolve, reject) => {
+      // verify connection configuration
+      transporter.verify(function (error, success) {
+        console.log("verify connection configuration");
+        if (error) {
+          console.log("error:", error);
+          reject(error);
+        } else {
+          console.log("Server is ready to take our messages");
+          resolve(success);
+        }
+      });
+    });
+
     let mailOptions = {
       from: ` ${process.env.EMAIL_FROM}`,
       to: email,
       subject: "Reset Password Link",
       text: link,
+      html: `Click on the link to reset the password ${message}`, //new
     };
     console.log("mailOptions: ", mailOptions);
-    transporter.sendMail(mailOptions, function (error, info) {
+
+    await new Promise((resolve, reject) => {
+      // send mail
+      transporter.sendMail(mailOptions, (err, info) => {
+        console.log("Email sent: " + info.response);
+        if (err) {
+          console.error(err);
+          reject(err);
+          return next(errorHandler(404, "error"));
+        } else {
+          // res          .status(200)          .send({ message: "Success from transporter.sendMail" });
+          console.log(info);
+          resolve(info);
+        }
+      });
+    });
+
+    /*     transporter.sendMail(mailOptions, function (error, info) {
       console.log("Email sent: ");
       console.log("Email sent: ", info);
       console.log("Email sent: " + info.response);
@@ -147,7 +182,7 @@ const ForgotPassword = async (req, res, next) => {
           .status(200)
           .send({ message: "Success from transporter.sendMail" });
       }
-    });
+    }); */
     /*   
     res
       .status(200)
