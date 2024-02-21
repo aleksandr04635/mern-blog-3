@@ -1,6 +1,6 @@
 ## MERN Blog with comments structure, tags, search, dark mode and image uploading from a rich text editor
 
-Tailored to be deployed on vercel. For this minimisation of the number of files in api directory is necessary.
+A MERN blogspot tailored to be deployed on Vercel. For this the minimization of the number of .js files in the API directory and a new database connection for each serverless function are necessary.
 
 Deployed [here](https://oleksandrs-mern-blog.vercel.app/)
 

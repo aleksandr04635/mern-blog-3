@@ -8,13 +8,20 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { app } from "../firebase";
+import { useSelector, useDispatch } from "react-redux";
 
 export default function TinyMCEEditor({ value2, onChange }) {
+  const { theme } = useSelector((state) => state.theme);
   const editorRef = useRef(null);
   const [imageUploadError, setImageUploadError] = useState(null);
   // const [cont, setCont] = useState("");
   //console.log("value2:", value2);
   // console.log("cont:", cont);
+  console.log("theme:", theme);
+  let skinSt = theme === "light" ? "oxide" : "oxide-dark";
+  let conSt = theme === "light" ? "/index.css" : "/index.css,dark";
+  console.log("skinSt:", skinSt);
+  console.log("conSt:", conSt);
 
   const log = () => {
     if (editorRef.current) {
@@ -49,9 +56,13 @@ export default function TinyMCEEditor({ value2, onChange }) {
           },
           promotion: false, //a note about update
           height: 600,
+          skin: skinSt,
+          //skin: theme === "light" ? "" : "oxide-dark",
+          //content_css: theme === "light" ? "/index.css" : "dark",
+          content_css: conSt,
           //content_css: '/myLayout.css',
-          content_css: "/index.css",
-          //browser_spellcheck: true,
+          //content_css: "/index.css",
+          browser_spellcheck: true,
           language: "en",
           image_title: true,
           image_caption: true,

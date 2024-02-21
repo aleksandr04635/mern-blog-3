@@ -72,7 +72,7 @@ export default function Header() {
   return (
     <Navbar className="sm:border-b border-gray-500">
       <div className="flex flex-col w-full">
-        <div className="flex w-full justify-between ">
+        <div className="flex w-full items-center justify-between ">
           {/* <Navbar className="m-auto max-w-6xl max-w-[1200px]  border border-gray-400  rounded"></Navbar> */}
           {/* my */}
           {/*       <Link
@@ -105,6 +105,12 @@ export default function Header() {
             >
               <h2> My Blog</h2>
             </Button>
+          </Link>
+          <Link
+            className="text-blue-500 text -sm hover:underline"
+            to={`/about`}
+          >
+            About this project
           </Link>
           <form onSubmit={handleSubmit} className="relative hidden sm:inline">
             <TextInput

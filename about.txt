@@ -2,7 +2,7 @@ MY main blog
 
 https://www.youtube.com/watch?v=Kkht2mwSL_I
 https://github.com/sahandghavidel/mern-blog
-based on Sahand's blog
+based on Sahand's blog by Sahand Ghavidel
 Build a Blog App with Dashboard using MERN (jwt, redux toolkit)
 with redux toolkit with local persistance for user and dark theme
 with very developed search 
@@ -23,7 +23,7 @@ https://oleksandrs-mern-blog.vercel.app/
 
 https://www.tiny.cloud/docs/tinymce/6/react-ref/
 
-email sending is based on
+email sending  with template is based on
 new4/next-supabase-im-up-db-auth-google-email-vacation
 
 https://www.youtube.com/watch?v=EirJor7TgXQ

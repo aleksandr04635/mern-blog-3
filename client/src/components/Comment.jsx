@@ -96,7 +96,8 @@ export default function Comment({
               <>
                 {/*  <p className=" text-justify px-2 p-1">{comment.content}</p> */}
                 <div
-                  className="comment-content px-2 p-1 text-justify text-base mx-auto w-full "
+                  className="comment-content px-2 p-1 text-justify text-base mx-auto w-full 
+                   rounded-lg bg-slate-50 dark:bg-slate-800"
                   dangerouslySetInnerHTML={{
                     __html: comment && comment.content,
                   }}

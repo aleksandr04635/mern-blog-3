@@ -60,7 +60,7 @@ const getPostComments = async (req, res, next) => {
     const comments = await Comment.find({ post: req.params.postId })
       .populate("userId", ["username", "_id", "profilePicture"])
       .sort({
-        createdAt: -1,
+        createdAt: 1,
       });
     // virtual WORKS
     //const post = await Post.findById(req.params.postId).populate("comments");
@@ -94,7 +94,7 @@ const getCommentComments = async (req, res, next) => {
     const comments = await Comment.find({ commentto: req.params.commentId })
       .populate("userId", ["username", "_id", "profilePicture"])
       .sort({
-        createdAt: -1,
+        createdAt: 1,
       });
 
     res.status(200).json({ comments });
