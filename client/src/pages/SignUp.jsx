@@ -1,5 +1,5 @@
 import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import OAuth from "../components/OAuth";
 import { BsEyeSlash, BsEye } from "react-icons/bs";
@@ -17,8 +17,18 @@ export default function SignUp() {
   const [visible, setVisible] = useState(false);
   const navigate = useNavigate();
   const [visibleEr, setVisibleEr] = useState(true);
-  const { loading, error: errorMessage } = useSelector((state) => state.user);
+  const {
+    loading,
+    error: errorMessage,
+    currentUser,
+  } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (currentUser) {
+      navigate("/");
+    }
+  }, [navigate, currentUser]);
 
   const validateEmail = (email) => {
     return !!String(email)
@@ -96,6 +106,10 @@ export default function SignUp() {
         <h3 className="text-lg font-semibold text-center">
           You can sign up with your email and password or with Google.
         </h3>
+        <div className="text-sm  text-center text-orange-600">
+          If you register with a wrong email or change it to a wrong one in your
+          profile you will not be able to reset your password via email
+        </div>
         <div className="flex-1">
           <form
             className="flex flex-col w-[300px] mx-auto gap-4"

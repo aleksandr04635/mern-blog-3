@@ -1,14 +1,12 @@
 import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   signInStart,
   signInSuccess,
   signInFailure,
 } from "../redux/user/userSlice";
-import { BsEyeSlash } from "react-icons/bs";
-import { BsEye } from "react-icons/bs";
 import OAuth from "../components/OAuth";
 
 export default function ForgotPassword() {
@@ -16,16 +14,25 @@ export default function ForgotPassword() {
   //const [visible, setVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const [visibleEr, setVisibleEr] = useState(true);
+  const navigate = useNavigate();
+  const { currentUser } = useSelector((state) => state.user);
   //const { loading, error: errorMessage } = useSelector((state) => state.user);
   //const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   console.log("errorMessage: ", errorMessage);
   //console.log("visibleEr: ", visibleEr);
   //console.log("formData: ", formData);
   //console.log("formData.password: ", formData.password);
   //console.log("formData.password.length: ", formData.password?.length);
+
+  useEffect(() => {
+    if (currentUser) {
+      navigate("/dashboard?tab=profile");
+    }
+  }, [navigate, currentUser]);
+
   const handleChange = (e) => {
     setVisibleEr(false);
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
@@ -86,7 +93,8 @@ export default function ForgotPassword() {
       }
       setLoading(false);
       if (res.ok) {
-        navigate("/sign-in");
+        setSuccess(true);
+        //navigate("/sign-in");
       }
     } catch (error) {
       setErrorMessage(error.message);
@@ -96,7 +104,7 @@ export default function ForgotPassword() {
 
   return (
     <div className="min-h-screen sm:mt-20">
-      <div className="flex p-3 max-w-lg mx-auto flex-col  md:items-center gap-5">
+      <div className="flex p-3 max-w-xl mx-auto flex-col  md:items-center gap-5">
         <h3 className="text-lg font-semibold text-center">
           Enter your email to reset your password.
         </h3>
@@ -131,7 +139,7 @@ export default function ForgotPassword() {
                   <span className="pl-3">Loading...</span>
                 </>
               ) : (
-                "Reset"
+                "Send me a link to reset the password"
               )}
             </Button>
             <OAuth />
@@ -157,6 +165,13 @@ export default function ForgotPassword() {
             >
               {/* it can be failure or success */}
               {errorMessage}
+            </Alert>
+          )}
+          {success && (
+            <Alert className={`mt-5 text-center `} color="success">
+              {/* it can be failure or success */}
+              The email with a reset link had been sent to your email. Go there
+              and click it
             </Alert>
           )}
         </div>

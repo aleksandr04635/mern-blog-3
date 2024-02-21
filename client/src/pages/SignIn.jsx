@@ -1,5 +1,5 @@
 import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -15,7 +15,11 @@ export default function SignIn() {
   const [formData, setFormData] = useState({});
   const [visible, setVisible] = useState(false);
   const [visibleEr, setVisibleEr] = useState(true);
-  const { loading, error: errorMessage } = useSelector((state) => state.user);
+  const {
+    loading,
+    error: errorMessage,
+    currentUser,
+  } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -23,6 +27,13 @@ export default function SignIn() {
   //console.log("formData: ", formData);
   //console.log("formData.password: ", formData.password);
   //console.log("formData.password.length: ", formData.password?.length);
+
+  useEffect(() => {
+    if (currentUser) {
+      navigate("/");
+    }
+  }, [navigate, currentUser]);
+
   const handleChange = (e) => {
     setVisibleEr(false);
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });

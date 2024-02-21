@@ -2,6 +2,8 @@
 
 Tailored to be deployed on vercel. For this minimisation of the number of files in api directory is necessary.
 
+Deployed [here](https://oleksandrs-mern-blog.vercel.app/)
+
 The previous version is deployed [here](https://mern-blog-2-khaki.vercel.app/)
 
 <!--

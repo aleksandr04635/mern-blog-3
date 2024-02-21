@@ -1,5 +1,5 @@
 import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -13,18 +13,21 @@ import OAuth from "../components/OAuth";
 
 export default function ResetPassword() {
   const { id, token } = useParams();
-  const { currentUser } = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  const {
+    loading: load2,
+    error: errorMessage2,
+    currentUser,
+  } = useSelector((state) => state.user);
 
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [formData, setFormData] = useState({});
   const [visible, setVisible] = useState(false);
+  const [success, setSuccess] = useState(false);
   //const [visibleEr, setVisibleEr] = useState(true);
-  const { loading: load2, error: errorMessage2 } = useSelector(
-    (state) => state.user
-  );
+
   //const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   console.log("id : ", id);
   console.log("token : ", token);
@@ -37,11 +40,12 @@ export default function ResetPassword() {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
   };
 
-  /*   useEffect(() => {
+  useEffect(() => {
     if (currentUser || !token) {
-      navigate("/");
+      // navigate("/");
+      navigate("/dashboard?tab=profile");
     }
-  }, [navigate, currentUser, token]); */
+  }, [navigate, currentUser, token]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -59,14 +63,13 @@ export default function ResetPassword() {
       });
       const data = await res.json();
       console.log("data received in ResetPassword: ", data);
+      setLoading(false); //my
       if (data.success === false) {
-        setLoading(false); //my
-
         return setErrorMessage(data.message);
       }
-      setLoading(false);
       if (res.ok) {
-        navigate("/sign-in");
+        setSuccess(true);
+        //navigate("/sign-in");
       }
     } catch (error) {
       setErrorMessage(error.message);
@@ -76,7 +79,7 @@ export default function ResetPassword() {
 
   return (
     <div className="min-h-screen sm:mt-20">
-      <div className="flex p-3 max-w-lg mx-auto flex-col  md:items-center gap-5">
+      <div className="flex p-3 max-w-xl mx-auto flex-col  md:items-center gap-5">
         <h3 className="text-lg font-semibold text-center">
           Enter your new password.
         </h3>
@@ -114,11 +117,13 @@ export default function ResetPassword() {
                 value={formData.conpassword || ""}
                 onChange={handleChange}
                 color={
+                  formData.conpassword?.length > 5 &&
                   formData.conpassword == formData.password
                     ? "success"
                     : "failure"
                 }
                 helperText={
+                  formData.conpassword?.length > 5 &&
                   formData.conpassword == formData.password
                     ? ""
                     : "Confirmation of the password is wrong"
@@ -146,22 +151,22 @@ export default function ResetPassword() {
                   <span className="pl-3">Loading...</span>
                 </>
               ) : (
-                "Sign In"
+                "Reset the password"
               )}
             </Button>
             <OAuth />
-            <div className="flex gap-2 text-sm ">
+            {/*             <div className="flex gap-2 text-sm ">
               <span>Dont Have an account?</span>
               <Link to="/sign-up" className="text-blue-500">
                 Sign Up
               </Link>
-            </div>
-            <div className="flex gap-2 text-sm ">
+            </div> */}
+            {/*             <div className="flex gap-2 text-sm ">
               <span>Forgot&nbsp;the&nbsp;password?</span>
               <Link to="/forgot-password" className="text-blue-500">
                 Reset&nbsp;the&nbsp;password
               </Link>
-            </div>
+            </div> */}
           </form>
           {errorMessage && (
             <Alert
@@ -172,6 +177,25 @@ export default function ResetPassword() {
               {/* it can be failure or success */}
               {errorMessage}
             </Alert>
+          )}
+          {success && (
+            <>
+              <Alert className={`mt-5 text-center mx-auto `} color="success">
+                {/* it can be failure or success */}
+                The password had been resetted succesfully. You can login now
+              </Alert>
+              <Button
+                onClick={() => navigate("/sign-in")}
+                className={`mt-5 text-center mx-auto `}
+                gradientDuoTone="purpleToBlue"
+                outline
+              >
+                Sign In
+              </Button>
+              {/*              <Link className={`mt-5  `} to="/sign-in">
+                
+              </Link> */}
+            </>
           )}
         </div>
       </div>

@@ -4,6 +4,8 @@ import bcryptjs from "bcryptjs";
 import { connectDB, errorHandler } from "../utils/utils.js";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
+import Handlebars from "handlebars";
+import { readFileSync } from "fs";
 
 const signup = async (req, res, next) => {
   connectDB();
@@ -119,7 +121,7 @@ const ForgotPassword = async (req, res, next) => {
     //console.log("fullUrl:", fullUrl);
     const loc = req.protocol + "://" + req.get("host");
     const link = `${loc}/reset-password/${validUser._id}/${token}`;
-    console.log("link:", link);
+    console.log("sent link:", link);
     const transporter = nodemailer.createTransport({
       service: "gmail", //old
       port: 465, //new
@@ -131,8 +133,8 @@ const ForgotPassword = async (req, res, next) => {
       },
     });
     //console.log("transporter: ", transporter);
+    // verify connection configuration
     await new Promise((resolve, reject) => {
-      // verify connection configuration
       transporter.verify(function (error, success) {
         console.log("verify connection configuration");
         if (error) {
@@ -145,14 +147,26 @@ const ForgotPassword = async (req, res, next) => {
       });
     });
 
+    const emailFile = readFileSync("./emails/reset-email.html", {
+      encoding: "utf8",
+    });
+    console.log("emailFile: ", emailFile);
+    const emailTemplate = Handlebars.compile(emailFile);
+
     let mailOptions = {
-      from: ` ${process.env.EMAIL_FROM}`,
+      from: `My blog ${process.env.EMAIL_FROM}`,
       to: email,
       subject: "Reset Password Link",
       text: link,
-      html: `Click on the link to reset the password ${link}`, //new
+
+      html: emailTemplate({
+        base_url: loc,
+        signin_url: link,
+        email: email,
+      }),
     };
-    console.log("mailOptions: ", mailOptions);
+    // html: `Click on the link to reset the password ${link}`, //new
+    //console.log("mailOptions: ", mailOptions);
 
     await new Promise((resolve, reject) => {
       // send mail
