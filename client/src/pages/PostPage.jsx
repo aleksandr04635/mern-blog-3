@@ -2,17 +2,17 @@ import { Alert, Button, Spinner } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
-import CommentSection from "../components/CommentSection";
-import CommentingEditor from "../components/CommentingEditor";
-
 import { useSelector } from "react-redux";
 import { Modal, Table } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
-//import { DateTime } from "luxon";
 import { formatISO9075 } from "date-fns";
 
+import CommentSection from "../components/CommentSection";
+import CommentingEditor from "../components/CommentingEditor";
+
 export default function PostPage() {
+  const navigate = useNavigate();
   const { postSlug } = useParams();
   const { currentUser } = useSelector((state) => state.user);
   const [loading, setLoading] = useState(true);
@@ -20,11 +20,11 @@ export default function PostPage() {
   const [post, setPost] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [tocomment, setTocomment] = useState(false);
-  const [reloadSwitch, setReloadSwitch] = useState(false);
-  const navigate = useNavigate();
-  console.log("loading: ", loading);
-  console.log("post: ", post);
-  console.log("error: ", error);
+  const [reloadSwitch, setReloadSwitch] = useState(false); //triggers the reload of comments section upon adding a new comment
+
+  //console.log("loading: ", loading);
+  //console.log("post: ", post);
+  // console.log("error: ", error);
   //console.log(" currentUser : ", currentUser);
 
   useEffect(() => {
@@ -48,14 +48,14 @@ export default function PostPage() {
         }
         if (res.ok) {
           setLoading(false);
-          console.log("res.ok ", error);
-          console.log("data.posts.length: ", data.posts.length);
+          //console.log("res.ok ");
+          //console.log("data.posts.length: ", data.posts.length);
           if (data.posts.length == 0) {
             setError("No posts found");
             console.log("No posts found");
             return;
           }
-          console.log("res.ok.data.posts[0]: ", data.posts[0]);
+          //console.log("res.ok.data.posts[0]: ", data.posts[0]);
           setPost(data.posts[0]);
           setError("");
         }
@@ -94,19 +94,6 @@ export default function PostPage() {
           dislikes: data.dislikes,
           numberOfDislikes: data.dislikes.length,
         });
-        /*         setComments(
-          comments.map((comment) =>
-            comment._id === commentId
-              ? {
-                  ...comment,
-                  likes: data.likes,
-                  numberOfLikes: data.likes.length,
-                  dislikes: data.dislikes,
-                  numberOfDislikes: data.dislikes.length,
-                }
-              : comment
-          )
-        ); */
       }
     } catch (error) {
       console.log(error.message);

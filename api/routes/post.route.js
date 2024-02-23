@@ -316,7 +316,7 @@ const countTags = async (req, res, next) => {
           }
         });
         if (found == false) {
-          tagData.push({ slug: tag.slug, count: 1 });
+          tagData.push({ name: tag.name, slug: tag.slug, count: 1 });
         }
       });
     });

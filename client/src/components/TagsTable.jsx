@@ -32,7 +32,7 @@ export default function TagsTable() {
           <p className="py-1 px-1">The most popular tags:</p>
           <Table hoverable className="shadow-md">
             <Table.Head className="font-light normal-case">
-              <Table.HeadCell>Tag slug</Table.HeadCell>
+              <Table.HeadCell>Tag name</Table.HeadCell>
               <Table.HeadCell>Number of posts with this tag</Table.HeadCell>
             </Table.Head>
             {tags.slice(0, 7).map((tag, i) => (
@@ -45,7 +45,7 @@ export default function TagsTable() {
                       to={`/search?tag=${tag.slug}`}
                       className="dark:hover:bg-stone-700 hover:bg-stone-200 text-sm border rounded  px-2 py-1"
                     >
-                      {tag.slug}
+                      {tag.name}
                     </Link>
                   </Table.Cell>
                   <Table.Cell className="w-[150px]">{tag.count}</Table.Cell>
@@ -55,7 +55,7 @@ export default function TagsTable() {
           </Table>
         </>
       ) : (
-        <p>You have no comments yet!</p>
+        <p>You have no tags yet!</p>
       )}
     </div>
   );

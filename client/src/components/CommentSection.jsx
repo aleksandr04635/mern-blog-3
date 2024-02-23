@@ -56,7 +56,7 @@ export default function CommentSection({
 
   useEffect(() => {
     getComments();
-  }, [postId, reloadSwitch]);
+  }, [postId, reloadSwitch]); //reloadSwitch commands a reload of this commentSection from its parent comment component
 
   const handleLike = async (commentId, type, ac) => {
     try {
@@ -97,7 +97,7 @@ export default function CommentSection({
     }
   };
 
-  const handleEdit = async (comment, editedContent) => {
+  const handleEditInSection = async (comment, editedContent) => {
     setComments(
       comments.map((c) =>
         c._id === comment._id ? { ...c, content: editedContent } : c
@@ -121,8 +121,9 @@ export default function CommentSection({
         console.log(
           "getComments and reloadParentSection started in CommentSection from handleDelete "
         );
-        getComments(); //MY
-        reloadParentSection();
+        getComments(); //New
+        reloadParentSection(); //New, forces to reload the commentSection that inclued the comment, to which this commentSection is
+        //in case the deletion triggered the deletion of a comment, that had been flagged to be deleted before
         // setComments(comments.filter((comment) => comment._id !== commentId));//OLD
       }
     } catch (error) {
@@ -165,7 +166,7 @@ export default function CommentSection({
                   level={level}
                   comment={comment}
                   onLike={handleLike}
-                  onEdit={handleEdit}
+                  onEdit={handleEditInSection}
                   onDelete={(commentId) => {
                     setShowModal(true);
                     setCommentToDelete(commentId);

@@ -25,7 +25,6 @@ export default function ResetPassword() {
   const [formData, setFormData] = useState({});
   const [visible, setVisible] = useState(false);
   const [success, setSuccess] = useState(false);
-  //const [visibleEr, setVisibleEr] = useState(true);
 
   //const dispatch = useDispatch();
 
@@ -35,8 +34,8 @@ export default function ResetPassword() {
   //console.log("formData: ", formData);
   //console.log("formData.password: ", formData.password);
   //console.log("formData.password.length: ", formData.password?.length);
+
   const handleChange = (e) => {
-    // setVisibleEr(false);
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
   };
 
@@ -182,7 +181,7 @@ export default function ResetPassword() {
             <>
               <Alert className={`mt-5 text-center mx-auto `} color="success">
                 {/* it can be failure or success */}
-                The password had been resetted succesfully. You can login now
+                The password had been resetted succesfully. You can sign in now
               </Alert>
               <Button
                 onClick={() => navigate("/sign-in")}
@@ -193,71 +192,11 @@ export default function ResetPassword() {
                 Sign In
               </Button>
               {/*              <Link className={`mt-5  `} to="/sign-in">
-                
-              </Link> */}
+                              </Link> */}
             </>
           )}
         </div>
       </div>
     </div>
-    /*  <div className="min-h-screen mt-20">
-      <div className="flex p-3 max-w-3xl mx-auto flex-col md:items-center gap-5">
-        <h3 className="text-lg font-semibold text-center">
-          You can sign in with your email and password or with Google.
-        </h3>
-
-        <div className="flex-1">
-          <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-            <div>
-              <Label htmlFor="email" value="Your email" />
-              <TextInput
-                type="email"
-                placeholder="name@company.com"
-                id="email"
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <Label htmlFor="password" value="Your password" />
-              <TextInput
-                type="password"
-                placeholder="**********"
-                id="password"
-                onChange={handleChange}
-              />
-            </div>
-            <Button
-              outline
-              gradientDuoTone="purpleToBlue"
-              type="submit"
-              disabled={
-                loading || !formData.email || formData.password?.length < 3
-              }
-            >
-              {loading ? (
-                <>
-                  <Spinner size="sm" />
-                  <span className="pl-3">Loading...</span>
-                </>
-              ) : (
-                "Sign In"
-              )}
-            </Button>
-            <OAuth />
-          </form>
-          <div className="flex gap-2 text-sm mt-5">
-            <span>Dont Have an account?</span>
-            <Link to="/sign-up" className="text-blue-500">
-              Sign Up
-            </Link>
-          </div>
-          {errorMessage && (
-            <Alert className="mt-5" color="failure">
-              {errorMessage}
-            </Alert>
-          )}
-        </div>
-      </div>
-    </div> */
   );
 }

@@ -45,11 +45,9 @@ export default function App() {
           <Route path="/create-post" element={<CreatePost />} />
           <Route path="/update-post/:postId" element={<UpdatePost />} />
         </Route>
-        {/*         <Route element={<OnlyAdminPrivateRoute />}>
-          <Route path="/create-post" element={<CreatePost />} />
-          <Route path="/update-post/:postId" element={<UpdatePost />} />
+        {/*<Route element={<OnlyAdminPrivateRoute />}>
+          
         </Route> */}
-
         <Route path="/post/:postSlug" element={<PostPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

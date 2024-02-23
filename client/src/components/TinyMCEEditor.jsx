@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import { Alert } from "flowbite-react";
 import {
@@ -14,14 +14,38 @@ export default function TinyMCEEditor({ value2, onChange }) {
   const { theme } = useSelector((state) => state.theme);
   const editorRef = useRef(null);
   const [imageUploadError, setImageUploadError] = useState(null);
+  const [skinStyle, setSkinStyle] = useState(
+    theme === "light" ? "oxide" : "oxide-dark"
+  );
+  const [contentStyle, setContentStyle] = useState(
+    theme === "light" ? "/index.css" : "/index.css,dark"
+  );
   // const [cont, setCont] = useState("");
   //console.log("value2:", value2);
   // console.log("cont:", cont);
-  console.log("theme:", theme);
+
   let skinSt = theme === "light" ? "oxide" : "oxide-dark";
   let conSt = theme === "light" ? "/index.css" : "/index.css,dark";
+  /*   console.log("theme:", theme);
+  console.log("skinStyle:", skinStyle);
+  console.log("contentStyle:", contentStyle);
+  console.log("theme === 'light':", theme === "light");
   console.log("skinSt:", skinSt);
-  console.log("conSt:", conSt);
+  console.log("conSt:", conSt); */
+
+  useEffect(() => {
+    //editorRef.current.focus();
+  }, []);
+
+  useEffect(() => {
+    setSkinStyle(theme === "light" ? "oxide" : "oxide-dark");
+    setContentStyle(theme === "light" ? "/index.css" : "/index.css,dark");
+  }, [theme]);
+
+  const set = function () {
+    setSkinStyle(theme === "light" ? "oxide" : "oxide-dark");
+    setContentStyle(theme === "light" ? "/index.css" : "/index.css,dark");
+  };
 
   const log = () => {
     if (editorRef.current) {
@@ -36,7 +60,10 @@ export default function TinyMCEEditor({ value2, onChange }) {
         //apiKey="your-api-key"
         //tinymceScriptSrc={process.env.PUBLIC_URL + '/tinymce/tinymce.min.js'}
         tinymceScriptSrc="/tinymce/tinymce.min.js"
-        onInit={(evt, editor) => (editorRef.current = editor)}
+        onInit={(evt, editor) => {
+          editorRef.current = editor;
+          editorRef.current.focus();
+        }}
         onEditorChange={(e) => onChange(e)}
         //onEditorChange={()=>setCont(editorRef.current.getContent())}
         //initialValue="<p>This is the initial content of the editor.</p>"
@@ -49,6 +76,8 @@ export default function TinyMCEEditor({ value2, onChange }) {
             freeTiny.style.display = "none";
           }, */
           init_instance_callback: function (editor) {
+            set();
+            // console.log(`Editor: ${editor.id} is now initialized.`);
             var freeTiny = document.querySelector(".tox-promotion");
             if (freeTiny) {
               freeTiny.style.display = "none";
@@ -56,10 +85,10 @@ export default function TinyMCEEditor({ value2, onChange }) {
           },
           promotion: false, //a note about update
           height: 600,
-          skin: skinSt,
+          skin: skinSt, //skinStyle,
           //skin: theme === "light" ? "" : "oxide-dark",
           //content_css: theme === "light" ? "/index.css" : "dark",
-          content_css: conSt,
+          content_css: conSt, // contentStyle,
           //content_css: '/myLayout.css',
           //content_css: "/index.css",
           browser_spellcheck: true,

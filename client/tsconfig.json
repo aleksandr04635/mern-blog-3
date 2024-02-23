@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx", // If using JSX syntax
+    "module": "nodenext",
+    "target": "es5",
+    "strict": false,
+    "esModuleInterop": true,
+    "moduleResolution": "nodenext"
+  }
+}

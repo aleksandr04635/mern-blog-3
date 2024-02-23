@@ -18,7 +18,7 @@ export default function Comment({
   const [editedContent, setEditedContent] = useState(comment.content);
   const { currentUser } = useSelector((state) => state.user);
   const [tocomment, setTocomment] = useState(false);
-  const [reloadSwitch, setReloadSwitch] = useState(false);
+  const [reloadSwitch, setReloadSwitch] = useState(false); //is changed to force a reload of a commentSection of this comment
   //console.log("comment: ", comment);
   //console.log("level  from Comment.jsx:", level);
 
@@ -31,7 +31,7 @@ export default function Comment({
     }
   };
 
-  const handleSaveUponEditing = async (con) => {
+  const handleSaveUponEditing = async (content) => {
     try {
       const res = await fetch(`/api/comment/editComment/${comment._id}`, {
         method: "PUT",
@@ -39,12 +39,12 @@ export default function Comment({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          content: con,
+          content: content,
         }),
       });
       if (res.ok) {
         setIsEditing(false);
-        onEdit(comment, con);
+        onEdit(comment, content);
       }
     } catch (error) {
       console.log(error.message);

@@ -11,18 +11,19 @@ import {
 } from "../redux/user/userSlice";
 
 export default function SignUp() {
-  const [formData, setFormData] = useState({});
-  //const [errorMessage, setErrorMessage] = useState(null);
-  //const [loading, setLoading] = useState(false);
-  const [visible, setVisible] = useState(false);
-  const navigate = useNavigate();
-  const [visibleEr, setVisibleEr] = useState(true);
   const {
     loading,
     error: errorMessage,
     currentUser,
   } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({});
+  //const [errorMessage, setErrorMessage] = useState(null);
+  //const [loading, setLoading] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [visibleEr, setVisibleEr] = useState(true);
 
   useEffect(() => {
     if (currentUser) {
@@ -45,7 +46,7 @@ export default function SignUp() {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
   };
 
-  //old
+  //old without instant sign-in
   /*   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.username || !formData.email || !formData.password) {
@@ -73,7 +74,7 @@ export default function SignUp() {
       setLoading(false);
     }
   }; */
-  //new
+  //new with instant sign-in
   const handleSubmit = async (e) => {
     e.preventDefault();
     setVisibleEr(true);

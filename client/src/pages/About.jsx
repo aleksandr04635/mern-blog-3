@@ -17,7 +17,8 @@ export default function About() {
               It uses React as a front framework and Express as a back one with
               Mongo as a database. Deployment to Vercel required the
               minimization of the number of .js files in the API directory and a
-              new database connection for each serverless function.
+              new database connection for each serverless function. For UI
+              elements Flowbite library with Tailwind styles is used
             </p>
             <p>
               Redux Toolkit was used to store user data, the theme, and the
@@ -51,8 +52,8 @@ export default function About() {
             </p>
             <p>
               Note how I made a logical tree of comments more readable with just
-              a style. Also, try to delete an already deleted comment. It will
-              just change status and will be deleted automatically then all the
+              a style. Also, try to delete an already commented comment. It will
+              just change status and will be deleted automatically when all the
               comments to it will be deleted - try it.
             </p>
             <Link
