@@ -165,8 +165,8 @@ const uploadFire = [
 
 const router = express.Router();
 
-//router.post("/upload", uploadCloud);
-router.post("/upload", uploadFire);
+//router.post("/upload", uploadCloud);//to Cloudinary
+router.post("/upload", uploadFire); // to Firebase
 
 export default router;
 //module.exports = {  router,};

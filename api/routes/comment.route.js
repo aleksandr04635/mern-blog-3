@@ -227,10 +227,10 @@ const deleteComment = async (req, res, next) => {
       res.status(200).json(editedComment); */
       comment.deleted = true;
       comment.content =
-        "<p style='color:orange;  font-size: 0.875em; '>This comment is deleted by its author and will be completely deleted then all the comments to it will be deleted</p>";
+        "<p style='color:orange;  font-size: 0.875em; '>This comment is deleted by its author and will be completely deleted when all the comments to it will be deleted</p>";
       await comment.save();
       console.log("only edited a comment in deleteComment: ", comment);
-      res.status(200).json("Comment has been set to be deleted");
+      res.status(200).json("Comment was set to be deleted");
       return;
     }
 
@@ -258,6 +258,8 @@ const deleteComment = async (req, res, next) => {
           );
           //delete commentTo
           await Comment.findByIdAndDelete(comment.commentto.toString());
+          res.status(200).json("Comment and his parent one were deleted");
+          return;
         }
       }
     }

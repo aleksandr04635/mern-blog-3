@@ -64,7 +64,9 @@ export default function CommentingEditor({
         onClose();
         setCommentError(null);
         console.log(
-          ` giving command to comment section to REFETCH comments from editor from: `,
+          ` giving command to comment section to REFETCH comments from commentingEditor from: ${
+            toPost ? "post" : "comment"
+          }`,
           postId
         );
         commandReload();

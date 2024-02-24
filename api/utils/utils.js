@@ -12,6 +12,19 @@ export const connectDB = async () => {
   }
 };
 
+//possible alternative
+/* export function mongooseConnect() {
+  if (mongoose.connection.readyState === 1) {
+    return mongoose.connection.asPromise();
+  } else {
+    const uri = process.env.MONGODB_URI;
+    return mongoose.connect(uri);
+  }
+} 
+...
+  await mongooseConnect();
+  */
+
 export const verifyToken = (req, res, next) => {
   const token = req.cookies.access_token;
   if (!token) {

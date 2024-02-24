@@ -46,6 +46,9 @@ const getposts = async (req, res, next) => {
     //console.log("sortObj from getposts:", sortObj);
     const pageSize =
       parseInt(req.query.pageSize) || parseInt(process.env.DEFAULT_PAGE_SIZE);
+    if (pageSize < 0) {
+      return next(errorHandler(400, `The pageSize is wrong`));
+    }
     const pageFromQuerry = parseInt(req.query.page);
     //console.log("pageSize:", pageSize);
     //console.log("pageFromQuerry:", pageFromQuerry);
@@ -104,16 +107,13 @@ const getposts = async (req, res, next) => {
       );
       page = pageFromQuerry;
     }
-    //console.log("page from getposts:", page);
-
-    if (page > totalPages || page < 0) {
-      return next(
+    if (page > totalPages || page < 1) {
+      /*      return next(
         errorHandler(400, `The page number ${page} isn't in the correct range`)
-      );
+      ); */
+      page = totalPages;
     }
-    if (pageSize < 0) {
-      return next(errorHandler(400, `The pageSize is wrong`));
-    }
+    //console.log("page from getposts:", page);
 
     const numOnTopPage = pageSize + (totalPosts % pageSize);
     //console.log("numOnTopPage from getposts:", numOnTopPage);

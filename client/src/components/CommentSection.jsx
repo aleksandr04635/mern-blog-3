@@ -118,13 +118,27 @@ export default function CommentSection({
       if (res.ok) {
         const data = await res.json();
         console.log("data from handleDelete: ", data);
-        console.log(
-          "getComments and reloadParentSection started in CommentSection from handleDelete "
-        );
-        getComments(); //New
-        reloadParentSection(); //New, forces to reload the commentSection that inclued the comment, to which this commentSection is
+
+        if (data == "Comment has been deleted") {
+          console.log(
+            "only setComments started in CommentSection from handleDelete "
+          );
+          setComments(comments.filter((comment) => comment._id !== commentId));
+        } else if (data == "Comment was set to be deleted") {
+          console.log(
+            " a comment was not deleted but changed in CommentSection from handleDelete "
+          );
+          getComments();
+        } else if (data == "Comment and his parent one were deleted") {
+          console.log(
+            " reloadParentSection started in CommentSection from handleDelete "
+          );
+          reloadParentSection();
+        }
+        //reloadParentSection(); //New, forces to reload the commentSection that inclued the comment, to which this commentSection is
         //in case the deletion triggered the deletion of a comment, that had been flagged to be deleted before
-        // setComments(comments.filter((comment) => comment._id !== commentId));//OLD
+        //getComments(); //New. Not the old version because a comment can be not deleted but changed
+        //setComments(comments.filter((comment) => comment._id !== commentId)); //OLD
       }
     } catch (error) {
       setCommentsError(error.message);
