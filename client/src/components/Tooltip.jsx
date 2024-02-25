@@ -30,7 +30,7 @@ export default function Tooltip({
       {children}
       <span
         className={
-          `absolute scale-0 bg-white dark:bg-gray-700 group-hover:scale-100 z-10 border rounded-md 
+          `absolute scale-0 bg-white dark:bg-dark-active-bg group-hover:scale-100 z-10 border rounded-md 
        px-2 py-1 text-sm  ` +
           stCol +
           stPos

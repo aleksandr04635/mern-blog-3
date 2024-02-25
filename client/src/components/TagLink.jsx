@@ -6,7 +6,7 @@ export default function TagLink({ tag }) {
   return (
     <Link
       to={`/search?tag=${tag.slug}`}
-      className="dark:hover:bg-stone-700 hover:bg-stone-100 font-normal text-sm border rounded  px-2 py-1 border-purple-500"
+      className="dark:hover:bg-dark-active-bg hover:bg-stone-100 font-normal text-sm border rounded  px-2 py-1 border-purple-500"
     >
       {tag?.name?.split(" ").join("\u00A0")}
     </Link>

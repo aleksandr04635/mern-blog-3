@@ -28,7 +28,7 @@ export default function PageSizeControl() {
         value={pageSize || import.meta.env.VITE_FIREBASE_API_KEY}
         id="pageSize"
         className="px-2 py-0 border rounded-lg border-teal-500   
-          dark:bg-slate-900 dark:hover:bg-stone-700 hover:bg-stone-100 
+          dark:bg-slate-900 dark:hover:bg-dark-active-bg  hover:bg-stone-100 
            "
       >
         <option value="2">2</option>

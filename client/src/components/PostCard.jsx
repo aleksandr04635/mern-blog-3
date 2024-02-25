@@ -15,18 +15,25 @@ export default function PostCard({ post, onDelete }) {
   const { currentUser } = useSelector((state) => state.user);
 
   // overflow-hidden
+  /*   GOOD         
+            <img
+              src={post.image}
+              alt="post cover"
+              className="w-full sm:min-h-full sm:h-[260px] sm:w-[360px] object-cover"
+            />
+*/
   return (
     <div
       className="flex flex-col sm:flex-row w-full  border border-teal-500
      outline-teal-500  outline-1 hover:outline  rounded-lg  "
     >
       {post.image && (
-        <div className=" grow-0 shrink-0 ">
+        <div className=" grow-0 shrink-0 rounded-tr-lg sm:rounded-tr-none rounded-tl-lg  sm:rounded-bl-lg overflow-hidden">
           <Link to={`/post/${post.slug}`}>
             <img
               src={post.image}
               alt="post cover"
-              className=" h-[260px] sm:w-[360px] object-cover"
+              className="w-full sm:min-h-full sm:h-[260px] sm:w-[360px] object-cover"
             />
           </Link>
         </div>

@@ -21,7 +21,8 @@ export default function PaginationBar({ currentPage, totalPages }) {
       cn += " dark:bg-cyan-900 bg-cyan-50";
     }
     if (n != currentPage) {
-      cn += " dark:bg-slate-900 dark:hover:bg-stone-700 hover:bg-stone-100 ";
+      cn +=
+        " dark:bg-slate-900 dark:hover:bg-dark-active-bg hover:bg-gray-100 ";
     }
     if (n == totalPages) {
       cn += " rounded-l-lg ";

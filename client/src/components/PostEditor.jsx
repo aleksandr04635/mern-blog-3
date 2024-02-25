@@ -386,7 +386,10 @@ export default function PostEditor({ mode, postId }) {
                       <FaPlus />
                     </p>
                     <p className="w-[235px]">{t.name}</p>{" "}
-                    <p>{t.number_of_posts} posts </p>
+                    <p>
+                      {t.number_of_posts}{" "}
+                      {t.number_of_posts > 1 ? "posts" : "post"}{" "}
+                    </p>
                   </div>
                 ))}
             </div>
