@@ -66,6 +66,6 @@ const getAllTags = async (req, res, next) => {
 
 const router = express.Router();
 router.get("/get-all-tags", getAllTags);
-router.post("/create-tag", verifyToken, createTag);
+//router.post("/create-tag", verifyToken, createTag);
 
 export default router;
