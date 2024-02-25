@@ -7,9 +7,10 @@ import { Modal, Table } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { formatISO9075 } from "date-fns";
-
+import TagLinksList from "../components/TagLinksList";
 import CommentSection from "../components/CommentSection";
 import CommentingEditor from "../components/CommentingEditor";
+import AuthrorName from "../components/AuthrorName";
 
 export default function PostPage() {
   const navigate = useNavigate();
@@ -147,47 +148,11 @@ export default function PostPage() {
             </span>
           </div>
           <div className="flex  w-full items-center mt-2  font-semibold">
-            <div className="flex flex-wrap items-center space-x-2 ">
-              <span>Tags: </span>
-              {post.tags?.map((t, i) => (
-                <Link
-                  key={i}
-                  to={`/search?tag=${t.slug}`}
-                  className="dark:hover:bg-stone-700 hover:bg-stone-200 border rounded my-1 px-2 py-1"
-                >
-                  {t.name}
-                </Link>
-              ))}
-            </div>
+            <span>Tags: </span>
+            <TagLinksList post={post} />
           </div>
 
-          {post && post.userId.username && (
-            <Link
-              to={
-                currentUser && post.userId._id == currentUser._id
-                  ? `/dashboard?tab=posts&userId=${currentUser._id}`
-                  : `/search?userId=${post.userId._id}`
-              }
-              className="text-gray-500 "
-            >
-              <div className="group flex  ">
-                <div className="relative w-10 h-10 self-center shadow-md overflow-hidden rounded-full">
-                  <img
-                    src={post.userId.profilePicture}
-                    alt="user"
-                    className={`rounded-full w-full h-full object-cover border-2 group-hover:border-blue-800
-                   dark:border-purple-800 dark:group-hover:border-blue-400 border-[lightgray] `}
-                  />
-                </div>
-                <h1
-                  className="text-xl  text-slate-800 hover:text-blue-800 
-               dark:text-purple-400 dark:group-hover:text-blue-400 p-1 my-1 text-center font-serif  "
-                >
-                  {post.userId.username}
-                </h1>
-              </div>
-            </Link>
-          )}
+          {post && post.userId.username && <AuthrorName post={post} />}
           <h1 className="text-3xl  p-1 text-center font-serif  lg:text-2xl">
             {post && post.title}
           </h1>

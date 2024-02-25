@@ -26,7 +26,7 @@ const postSchema = new Schema(
       /* default:
         "https://www.hostinger.com/tutorials/wp-content/uploads/sites/2/2021/09/how-to-write-a-blog-post.png", */
     },
-    tags: [{ name: String, slug: String }],
+    tags: [{ type: Schema.Types.ObjectId, ref: "Tag" }],
     slug: {
       type: String,
       required: true,
@@ -67,3 +67,29 @@ postSchema.virtual("comments", {
 const Post = mongoose.model("Post", postSchema);
 
 export default Post;
+
+//tags: [{ type: Schema.Types.ObjectId, ref: "Tag" }],
+
+/* https://mongoosejs.com/docs/schematypes.html#arrays
+const ToySchema = new Schema({ name: String });
+const ToyBoxSchema = new Schema({
+  toys: [ToySchema],
+  buffers: [Buffer],
+  strings: [String],
+  numbers: [Number]
+  // ... etc
+});
+
+Arrays are special because they implicitly have a default value of [] (empty array).
+
+const ToyBox = mongoose.model('ToyBox', ToyBoxSchema);
+console.log((new ToyBox()).toys); // []
+
+To overwrite this default, you need to set the default value to undefined
+
+const ToyBoxSchema = new Schema({
+  toys: {
+    type: [ToySchema],
+    default: undefined
+  }
+}); */

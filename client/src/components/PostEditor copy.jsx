@@ -23,9 +23,6 @@ import "react-circular-progressbar/dist/styles.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { ImCross } from "react-icons/im";
-import { FaPlus } from "react-icons/fa";
-import { FaMinus } from "react-icons/fa6";
-import { TiMinus } from "react-icons/ti";
 
 import TinyMCEEditor from "../components/TinyMCEEditor";
 
@@ -39,66 +36,20 @@ export default function PostEditor({ mode, postId }) {
   const [formData, setFormData] = useState({});
   //const [postData, setPostData] = useState({});
   const [publishError, setPublishError] = useState(null);
-  const [tagString, setTagString] = useState(""); //scalar
+  const [tag, setTag] = useState(""); //scalar
   const [tags, setTags] = useState([]); //array of objects
-  console.log("tags in PostEditor : ", tags);
-  //const [allTags, setAllTags] = useState([]);
-  const [allTagsInDB, setAllTagsInDB] = useState([]);
   const [loading, setLoading] = useState(true);
 
   //console.log("PostEditor(mode, postId) : ", mode, postId);
   //console.log("formData in PostEditor : ", formData);
 
-  function slugFromString(s) {
-    return s
-      .replace(/[^a-z\-A-Z0-9-]/g, " ")
-      .replace(/\s+/g, " ")
-      .trim()
-      .split(" ")
-      .join("-")
-      .toLowerCase();
-  }
-
-  function prohibitedToAddFromString() {
-    return (
-      [...tags, ...allTagsInDB]
-        .map((t) => t.slug)
-        .indexOf(slugFromString(tagString)) !== -1
-    );
-  }
-
-  /*   console.log("[...tags, ...allTagsInDB]", [...tags, ...allTagsInDB]);
-  console.log(
-    "tags.map(t=>t.slug):",
-    tags.map((t) => t.slug)
-  ); */
-  function allowedToAddFromDB(tg) {
-    // tags.map(t=>t.slug).indexOf(tg.slug)
-    return tags.map((t) => t.slug).indexOf(tg.slug) == -1;
-  }
-
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const rest = await fetch(`/api/tag/get-all-tags`);
-        const datat = await rest.json();
-        console.log("datat from fetch: ", datat);
-        if (!rest.ok) {
-          console.log(datat.message);
-          setPublishError(datat.message);
-          return;
-        }
-        if (rest.ok) {
-          if (datat.tags.length > 0) {
-            setAllTagsInDB(datat.tags);
-          }
-
-          setLoading(false);
-        }
-
         if (mode == "edit") {
           const res = await fetch(`/api/post/getposts?postId=${postId}`);
           const data = await res.json();
+          console.log("formData upon fetch: ", formData);
           if (!res.ok) {
             console.log(data.message);
             setPublishError(data.message);
@@ -109,12 +60,13 @@ export default function PostEditor({ mode, postId }) {
             console.log("data.posts[0]: ", data.posts[0]);
             setPublishError(null);
             setFormData(data.posts[0]);
-            if (data.posts[0].tags && data.posts[0].tags?.length > 0) {
-              setTags(data.posts[0].tags);
-            }
+            //setPostData(data.posts[0]);
+            setTags(data.posts[0].tags);
+            setLoading(false);
           }
+        } else {
+          setLoading(false);
         }
-        setLoading(false);
       } catch (error) {
         console.log(error.message);
       }
@@ -176,11 +128,18 @@ export default function PostEditor({ mode, postId }) {
   const addTag = () => {
     let updatedTags = [...tags];
     updatedTags.push({
-      name: tagString.trim(),
-      slug: slugFromString(tagString),
+      name: tag.trim(),
+      slug: tag
+        .replace(/[^a-z\-A-Z0-9-]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim()
+        .split(" ")
+        .join("-")
+        /* .toLowerCase() */
+        .replace(/[^a-z\-A-Z0-9-]/g, ""),
     });
+    setTag("");
     setTags(updatedTags);
-    setTagString("");
   };
 
   //console.log("formData.content.length: ", formData.content.length);
@@ -207,7 +166,6 @@ export default function PostEditor({ mode, postId }) {
         }
       );
       const data = await res.json();
-      console.log("received data in handleSubmit: ", data);
       if (!res.ok) {
         setPublishError(data.message);
         return;
@@ -224,8 +182,8 @@ export default function PostEditor({ mode, postId }) {
   //create
 
   return (
-    <div className="p-1 pr-2  max-w-3xl mx-auto min-h-screen">
-      <h1 className="text-center text-2xl my-2 font-semibold">
+    <div className="p-1 max-w-3xl mx-auto min-h-screen">
+      <h1 className="text-center text-xl my-2 font-semibold">
         {mode == "edit" ? "Update a post" : "Create a post"}
       </h1>
       {loading ? (
@@ -233,53 +191,10 @@ export default function PostEditor({ mode, postId }) {
           <Spinner size="xl" />
         </div>
       ) : (
-        <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
-          {/* importance */}
-          <div className="flex flex-col ">
-            <div className="flex flex-row items-center gap-1">
-              <div className="text-lg px-1">Importance:</div>
-              <div className="text-lg">{formData.importance || 1}</div>
-              <div className="flex flex-col   text-sm">
-                <button
-                  className=" relative border items-center text-lg text-center rounded-t-lg w-[19px] h-[16px]"
-                  type="button"
-                  onClick={() =>
-                    setFormData({
-                      ...formData,
-                      importance: (formData.importance || 1) + 1,
-                    })
-                  }
-                >
-                  <p className="top-[-9px] right-[3px] absolute align-middle ">
-                    +
-                  </p>
-                </button>
-                <button
-                  className=" relative border items-center text-2xl text-center rounded-b-lg w-[19px] h-[16px]"
-                  type="button"
-                  onClick={() => {
-                    !!formData.importance & (formData.importance > 1) &&
-                      setFormData({
-                        ...formData,
-                        importance: (formData.importance || 1) - 1,
-                      });
-                  }}
-                >
-                  <p className="top-[-12px] right-[4px] absolute align-middle ">
-                    -
-                  </p>
-                </button>
-              </div>
-            </div>
-            <div className="text-base px-1">
-              Your posts are sorted by importance on your page. Don't set it
-              above 1 without real purpose
-            </div>
-          </div>
-
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           {/* image */}
           <div>
-            <h3 className="p-1 text-lg">Front image (optional):</h3>
+            <h3 className="p-1">Front image (optional):</h3>
             <div className="flex gap-4 items-center justify-between border border-teal-500 rounded-lg p-3">
               <FileInput
                 type="file"
@@ -320,13 +235,12 @@ export default function PostEditor({ mode, postId }) {
           </div>
           {/* tags */}
           <div className="flex flex-col">
-            <h3 className=" text-lg">Tags list (optional):</h3>
-            <p>Addition of already existing tags is preferable </p>
-            <div className="flex items-center ">
+            <h3 className="p-1 text-base">Tags list (optional):</h3>
+            <div className="flex items-center space-x-4 md:space-x-2">
               <TextInput
-                value={tagString}
-                onChange={(e) => setTagString(e.target.value)}
-                className=" py-1 outline-none rounded border-teal-500 "
+                value={tag}
+                onChange={(e) => setTag(e.target.value)}
+                className="px-4 py-2 outline-none rounded border-teal-500 "
                 placeholder="Enter a post tag"
                 /* color="success" */
                 type="text"
@@ -341,64 +255,78 @@ export default function PostEditor({ mode, postId }) {
                 onClick={addTag}
                 outline
                 gradientDuoTone="purpleToBlue"
-                className=""
-                disabled={prohibitedToAddFromString()}
+                className="w-[70px]"
               >
-                Create&nbsp;a&nbsp;new&nbsp;tag
+                Add
               </Button>
             </div>
-            <div className="flex flex-col  mt-1">
-              <p>Tags to the post:</p>
+            <div className="flex flex-wrap px-4 mt-3">
               {tags?.map((t, i) => (
                 <div
-                  onClick={() => deleteTag(i)}
                   key={i}
-                  className="flex cursor-pointer justify-start w-[350px] dark:text-gray-200 items-center space-x-2 mr-4 dark:bg-gray-700 bg-gray-100 px-2 py-1 rounded-lg"
+                  className="flex justify-center dark:text-gray-200 items-center space-x-2 mr-4 dark:bg-gray-700 bg-gray-200 px-2 py-1 rounded-lg"
                 >
-                  <p className="text-white bg-gray-500 rounded-full  p-1 text-sm">
-                    <TiMinus />
-                  </p>
                   <p>{t.name}</p>
+                  <p
+                    onClick={() => deleteTag(i)}
+                    className="text-white bg-gray-500 rounded-full cursor-pointer p-1 text-sm"
+                  >
+                    <ImCross />
+                  </p>
                 </div>
               ))}
             </div>
-            <div className="flex flex-col  mt-1">
-              <p>Already existing tags: </p>
-              {allTagsInDB
-                ?.filter((t) => allowedToAddFromDB(t))
-                .filter((t) => t.name.indexOf(tagString.trim()) == 0)
-                .slice(0, 10)
-                .map((t, i) => (
-                  <div
-                    key={i}
-                    onClick={() => {
-                      setTags([...tags, t]);
-                    }}
-                    className={`${
-                      allowedToAddFromDB(t) ? "cursor-pointer" : ""
-                    } flex justify-start w-[350px] dark:text-gray-200 
-                    items-start space-x-2 mr-4 dark:bg-gray-700 bg-gray-100 px-2 py-1 rounded-lg`}
-                  >
-                    <p
-                      onClick={() => deleteTag(i)}
-                      className="text-white bg-gray-500 rounded-full cursor-pointer p-1 text-sm"
-                    >
-                      <FaPlus />
-                    </p>
-                    <p className="w-[235px]">{t.name}</p>{" "}
-                    <p>{t.number_of_posts} posts </p>
-                  </div>
-                ))}
+          </div>
+
+          {/* importance */}
+          <div className="flex items-center gap-1">
+            <div className="text-sm px-1">importance:</div>
+            <div className="text-lg">{formData.importance || 1}</div>
+            <div className="flex flex-col   text-sm">
+              <button
+                className=" relative border items-center text-center rounded-t-lg w-[15px] h-[12px]"
+                type="button"
+                onClick={() =>
+                  setFormData({
+                    ...formData,
+                    importance: (formData.importance || 1) + 1,
+                  })
+                }
+              >
+                <p className="top-[-5px] right-[2px] absolute align-middle ">
+                  +
+                </p>
+              </button>
+              <button
+                className=" relative border items-center text-center rounded-b-lg w-[15px] h-[12px]"
+                type="button"
+                onClick={() => {
+                  !!formData.importance & (formData.importance > 1) &&
+                    setFormData({
+                      ...formData,
+                      importance: (formData.importance || 1) - 1,
+                    });
+                }}
+              >
+                <p className="top-[-6px] right-[4px] absolute align-middle ">
+                  -
+                </p>
+              </button>
+            </div>
+            <div className="text-sm px-2">
+              Your posts will be sorted by this importance on your page. Not set
+              it above 1 without real purpose
             </div>
           </div>
 
           {/* title */}
           <div className="flex flex-col  justify-between">
+            {/* <h3 className="p-1">Title (minimum 5 characters):</h3> */}
             <Label
               htmlFor="title"
               color="gray"
-              value="Title (minimum 6 characters):"
-              className="p-1 text-lg"
+              value="Title (minimum 5 characters)"
+              className="p-1 text-base"
             />
             <TextInput
               type="text"
@@ -413,22 +341,21 @@ export default function PostEditor({ mode, postId }) {
               value={formData.title || ""}
               color={formData.title?.length > 5 ? "success" : "failure"}
               helperText={
-                formData.title?.length > 5 ? "" : "minimum 6 characters"
+                formData.title?.length > 5 ? "" : "minimum 5 characters"
               }
             />
             <p className="text-gray-500 p-1 text-xs">
               {150 - (formData.title?.length ?? 0)} characters remaining
             </p>
           </div>
-
           {/* intro */}
           <div className="flex flex-col">
             {/* <h3 className="p-1">Introduction (minimum 5 characters):</h3> */}
             <Label
               htmlFor="intro"
               color="gray"
-              value="Introduction (minimum 6 characters):"
-              className="p-1 text-lg"
+              value="Introduction (minimum 5 characters)"
+              className="p-1 text-base"
             />
             <Textarea
               placeholder="Write an introduction"
@@ -441,16 +368,15 @@ export default function PostEditor({ mode, postId }) {
               className="h-[160px] sm:h-[80px] text-justify text-sm "
               value={formData.intro || ""}
               helperText={
-                formData.intro?.length > 5 ? "" : "minimum 6 characters"
+                formData.intro?.length > 5 ? "" : "minimum 5 characters"
               }
             />
             <p className="text-gray-500 text-xs">
               {300 - (formData.intro?.length ?? 0)} characters remaining
             </p>
           </div>
-
           {/* Text */}
-          <h3 className="p-1 text-lg">Main content (necessary):</h3>
+          <h3 className="p-1">Main content (necessary):</h3>
           {/*           <ReactQuill
             theme="snow"
             value={formData.content || ""}
@@ -506,7 +432,3 @@ export default function PostEditor({ mode, postId }) {
     </div>
   );
 }
-
-//sort(function (a, b) {
-// return a.number_of_posts - b.number_of_posts;
-//})

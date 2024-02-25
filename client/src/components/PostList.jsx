@@ -15,21 +15,20 @@ import { changePageSize } from "../redux/pageSize/pageSizeSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 
-export default function PostList() {
+export default function PostList({ deleteSignal }) {
   const navigate = useNavigate();
   const location = useLocation();
   // const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
   const { pageSize: pageSizeStore } = useSelector((state) => state.pageSize);
   //console.log("pageSizeStore in PostList: ", pageSizeStore);
+
   /*   console.log(
     "useSelector((state) => state.pageSize) in PostList: ",
     useSelector((state) => state.pageSize)
   ); */
-
   const [showModal, setShowModal] = useState(false);
   const [postToDelete, setPostToDelete] = useState(null);
-
   const [errorMessage, setErrorMessage] = useState(null);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -167,6 +166,7 @@ export default function PostList() {
           searchQuery3
         );
         fetchPostsByQuerryString(searchQuery3);
+        deleteSignal(); //signals to the parent component
       }
     } catch (error) {
       console.log(error.message);

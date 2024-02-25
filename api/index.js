@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import userRoutes from "./routes/user.route.js";
 import authRoutes from "./routes/auth.route.js";
 import postRoutes from "./routes/post.route.js";
+import tagRoutes from "./routes/tag.route.js";
 import commentRoutes from "./routes/comment.route.js";
 import imageRoutes from "./routes/image.route.js";
 import cookieParser from "cookie-parser";
@@ -84,6 +85,7 @@ app.get("/api/test", (req, res) => {
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/post", postRoutes);
+app.use("/api/tag", tagRoutes);
 app.use("/api/comment", commentRoutes);
 app.use("/api/image", imageRoutes);
 

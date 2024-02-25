@@ -113,6 +113,7 @@ export default function CommentingEditor({
         >
           <TinyMCEEditor
             value2={comment}
+            toCom={true}
             onChange={(value3) => {
               setComment(value3);
             }}

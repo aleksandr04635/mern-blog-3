@@ -10,7 +10,7 @@ import {
 import { app } from "../firebase";
 import { useSelector, useDispatch } from "react-redux";
 
-export default function TinyMCEEditor({ value2, onChange }) {
+export default function TinyMCEEditor({ value2, onChange, toCom = false }) {
   const { theme } = useSelector((state) => state.theme);
   const editorRef = useRef(null);
   const [imageUploadError, setImageUploadError] = useState(null);
@@ -62,7 +62,9 @@ export default function TinyMCEEditor({ value2, onChange }) {
         tinymceScriptSrc="/tinymce/tinymce.min.js"
         onInit={(evt, editor) => {
           editorRef.current = editor;
-          editorRef.current.focus();
+          if (toCom) {
+            editorRef.current.focus();
+          }
         }}
         onEditorChange={(e) => onChange(e)}
         //onEditorChange={()=>setCont(editorRef.current.getContent())}
