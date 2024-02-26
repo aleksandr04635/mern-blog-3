@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { Button, Textarea } from "flowbite-react";
 import CommentSection from "./CommentSection";
 import CommentingEditor from "./CommentingEditor";
+import DateTime from "./DateTime";
 
 export default function Comment({
   level,
@@ -78,19 +79,7 @@ export default function Comment({
                   ? `${comment.userId.username}`
                   : "anonymous user"}
               </div>
-              <div className="flex flex-row gap-4 text-gray-500 text-xs">
-                <span>
-                  {formatISO9075(new Date(comment.createdAt))
-                    .split(" ")
-                    .join("\u00A0")}
-                </span>
-                <span>
-                  {moment(comment.createdAt)
-                    .fromNow()
-                    .split(" ")
-                    .join("\u00A0")}
-                </span>
-              </div>
+              <DateTime time={comment.createdAt} variant={"comment"} />
             </div>
             {isEditing ? (
               <CommentingEditor
@@ -206,7 +195,7 @@ export default function Comment({
         {tocomment && (
           <CommentingEditor
             toPost={false}
-            postId={comment._id}
+            idOfParentPostOrComment={comment._id}
             mode={"create"}
             commandReload={() => {
               setReloadSwitch(!reloadSwitch);
@@ -220,8 +209,7 @@ export default function Comment({
           level={level + 1}
           reloadSwitch={reloadSwitch}
           key={comment._id}
-          toPost={false}
-          postId={comment._id}
+          idOfParentPostOrComment={comment._id}
           reloadParentSection={() => {
             reloadParentSection();
           }}

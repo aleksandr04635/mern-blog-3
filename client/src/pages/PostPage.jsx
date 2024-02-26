@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 import { useSelector } from "react-redux";
-import { Modal, Table } from "flowbite-react";
+import { Table } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { formatISO9075 } from "date-fns";
@@ -12,6 +12,7 @@ import CommentSection from "../components/CommentSection";
 import CommentingEditor from "../components/CommentingEditor";
 import InfoString from "../components/InfoString";
 import AuthrorName from "../components/AuthrorName";
+import ModalComponent from "../components/ModalComponent";
 
 export default function PostPage() {
   const navigate = useNavigate();
@@ -171,8 +172,8 @@ export default function PostPage() {
           </div> */}
           <div className="flex flex-col border-l-0  border-teal-500 sm:flex-row items-center justify-between w-full">
             {/* Likes sm:w-[150px] flex-col sm: */}
-            <div className="flex flex-col  sm:flex-row items-center justify-between w-full">
-              <div className="flex h-[50px] w-full p-2 text-lg items-center dark:border-gray-700  gap-2">
+            <div className="flex flex-row items-center justify-between w-full">
+              <div className="flex flex-row h-[50px] w-full p-2 text-lg items-center dark:border-gray-700  gap-2">
                 <button
                   type="button"
                   onClick={() =>
@@ -224,18 +225,18 @@ export default function PostPage() {
                 outline
                 gradientDuoTone="purpleToBlue"
                 type="submit"
-                className="w-[150px] "
+                className="flex-none w-[150px] mx-1"
               >
                 {tocomment ? "Cancel" : "Comment"}
               </Button>
             </div>
             {currentUser &&
               (post.userId._id == currentUser._id || currentUser.isAdmin) && (
-                <div className="flex justify-around sm:justify-end gap-2 w-full items-center  ">
+                <div className="flex justify-between sm:justify-end gap-2 w-full items-center  ">
                   <Button
                     outline
                     gradientDuoTone="purpleToBlue"
-                    className="w-[120px] "
+                    className="w-[150px] "
                     onClick={() => {
                       navigate(`/update-post/${post._id}`);
                     }}
@@ -245,7 +246,7 @@ export default function PostPage() {
                   <Button
                     outline
                     gradientDuoTone="pinkToOrange"
-                    className="w-[120px]"
+                    className="w-[150px] mx-1"
                     onClick={() => {
                       setShowModal(true);
                     }}
@@ -258,7 +259,7 @@ export default function PostPage() {
           {tocomment && (
             <CommentingEditor
               toPost={true}
-              postId={post._id}
+              idOfParentPostOrComment={post._id}
               commandReload={() => {
                 setReloadSwitch(!reloadSwitch);
               }}
@@ -271,37 +272,17 @@ export default function PostPage() {
             key={post._id}
             level={1}
             reloadSwitch={reloadSwitch}
-            toPost={true}
-            postId={post._id}
+            idOfParentPostOrComment={post._id}
             reloadParentSection={() => {
               console.log("reloaded post's comments");
             }}
           />
-
-          <Modal
+          <ModalComponent
             show={showModal}
             onClose={() => setShowModal(false)}
-            popup
-            size="md"
-          >
-            <Modal.Header />
-            <Modal.Body>
-              <div className="text-center">
-                <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
-                <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-400">
-                  Are you sure you want to delete this post?
-                </h3>
-                <div className="flex justify-center gap-4">
-                  <Button color="failure" onClick={handleDeletePost}>
-                    Delete
-                  </Button>
-                  <Button color="gray" onClick={() => setShowModal(false)}>
-                    Cancel
-                  </Button>
-                </div>
-              </div>
-            </Modal.Body>
-          </Modal>
+            onConfirm={handleDeletePost}
+            text={"Are you sure you want to delete this post?"}
+          />
         </div>
       )}
       {error && (

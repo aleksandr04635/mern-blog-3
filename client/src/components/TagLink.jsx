@@ -1,5 +1,3 @@
-import { Modal, Table, Button } from "flowbite-react";
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function TagLink({ tag }) {

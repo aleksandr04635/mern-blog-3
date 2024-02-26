@@ -1,8 +1,9 @@
-import { Modal, Table, Button } from "flowbite-react";
+import { Table, Button } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { FaCheck, FaTimes } from "react-icons/fa";
+import ModalComponent from "./ModalComponent";
 
 export default function DashUsers() {
   const { currentUser } = useSelector((state) => state.user);
@@ -127,30 +128,12 @@ export default function DashUsers() {
       ) : (
         <p>You have no users yet!</p>
       )}
-      <Modal
+      <ModalComponent
         show={showModal}
         onClose={() => setShowModal(false)}
-        popup
-        size="md"
-      >
-        <Modal.Header />
-        <Modal.Body>
-          <div className="text-center">
-            <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
-            <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-400">
-              Are you sure you want to delete this user?
-            </h3>
-            <div className="flex justify-center gap-4">
-              <Button color="failure" onClick={handleDeleteUser}>
-                Yes, I'm sure
-              </Button>
-              <Button color="gray" onClick={() => setShowModal(false)}>
-                No, cancel
-              </Button>
-            </div>
-          </div>
-        </Modal.Body>
-      </Modal>
+        onConfirm={handleDeleteUser}
+        text={"Are you sure you want to delete this user?"}
+      />
     </div>
   );
 }

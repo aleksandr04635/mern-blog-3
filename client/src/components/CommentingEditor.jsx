@@ -1,11 +1,4 @@
-import {
-  Alert,
-  Button,
-  Modal,
-  TextInput,
-  Textarea,
-  Spinner,
-} from "flowbite-react";
+import { Alert, Button, TextInput, Textarea, Spinner } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -16,7 +9,7 @@ export default function CommentingEditor({
   mode,
   commandReload,
   toPost,
-  postId,
+  idOfParentPostOrComment,
   onEdit,
   onClose,
 }) {
@@ -43,14 +36,15 @@ export default function CommentingEditor({
       const reqO = toPost
         ? {
             content: comment,
-            postId,
+            postId: idOfParentPostOrComment,
             userId: currentUser._id,
           }
         : {
             content: comment,
-            commentId: postId,
+            commentId: idOfParentPostOrComment,
             userId: currentUser._id,
           };
+      console.log(" reqO in CommentingEditor.jsx", reqO);
       const res = await fetch("/api/comment/create", {
         method: "POST",
         headers: {
@@ -58,6 +52,7 @@ export default function CommentingEditor({
         },
         body: JSON.stringify(reqO),
       });
+      console.log(" res in CommentingEditor.jsx", res);
       //const data = await res.json();
       if (res.ok) {
         setComment("");
@@ -67,7 +62,7 @@ export default function CommentingEditor({
           ` giving command to comment section to REFETCH comments from commentingEditor from: ${
             toPost ? "post" : "comment"
           }`,
-          postId
+          idOfParentPostOrComment
         );
         commandReload();
         //setComments([data, ...comments]);

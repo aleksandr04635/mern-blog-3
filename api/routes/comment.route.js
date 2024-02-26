@@ -227,7 +227,7 @@ const deleteComment = async (req, res, next) => {
       res.status(200).json(editedComment); */
       comment.deleted = true;
       comment.content =
-        "<p style='color:orange;  font-size: 0.875em; '>This comment is deleted by its author and will be completely deleted when all the comments to it will be deleted</p>";
+        "<p style='color:orange;  font-size: 0.875em; '>This comment is deleted by its author and will be deleted completely when all the comments to it will be deleted</p>";
       await comment.save();
       console.log("only edited a comment in deleteComment: ", comment);
       res.status(200).json("Comment was set to be deleted");

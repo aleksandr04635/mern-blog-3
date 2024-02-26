@@ -1,21 +1,14 @@
-import {
-  Alert,
-  Button,
-  Modal,
-  TextInput,
-  Textarea,
-  Spinner,
-} from "flowbite-react";
+import { Alert, Spinner } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import Comment from "./Comment";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
+import ModalComponent from "./ModalComponent";
 
 export default function CommentSection({
   level,
-  toPost,
-  postId,
+  idOfParentPostOrComment,
   reloadSwitch,
   reloadParentSection,
 }) {
@@ -29,15 +22,14 @@ export default function CommentSection({
   const navigate = useNavigate();
 
   //console.log("level  from CommentSection.jsx:", level);
-  //console.log("toPost, postId  from CommentSection.jsx:", toPost, postId);
 
   const getComments = async () => {
     setCloader(true);
     console.log("getComments started in CommentSection: ");
     try {
       const qs = `/api/comment/get${
-        toPost ? `Post` : `Comment`
-      }Comments/${postId}`;
+        level == 1 ? `Post` : `Comment`
+      }Comments/${idOfParentPostOrComment}`;
       //console.log("qs from CommentSection.jsx:", qs);
       const res = await fetch(qs);
       if (res.ok) {
@@ -56,7 +48,7 @@ export default function CommentSection({
 
   useEffect(() => {
     getComments();
-  }, [postId, reloadSwitch]); //reloadSwitch commands a reload of this commentSection from its parent comment component
+  }, [idOfParentPostOrComment, reloadSwitch]); //reloadSwitch commands a reload of this commentSection from its parent comment component
 
   const handleLike = async (commentId, type, ac) => {
     try {
@@ -200,33 +192,12 @@ export default function CommentSection({
         </div>
       )}
 
-      <Modal
+      <ModalComponent
         show={showModal}
         onClose={() => setShowModal(false)}
-        popup
-        size="md"
-      >
-        <Modal.Header />
-        <Modal.Body>
-          <div className="text-center">
-            <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
-            <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-400">
-              Are you sure you want to delete this comment?
-            </h3>
-            <div className="flex justify-center gap-4">
-              <Button
-                color="failure"
-                onClick={() => handleDelete(commentToDelete)}
-              >
-                Yes, delete
-              </Button>
-              <Button color="gray" onClick={() => setShowModal(false)}>
-                No, cancel
-              </Button>
-            </div>
-          </div>
-        </Modal.Body>
-      </Modal>
+        onConfirm={() => handleDelete(commentToDelete)}
+        text={"Are you sure you want to delete this comment?"}
+      />
     </div>
   );
 }
