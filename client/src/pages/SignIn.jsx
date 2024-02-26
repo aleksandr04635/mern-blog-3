@@ -36,7 +36,8 @@ export default function SignIn() {
 
   const handleChange = (e) => {
     setVisibleEr(false);
-    setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
+    // setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
+    setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
   const validateEmail = (email) => {

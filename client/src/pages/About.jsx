@@ -57,7 +57,7 @@ export default function About() {
               comments to it will be deleted - try it.
             </p>
             <Link
-              className="text-blue-500 hover:underline"
+              className="text-blue-500 hover:text-blue-800"
               to={`https://github.com/aleksandr04635/mern-blog-3`}
             >
               You can see the code here

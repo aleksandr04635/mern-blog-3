@@ -16,7 +16,8 @@ export default function PaginationBar({ currentPage, totalPages }) {
   }
 
   const cName = (n) => {
-    let cn = "  border border-teal-500 px-2 ";
+    let cn =
+      "  border border-teal-500 px-2 outline-teal-500  outline-1 hover:outline";
     if (n == currentPage) {
       cn += " dark:bg-cyan-900 bg-cyan-50";
     }

@@ -326,7 +326,7 @@ export default function PostEditor({ mode, postId }) {
               <TextInput
                 value={tagString}
                 onChange={(e) => setTagString(e.target.value)}
-                className=" py-1 outline-none rounded border-teal-500 "
+                className=" py-1 outline-none rounded border-teal-500 mr-2"
                 placeholder="Enter a post tag"
                 /* color="success" */
                 type="text"

@@ -8,6 +8,7 @@ import { BiEdit } from "react-icons/bi";
 import { MdDelete } from "react-icons/md";
 import Tooltip from "./Tooltip";
 import TagLinksList from "./TagLinksList";
+import InfoString from "./InfoString";
 import AuthrorName from "./AuthrorName";
 
 export default function PostCard({ post, onDelete }) {
@@ -24,39 +25,32 @@ export default function PostCard({ post, onDelete }) {
 */
   return (
     <div
-      className="flex flex-col sm:flex-row w-full  border border-teal-500
+      className="flex flex-col md:flex-row w-full  border border-teal-500
      outline-teal-500  outline-1 hover:outline  rounded-lg  "
     >
       {post.image && (
-        <div className=" grow-0 shrink-0 rounded-tr-lg sm:rounded-tr-none rounded-tl-lg  sm:rounded-bl-lg overflow-hidden">
+        <div className=" grow-0 shrink-0 rounded-tr-lg md:rounded-tr-none rounded-tl-lg  md:rounded-bl-lg overflow-hidden">
           <Link to={`/post/${post.slug}`}>
             <img
               src={post.image}
               alt="post cover"
-              className="w-full sm:min-h-full sm:h-[260px] sm:w-[360px] object-cover"
+              className="w-full md:min-h-full md:h-[260px] md:w-[360px] object-cover"
             />
           </Link>
         </div>
       )}
-      {/*  className="max-h-[260px] w-[360px] min-w-full sm:min-w-[360px]  object-cover " */}
-      <div className="sm:pl-2 flex flex-col grow justify-around">
-        <div className="flex justify-between pt-1 px-2  border-slate-500  w-full text-sm">
-          <span>{formatISO9075(new Date(post.createdAt))}</span>
-          {post && <span>importance: {post.importance}</span>}
-          <span className="italic">
-            {post && (post.content.length / 1000).toFixed(0)} mins read
-          </span>
-        </div>
+      <div className="md:pl-2 flex flex-col grow justify-around">
+        <InfoString post={post} />
         <Link to={`/post/${post.slug}`}>
           <h2
-            className="text-2xl text-justify px-2
+            className="text-2xl text-justify px-2 w-fit mx-auto md:w-full 
            text-stone-800 dark:text-purple-500 dark:hover:text-blue-500 hover:text-blue-800 
            font-semibold "
           >
             {post.title}
           </h2>
         </Link>
-        <div className="px-2  ">
+        <div className="px-2 w-fit mx-auto md:w-full ">
           <AuthrorName post={post} />
         </div>
         {post.intro && <div className="px-2 text-justify ">{post.intro}</div>}

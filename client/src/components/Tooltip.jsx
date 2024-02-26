@@ -8,7 +8,7 @@ export default function Tooltip({
   let stPos;
   switch (position) {
     case "bottom":
-      stPos = " top-8";
+      stPos = " top-8 left-[-10px]";
       break;
     case "right":
       stPos = "bottom-[1px] left-[90px]";

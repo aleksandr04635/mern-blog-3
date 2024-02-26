@@ -10,6 +10,7 @@ import { formatISO9075 } from "date-fns";
 import TagLinksList from "../components/TagLinksList";
 import CommentSection from "../components/CommentSection";
 import CommentingEditor from "../components/CommentingEditor";
+import InfoString from "../components/InfoString";
 import AuthrorName from "../components/AuthrorName";
 
 export default function PostPage() {
@@ -131,7 +132,7 @@ export default function PostPage() {
   return (
     <main className="px-1 sm:p-3   max-w-6xl mx-auto min-h-screen">
       {post && (
-        <div className="flex flex-col max-w-3xl w-full mx-auto items-center   ">
+        <div className="flex flex-col max-w-3xl w-full mx-auto    ">
           {post && post.image && (
             <img
               src={post && post.image}
@@ -139,30 +140,35 @@ export default function PostPage() {
               className=" p-3    object-contain "
             />
           )}
-          <div className="flex justify-between p-3 border-b border-slate-500  w-full text-xs">
+
+          <InfoString className="" post={post} />
+          {/*           <div className="flex justify-between p-3 border-b border-slate-500  w-full text-xs">
             <span>{formatISO9075(new Date(post.createdAt))}</span>
-            {/*         <span>{new Date(post.createdAt).toUTCString()}</span> */}
+                     <span>{new Date(post.createdAt).toUTCString()}</span> 
             {post && <span>importance: {post.importance}</span>}
             <span className="italic">
               {post && (post.content.length / 1000).toFixed(0)} mins read
             </span>
-          </div>
-          <div className="flex  w-full items-center mt-2  font-semibold">
-            <span>Tags: </span>
-            <TagLinksList post={post} />
+          </div> */}
+          <div className="mx-auto pt-2">
+            {post && post.userId.username && <AuthrorName post={post} />}
           </div>
 
-          {post && post.userId.username && <AuthrorName post={post} />}
           <h1 className="text-3xl  p-1 text-center font-serif  lg:text-2xl">
             {post && post.title}
           </h1>
-          <div className=" p-2  text-base  mx-auto w-full post-content ">
+          <div className=" p-2  text-base post-content ">
             {post && post.intro}
           </div>
           <div
-            className="p-2  text-base mx-auto w-full post-content"
+            className="p-2   post-content"
             dangerouslySetInnerHTML={{ __html: post && post.content }}
           ></div>
+          <TagLinksList post={post} />
+          {/*               <div className="flex  w-full items-center mt-2  font-semibold">
+            <span>Tags: </span>
+            <TagLinksList post={post} />
+          </div> */}
           <div className="flex flex-col border-l-0  border-teal-500 sm:flex-row items-center justify-between w-full">
             {/* Likes sm:w-[150px] flex-col sm: */}
             <div className="flex flex-col  sm:flex-row items-center justify-between w-full">
@@ -212,6 +218,7 @@ export default function PostPage() {
                       (post.numberOfDislikes === 1 ? "dislike" : "dislikes")}
                 </p>
               </div>
+
               <Button
                 onClick={() => setTocomment(!tocomment)}
                 outline

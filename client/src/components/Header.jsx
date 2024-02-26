@@ -66,7 +66,7 @@ export default function Header() {
             </Button>
           </Link>
           <Link
-            className="text-blue-500 text -sm hover:underline"
+            className="text-blue-500 text-base hover:text-blue-800"
             to={`/about`}
           >
             About this project

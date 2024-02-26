@@ -90,9 +90,9 @@ export default function Search() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row">
-      <div className="p-3 w-full bg-gray-50  dark:bg-gray-800 sm:flex-none sm:w-[300px] md:border-r sm:min-h-screen border-gray-500">
-        <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
+    <div className="flex flex-col xl:flex-row">
+      <div className="px-3 py-1 xl:py-3 w-full bg-gray-50  dark:bg-gray-800 xl:flex-none xl:w-[300px] xl:border-r xl:min-h-screen border-gray-500">
+        <form className="flex flex-col gap-1 xl:gap-8" onSubmit={handleSubmit}>
           <div className="flex   items-center gap-2">
             <label className="whitespace-nowrap font-semibold">
               Search Term:
@@ -116,7 +116,12 @@ export default function Search() {
               <option value="asc">Oldest on top</option>
             </Select>
           </div>
-          <Button type="submit" outline gradientDuoTone="purpleToBlue">
+          <Button
+            type="submit"
+            outline
+            gradientDuoTone="purpleToBlue"
+            className="max-w-[300px]"
+          >
             Apply Filters
           </Button>
         </form>

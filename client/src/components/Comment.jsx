@@ -1,4 +1,5 @@
 import moment from "moment";
+import { formatISO9075 } from "date-fns";
 import { useEffect, useState } from "react";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 import { useSelector } from "react-redux";
@@ -77,8 +78,18 @@ export default function Comment({
                   ? `${comment.userId.username}`
                   : "anonymous user"}
               </div>
-              <div className="text-gray-500 text-xs">
-                {moment(comment.createdAt).fromNow()}
+              <div className="flex flex-row gap-4 text-gray-500 text-xs">
+                <span>
+                  {formatISO9075(new Date(comment.createdAt))
+                    .split(" ")
+                    .join("\u00A0")}
+                </span>
+                <span>
+                  {moment(comment.createdAt)
+                    .fromNow()
+                    .split(" ")
+                    .join("\u00A0")}
+                </span>
               </div>
             </div>
             {isEditing ? (
