@@ -43,27 +43,32 @@ export default function TagsTable(reloadSwitch) {
       {tags && tags.length > 0 ? (
         <>
           <p className="py-1 ">The most popular tags:</p>
-          <Table hoverable className="shadow-md w-full mx-auto rounded-b-lg ">
-            <Table.Head className="font-light normal-case">
-              <Table.HeadCell>Tag</Table.HeadCell>
-              <Table.HeadCell>Posts</Table.HeadCell>
-            </Table.Head>
-            <Table.Body className="text-gray-800 dark:text-gray-200">
-              {tags.slice(0, 10).map((tag, i) => (
-                <Table.Row
-                  key={i}
-                  className="py-1 bg-white dark:border-gray-700 dark:bg-gray-800"
-                >
-                  <Table.Cell className="pl-2 py-1 max-w-[150px] overflow-hidden">
-                    <TagLink tag={tag} />
-                  </Table.Cell>
-                  <Table.Cell className="w-[70px] py-1">
-                    {tag.number_of_posts}
-                  </Table.Cell>
-                </Table.Row>
-              ))}
-            </Table.Body>
-          </Table>
+          <div className="border border-teal-500 rounded-lg overflow-hidden">
+            <Table
+              hoverable
+              className="shadow-md w-full  mx-auto  rounded-b-lg "
+            >
+              <Table.Head className="font-light normal-case">
+                <Table.HeadCell>Tag</Table.HeadCell>
+                <Table.HeadCell>Posts</Table.HeadCell>
+              </Table.Head>
+              <Table.Body className="text-gray-800 dark:text-gray-200">
+                {tags.slice(0, 10).map((tag, i) => (
+                  <Table.Row
+                    key={i}
+                    className="py-1 bg-white dark:border-gray-700 dark:bg-gray-800"
+                  >
+                    <Table.Cell className="pl-2 py-1 max-w-[150px] overflow-hidden">
+                      <TagLink tag={tag} />
+                    </Table.Cell>
+                    <Table.Cell className="w-[70px] py-1">
+                      {tag.number_of_posts}
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
+              </Table.Body>
+            </Table>
+          </div>
         </>
       ) : (
         <p>You have no tags yet!</p>

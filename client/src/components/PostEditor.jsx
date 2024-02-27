@@ -22,9 +22,7 @@ import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { ImCross } from "react-icons/im";
 import { FaPlus } from "react-icons/fa";
-import { FaMinus } from "react-icons/fa6";
 import { TiMinus } from "react-icons/ti";
 
 import TinyMCEEditor from "../components/TinyMCEEditor";
@@ -37,62 +35,31 @@ export default function PostEditor({ mode, postId }) {
   const [imageUploadProgress, setImageUploadProgress] = useState(null);
   const [imageUploadError, setImageUploadError] = useState(null);
   const [formData, setFormData] = useState({});
-  //const [postData, setPostData] = useState({});
   const [publishError, setPublishError] = useState(null);
   const [tagString, setTagString] = useState(""); //scalar
   const [tags, setTags] = useState([]); //array of objects
-  console.log("tags in PostEditor : ", tags);
-  //const [allTags, setAllTags] = useState([]);
   const [allTagsInDB, setAllTagsInDB] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  //console.log("tags in PostEditor : ", tags);
+  console.log("formData.importance in PostEditor : ", formData.importance);
   //console.log("PostEditor(mode, postId) : ", mode, postId);
   //console.log("formData in PostEditor : ", formData);
-
-  function slugFromString(s) {
-    return s
-      .replace(/[^a-z\-A-Z0-9-]/g, " ")
-      .replace(/\s+/g, " ")
-      .trim()
-      .split(" ")
-      .join("-")
-      .toLowerCase();
-  }
-
-  function prohibitedToAddFromString() {
-    return (
-      [...tags, ...allTagsInDB]
-        .map((t) => t.slug)
-        .indexOf(slugFromString(tagString)) !== -1
-    );
-  }
-
-  /*   console.log("[...tags, ...allTagsInDB]", [...tags, ...allTagsInDB]);
-  console.log(
-    "tags.map(t=>t.slug):",
-    tags.map((t) => t.slug)
-  ); */
-  function allowedToAddFromDB(tg) {
-    // tags.map(t=>t.slug).indexOf(tg.slug)
-    return tags.map((t) => t.slug).indexOf(tg.slug) == -1;
-  }
 
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const rest = await fetch(`/api/tag/get-all-tags`);
-        const datat = await rest.json();
+        const restag = await fetch(`/api/tag/get-all-tags`);
+        const datat = await restag.json();
         console.log("datat from fetch: ", datat);
-        if (!rest.ok) {
+        if (!restag.ok) {
           console.log(datat.message);
           setPublishError(datat.message);
           return;
         }
-        if (rest.ok) {
+        if (restag.ok) {
           if (datat.tags.length > 0) {
             setAllTagsInDB(datat.tags);
           }
-
           setLoading(false);
         }
 
@@ -121,6 +88,33 @@ export default function PostEditor({ mode, postId }) {
     };
     fetchPost();
   }, [postId]);
+
+  function slugFromString(str) {
+    return str
+      .replace(/[^a-z\-A-Z0-9-]/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+      .split(" ")
+      .join("-")
+      .toLowerCase();
+  }
+
+  function prohibitedToAddFromString() {
+    return (
+      [...tags, ...allTagsInDB]
+        .map((t) => t.slug)
+        .indexOf(slugFromString(tagString)) !== -1
+    );
+  }
+
+  /*   console.log("[...tags, ...allTagsInDB]", [...tags, ...allTagsInDB]);
+  console.log(
+    "tags.map(t=>t.slug):",
+    tags.map((t) => t.slug)
+  ); */
+  function allowedToAddFromDB(tag) {
+    return tags.map((t) => t.slug).indexOf(tag.slug) == -1;
+  }
 
   const handleUpdloadImage = async () => {
     try {
@@ -159,36 +153,21 @@ export default function PostEditor({ mode, postId }) {
     }
   };
 
-  //console.log("tags :", tags);
-  const deleteTag = (i) => {
-    //console.log("tags before:", tags);
-    //console.log("i:", i);
-    //let updatedTags = [...tags];
-    //console.log("tags after:", updatedTags.splice(i, 1));
-    // updatedTags.splice(i, 1);
-    setTags((t) => {
-      //console.log("c:", c);
-      //return c.splice(i, 1);
-      return t.filter((e, n) => n != i);
-    });
-  };
-
   const addTag = () => {
-    let updatedTags = [...tags];
-    updatedTags.push({
-      name: tagString.trim(),
-      slug: slugFromString(tagString),
-    });
-    setTags(updatedTags);
-    setTagString("");
+    if (tags.length < 10) {
+      let updatedTags = [...tags];
+      updatedTags.push({
+        name: tagString.trim(),
+        slug: slugFromString(tagString),
+      });
+      setTags(updatedTags);
+      setTagString("");
+    }
   };
 
-  //console.log("formData.content.length: ", formData.content.length);
-  //console.log("formData: ", formData);
   const handleSubmit = async (e) => {
     e.preventDefault();
     formData.tags = tags;
-    //formData._id = postData._id; //it gets lost
     console.log("formData from handleSubmit: ", formData);
     try {
       const res = await fetch(
@@ -221,8 +200,6 @@ export default function PostEditor({ mode, postId }) {
     }
   };
 
-  //create
-
   return (
     <div className="p-1 pr-2  max-w-3xl mx-auto min-h-screen">
       <h1 className="text-center text-2xl my-2 font-semibold">
@@ -238,34 +215,48 @@ export default function PostEditor({ mode, postId }) {
           <div className="flex flex-col ">
             <div className="flex flex-row items-center gap-1">
               <div className="text-lg px-1">Importance:</div>
-              <div className="text-lg">{formData.importance || 1}</div>
+              <div className="text-lg">{formData?.importance || 1}</div>
               <div className="flex flex-col   text-sm">
                 <button
-                  className=" relative border items-center text-lg text-center rounded-t-lg w-[19px] h-[16px]"
+                  className=" relative border border-teal-500 items-center text-lg text-center rounded-t-lg w-[19px] h-[16px] overflow-hidden"
                   type="button"
-                  onClick={() =>
-                    setFormData({
-                      ...formData,
-                      importance: (formData.importance || 1) + 1,
-                    })
-                  }
+                  onClick={() => {
+                    if (!!formData.importance) {
+                      console.log(
+                        "formData.importance before + : ",
+                        formData.importance
+                      );
+                      return setFormData({
+                        ...formData,
+                        importance: formData?.importance
+                          ? formData.importance + 1
+                          : 2,
+                      });
+                    }
+                  }}
                 >
-                  <p className="top-[-9px] right-[3px] absolute align-middle ">
+                  {/*   importance: (formData.importance || 1) + 1, */}
+                  <p className="top-[-1px] right-[3px] absolute align-middle leading-3">
                     +
                   </p>
                 </button>
                 <button
-                  className=" relative border items-center text-2xl text-center rounded-b-lg w-[19px] h-[16px]"
+                  className=" relative border border-teal-500 items-center text-2xl text-center rounded-b-lg w-[19px] h-[16px] overflow-hidden"
                   type="button"
                   onClick={() => {
-                    !!formData.importance & (formData.importance > 1) &&
-                      setFormData({
+                    if (!!formData.importance & (formData.importance > 1)) {
+                      console.log(
+                        "formData.importance before - : ",
+                        formData.importance
+                      );
+                      return setFormData({
                         ...formData,
-                        importance: (formData.importance || 1) - 1,
+                        importance: formData.importance - 1,
                       });
+                    }
                   }}
                 >
-                  <p className="top-[-12px] right-[4px] absolute align-middle ">
+                  <p className="top-[-12px] right-[4px] absolute align-middle h-[3px]">
                     -
                   </p>
                 </button>
@@ -323,10 +314,10 @@ export default function PostEditor({ mode, postId }) {
             <h3 className=" text-lg">Tags list (optional):</h3>
             <p>Addition of already existing tags is preferable </p>
             <div className="flex items-center ">
-              <TextInput
+              <input
                 value={tagString}
                 onChange={(e) => setTagString(e.target.value)}
-                className=" py-1 outline-none rounded border-teal-500 mr-2"
+                className=" py-1 outline-none h-10 w-[350px] border border-teal-500 rounded-lg mr-2"
                 placeholder="Enter a post tag"
                 /* color="success" */
                 type="text"
@@ -351,7 +342,7 @@ export default function PostEditor({ mode, postId }) {
               <p>Tags to the post:</p>
               {tags?.map((t, i) => (
                 <div
-                  onClick={() => deleteTag(i)}
+                  onClick={() => setTags(tags.filter((e, n) => n != i))}
                   key={i}
                   className="flex cursor-pointer justify-start w-[350px] dark:text-gray-200 items-center space-x-2 mr-4 dark:bg-gray-700 bg-gray-100 px-2 py-1 rounded-lg"
                 >
@@ -464,7 +455,6 @@ export default function PostEditor({ mode, postId }) {
               setFormData({ ...formData, content: value });
             }}
           /> */}
-
           <TinyMCEEditor
             value2={formData.content || ""}
             onChange={(value3) => {

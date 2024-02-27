@@ -1,9 +1,10 @@
-import { formatISO9075 } from "date-fns";
+import { formatDistanceToNow, formatISO9075 } from "date-fns";
 import moment from "moment";
 
 export default function DateTime({ time, variant }) {
   const ta = formatISO9075(new Date(time)).split(" ").join("\u00A0");
-  const tb = moment(time).fromNow().split(" ").join("\u00A0");
+  //const tb = moment(time).fromNow().split(" ").join("\u00A0");
+  const tb = formatDistanceToNow(time).split(" ").join("\u00A0") + "\u00A0ago";
 
   return (
     <span

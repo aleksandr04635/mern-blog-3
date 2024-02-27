@@ -5,8 +5,6 @@ export default function PageSizeControl() {
   const dispatch = useDispatch();
   const { pageSize } = useSelector((state) => state.pageSize);
 
-  //hover:outline
-
   return (
     <div className="flex items-center gap-1    ">
       <label className="text-sm">page size:</label>

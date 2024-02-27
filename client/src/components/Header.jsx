@@ -72,13 +72,14 @@ export default function Header() {
             About this project
           </Link>
           <form onSubmit={handleSubmit} className="relative hidden sm:inline">
-            <TextInput
+            {/* <TextInput */}
+            <input
               type="text"
               placeholder="Search..."
               /*  rightIcon={AiOutlineSearch} */
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-[300px]"
+              className="w-[300px] border border-teal-500 rounded-lg"
             />
             <p
               onClick={handleSubmit}

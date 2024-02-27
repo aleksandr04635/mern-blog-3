@@ -1,7 +1,7 @@
-import { Table, Button } from "flowbite-react";
+import { Table } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { HiOutlineExclamationCircle } from "react-icons/hi";
+
 import { FaCheck, FaTimes } from "react-icons/fa";
 import ModalComponent from "./ModalComponent";
 
@@ -31,7 +31,7 @@ export default function DashUsers() {
     if (currentUser.isAdmin) {
       fetchUsers();
     }
-  }, [currentUser._id]);
+  }, [currentUser]);
 
   const handleShowMore = async () => {
     const startIndex = users.length;

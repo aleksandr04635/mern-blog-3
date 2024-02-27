@@ -34,8 +34,8 @@ export default function PostList({ deleteSignal }) {
   const [totalPages, setTotalPages] = useState(0);
   const [tagInfo, setTagInfo] = useState("");
   const [userInfo, setUserInfo] = useState({});
-  const [usersPage, setUsersPage] = useState(false);
-  console.log("usersPage in PostList: ", usersPage);
+  const [isUsersPage, setIsUsersPage] = useState(false);
+  console.log("isUsersPage in PostList: ", isUsersPage);
   //console.log("userInfo in PostList: ", userInfo);
   /*   console.log("totalPosts in state: ", totalPosts);
   console.log("page in state: ", page);
@@ -81,10 +81,10 @@ export default function PostList({ deleteSignal }) {
         //setPageSize(data.pageSize);
         setTotalPages(data.totalPages);
         setPage(data.page);
-        setUsersPage(false);
+        setIsUsersPage(false);
         if (data.user) {
           setUserInfo(data.user);
-          setUsersPage(true);
+          setIsUsersPage(true);
         }
       } else {
         console.log(
@@ -180,7 +180,7 @@ export default function PostList({ deleteSignal }) {
     <div className="flex flex-col  gap-2 ">
       <div className="  text-lg">
         {/*         <h3 className="text-xl font-semibold  py-1  ">Querry results:</h3> */}
-        {usersPage && userInfo.username && (
+        {isUsersPage && userInfo.username && (
           <div className=" flex flex-col max-w-full ">
             <div className=" items-center flex max-w-full ">
               <p>Posts by </p>

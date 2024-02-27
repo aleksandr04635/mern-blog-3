@@ -12,7 +12,7 @@ export default function AuthrorName({ post }) {
       }
       className="text-slate-800 dark:text-purple-500 dark:hover:text-blue-500 hover:text-blue-800"
     >
-      <div className="group flex max-w-full ">
+      <div className="group flex  items- max-w-full ">
         <div className=" relative w-10 h-10 self-center shadow-md overflow-hidden rounded-full">
           <img
             src={post.userId.profilePicture}
@@ -21,7 +21,7 @@ export default function AuthrorName({ post }) {
            group-hover:border-blue-800 border-gray-300 dark:border-purple-500`}
           />
         </div>
-        <h1 className="text-xl  p-1 my-1 text-center font-serif  ">
+        <h1 className="text-lg  p-1  text-center font-serif  ">
           {post.userId.username}
         </h1>
       </div>

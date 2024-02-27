@@ -22,28 +22,39 @@ export default function PostCard({ post, onDelete }) {
               alt="post cover"
               className="w-full sm:min-h-full sm:h-[260px] sm:w-[360px] object-cover"
             />
+            md:min-h-full
+            md:h-fit 
 */
+
   return (
     <div
-      className="flex flex-col md:flex-row w-full  border border-teal-500
+      className="flex flex-col md:flex-row w-full md:items-stretch border border-teal-500
      outline-teal-500  outline-1 hover:outline  rounded-lg  "
     >
       {post.image && (
         <div className=" grow-0 shrink-0 rounded-tr-lg md:rounded-tr-none rounded-tl-lg  md:rounded-bl-lg overflow-hidden">
-          <Link to={`/post/${post.slug}`}>
+          <Link
+            to={`/post/${post.slug}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <img
               src={post.image}
               alt="post cover"
-              className="w-full md:min-h-full md:h-[260px] md:w-[360px] object-cover"
+              className="w-full  md:min-h-full md:h-[230px] md:max-h-full md:w-[300px] object-cover"
             />
           </Link>
         </div>
       )}
-      <div className="md:pl-2 flex flex-col grow justify-around">
+      <div className="md:pl-2 flex flex-col grow justify-around ">
         <InfoString post={post} />
-        <Link to={`/post/${post.slug}`}>
+        <Link
+          to={`/post/${post.slug}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <h2
-            className="text-2xl text-justify px-2 w-fit mx-auto md:w-full 
+            className="text-xl text-center md:text-justify px-2 w-fit mx-auto md:w-full 
            text-stone-800 dark:text-purple-500 dark:hover:text-blue-500 hover:text-blue-800 
            font-semibold "
           >
@@ -129,7 +140,39 @@ export default function PostCard({ post, onDelete }) {
   );
 }
 {
-  /* Old version    
+  /* Old version  
+    
+  <div
+className="flex flex-col md:flex-row w-full  border border-teal-500
+outline-teal-500  outline-1 hover:outline  rounded-lg  "
+>
+{post.image && (
+  <div className=" grow-0 shrink-0 rounded-tr-lg md:rounded-tr-none rounded-tl-lg  md:rounded-bl-lg overflow-hidden">
+    <Link to={`/post/${post.slug}`}>
+      <img
+        src={post.image}
+        alt="post cover"
+        className="w-full md:min-h-full md:h-[230px] md:w-[360px] object-cover"
+      />
+    </Link>
+  </div>
+)}
+<div className="md:pl-2 flex flex-col grow justify-around">
+  <InfoString post={post} />
+  <Link to={`/post/${post.slug}`}>
+    <h2
+      className="text-xl text-justify px-2 w-fit mx-auto md:w-full 
+     text-stone-800 dark:text-purple-500 dark:hover:text-blue-500 hover:text-blue-800 
+     font-semibold "
+    >
+      {post.title}
+    </h2>
+  </Link>
+
+</div>
+</div>
+
+
          <div className=" relative w-full  border outline-teal-500 border-teal-500 outline-2 hover:outline h-[400px] overflow-hidden rounded-lg sm:w-[360px] transition-all">
         <Link to={`/post/${post.slug}`}>
           {post.image && (
