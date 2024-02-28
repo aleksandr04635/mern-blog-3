@@ -25,6 +25,12 @@ import { useSelector } from "react-redux";
 import { FaPlus } from "react-icons/fa";
 import { TiMinus } from "react-icons/ti";
 
+import {
+  useAddNewPostMutation,
+  useEditPostMutation,
+  useGetTagsQuery,
+} from "../redux/apiSlice.js";
+
 import TinyMCEEditor from "../components/TinyMCEEditor";
 
 export default function PostEditor({ mode, postId }) {
@@ -38,17 +44,53 @@ export default function PostEditor({ mode, postId }) {
   const [publishError, setPublishError] = useState(null);
   const [tagString, setTagString] = useState(""); //scalar
   const [tags, setTags] = useState([]); //array of objects
-  const [allTagsInDB, setAllTagsInDB] = useState([]);
+  //const [allTagsInDB, setAllTagsInDB] = useState([]);
   const [loading, setLoading] = useState(true);
   //console.log("tags in PostEditor : ", tags);
-  console.log("formData.importance in PostEditor : ", formData.importance);
+  //console.log("formData.importance in PostEditor : ", formData.importance);
+
   //console.log("PostEditor(mode, postId) : ", mode, postId);
   //console.log("formData in PostEditor : ", formData);
+  /*   const [
+    addNewPost,
+    {
+      data: returnData,
+      isLoading,
+      isError: returnIsError,
+      error: returnError,
+      isSuccess: isSuccessPost,
+    },
+  ] = useAddNewPostMutation(); */
+  const [addNewPost, createMutationResult] = useAddNewPostMutation();
+  //console.log("isSuccessPost  in PostEditor : ", isSuccessPost);
+  const [editPost, editMutationResult] = useEditPostMutation();
+
+  const {
+    data: allTagsInDB = [],
+    isFetching,
+    isSuccess,
+    isError,
+    error,
+  } = useGetTagsQuery({ pollingInterval: 20 * 1000 }); //{ pollingInterval: 10000 }
 
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const restag = await fetch(`/api/tag/get-all-tags`);
+        /*         if (isFetching) {
+          //setLoading(true);
+          console.log("isFetching in PostEditor : ", isFetching);
+        } else if (isSuccess) {
+          setLoading(false);
+          console.log("tagsQ in PostEditor : ", tagsQ);
+          if (tagsQ.length > 0) {
+            setAllTagsInDB(tagsQ);
+          }
+        } else if (isError) {
+          setLoading(false);
+          console.log("error in PostEditor : ", error);
+          setPublishError(error);
+        } */
+        /*         const restag = await fetch(`/api/tag/get-all-tags`);
         const datat = await restag.json();
         console.log("datat from fetch: ", datat);
         if (!restag.ok) {
@@ -57,12 +99,11 @@ export default function PostEditor({ mode, postId }) {
           return;
         }
         if (restag.ok) {
-          if (datat.tags.length > 0) {
-            setAllTagsInDB(datat.tags);
+          if (datat.length > 0) {
+            setAllTagsInDB(datat);
           }
           setLoading(false);
-        }
-
+        } */
         if (mode == "edit") {
           const res = await fetch(`/api/post/getposts?postId=${postId}`);
           const data = await res.json();
@@ -99,11 +140,12 @@ export default function PostEditor({ mode, postId }) {
       .toLowerCase();
   }
 
-  function prohibitedToAddFromString() {
+  function prohibitedToCreateTagFromString() {
     return (
       [...tags, ...allTagsInDB]
         .map((t) => t.slug)
-        .indexOf(slugFromString(tagString)) !== -1
+        .indexOf(slugFromString(tagString)) !== -1 ||
+      slugFromString(tagString).length < 3
     );
   }
 
@@ -167,38 +209,116 @@ export default function PostEditor({ mode, postId }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.importance) {
+      formData.importance = 1;
+    }
     formData.tags = tags;
     console.log("formData from handleSubmit: ", formData);
     try {
-      const res = await fetch(
-        // `/api/post/updatepost/${formData._id}/${currentUser._id}`,//old
-        `${
-          mode == "edit"
-            ? `/api/post/updatepost/${formData._id}/${currentUser._id}`
-            : "/api/post/create"
-        }`,
-        {
-          method: `${mode == "edit" ? "PUT" : "POST"}`,
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
+      let res;
+      if (mode !== "edit") {
+        res = await addNewPost(formData).unwrap();
+        /*    if (isSuccessPost) {
+          navigate(`/`);
+        } */
+      } else {
+        /*      const res = await fetch(
+          // `/api/post/updatepost/${formData._id}/${currentUser._id}`,//old
+          `${
+            mode == "edit"
+              ? `/api/post/updatepost/${formData._id}/${currentUser._id}`
+              : "/api/post/create"
+          }`,
+          {
+            method: `${mode == "edit" ? "PUT" : "POST"}`,
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          }
+        ); */
+        res = await editPost({
+          postId: formData._id,
+          userId: currentUser._id,
+          formData,
+        }).unwrap();
+
+        //navigate(`/post/${res.slug}`);
+
+        /*         const data = await res.json();
+        console.log("received data in handleSubmit: ", data);
+        if (!res.ok) {
+          setPublishError(data.message);
+          return;
         }
-      );
-      const data = await res.json();
-      console.log("received data in handleSubmit: ", data);
-      if (!res.ok) {
-        setPublishError(data.message);
-        return;
+        if (res.ok) {
+          setPublishError(null);
+          navigate(`/post/${data.slug}`);
+        } */
       }
-      if (res.ok) {
-        setPublishError(null);
-        navigate(`/post/${data.slug}`);
-      }
-    } catch (error) {
-      setPublishError("Something went wrong");
+      console.log("res  in PostEditor : ", res);
+    } catch (err) {
+      //Querry error
+      /*   errMsgQ =
+        "status" in error
+          ? "error" in error
+            ? error.error
+            : JSON.stringify(error.data)
+          : error.message; */
+
+      //Mutation error
+      const errMsg =
+        "message" in err
+          ? err.message
+          : "error" in err
+          ? err.error
+          : JSON.stringify(err.data);
+      setPublishError(errMsg);
+      //setPublishError("Something went wrong");
     }
   };
+
+  useEffect(() => {
+    /*  if (isSuccessPost) {
+      returnData;
+      console.log("returnData  in PostEditor : ", returnData);
+      navigate(`/`);} */
+    console.log("returnData  in PostEditor : ", createMutationResult);
+    if (
+      createMutationResult.status == "fulfilled" &&
+      createMutationResult.isSuccess == true
+    ) {
+      navigate(`/post/${createMutationResult.data.slug}`);
+    }
+    if (editMutationResult.isError == true) {
+      setPublishError(editMutationResult.error.message);
+    }
+  }, [createMutationResult]);
+
+  useEffect(() => {
+    /*  if (isSuccessPost) {
+      returnData;
+      console.log("returnData  in PostEditor : ", returnData);
+      navigate(`/`);} */
+    console.log("returnData  in PostEditor : ", editMutationResult);
+    if (
+      editMutationResult.status == "fulfilled" &&
+      editMutationResult.isSuccess == true
+    ) {
+      navigate(`/post/${editMutationResult.data.slug}`);
+    }
+    if (editMutationResult.isError == true) {
+      setPublishError(editMutationResult.error.message);
+    }
+  }, [editMutationResult]);
+
+  /*   useEffect(() => {
+    if (isSuccessPost) {
+      returnData;
+      console.log("returnData  in PostEditor : ", returnData);
+      navigate(`/`);
+    }
+  }, [isSuccessPost]); */
 
   return (
     <div className="p-1 pr-2  max-w-3xl mx-auto min-h-screen">
@@ -221,18 +341,12 @@ export default function PostEditor({ mode, postId }) {
                   className=" relative border border-teal-500 items-center text-lg text-center rounded-t-lg w-[19px] h-[16px] overflow-hidden"
                   type="button"
                   onClick={() => {
-                    if (!!formData.importance) {
-                      console.log(
-                        "formData.importance before + : ",
-                        formData.importance
-                      );
-                      return setFormData({
-                        ...formData,
-                        importance: formData?.importance
-                          ? formData.importance + 1
-                          : 2,
-                      });
-                    }
+                    return setFormData({
+                      ...formData,
+                      importance: formData?.importance
+                        ? formData.importance + 1
+                        : 2,
+                    });
                   }}
                 >
                   {/*   importance: (formData.importance || 1) + 1, */}
@@ -333,7 +447,7 @@ export default function PostEditor({ mode, postId }) {
                 outline
                 gradientDuoTone="purpleToBlue"
                 className=""
-                disabled={prohibitedToAddFromString()}
+                disabled={prohibitedToCreateTagFromString()}
               >
                 Create&nbsp;a&nbsp;new&nbsp;tag
               </Button>
@@ -371,7 +485,7 @@ export default function PostEditor({ mode, postId }) {
                     items-start space-x-2 mr-4 dark:bg-gray-700 bg-gray-100 px-2 py-1 rounded-lg`}
                   >
                     <p
-                      onClick={() => deleteTag(i)}
+                      /*  onClick={() => deleteTag(i)} */
                       className="text-white bg-gray-500 rounded-full cursor-pointer p-1 text-sm"
                     >
                       <FaPlus />
@@ -468,6 +582,7 @@ export default function PostEditor({ mode, postId }) {
               type="submit"
               disabled={
                 formData.title?.length < 6 ||
+                !formData.content ||
                 formData.content?.length < 16 ||
                 !formData.intro ||
                 formData.intro?.length < 5

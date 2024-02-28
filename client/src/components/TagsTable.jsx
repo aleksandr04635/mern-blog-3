@@ -5,8 +5,11 @@ import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { FaCheck, FaTimes } from "react-icons/fa";
 import TagLink from "./TagLink";
 
+//import { changePageSize } from "../redux/pageSize/pageSizeSlice";
+import { useGetTagsQuery } from "../redux/apiSlice";
+
 export default function TagsTable(reloadSwitch) {
-  const [tags, setTags] = useState([]);
+  // const [tags, setTags] = useState([]);
 
   /*   const rest = await fetch(`/api/tag/get-all-tags`);
   const datat = await rest.json();
@@ -21,13 +24,29 @@ export default function TagsTable(reloadSwitch) {
     setLoading(false);
   } */
 
-  useEffect(() => {
+  const {
+    data: tags,
+    isLoading,
+    isSuccess,
+    isError,
+    error,
+    refetch,
+  } = useGetTagsQuery();
+  if (isLoading) {
+    console.log("isLoading in TagsTable : ", isLoading);
+  } else if (isSuccess) {
+    console.log("tags in TagsTable : ", tags);
+  } else if (isError) {
+    console.log("error in TagsTable : ", error);
+  }
+
+  /*   useEffect(() => {
     const fetchComments = async () => {
       try {
         const res = await fetch(`/api/tag/get-all-tags`);
         const data = await res.json();
         if (res.ok) {
-          setTags(data.tags);
+          setTags(data);
           console.log("fetched tags in TagsTable:", data);
         }
       } catch (error) {
@@ -36,10 +55,11 @@ export default function TagsTable(reloadSwitch) {
     };
 
     fetchComments();
-  }, [reloadSwitch]);
+  }, [reloadSwitch]); */
 
   return (
     <div className=" px-1  ">
+      <button onClick={refetch}>Refetch Posts</button>
       {tags && tags.length > 0 ? (
         <>
           <p className="py-1 ">The most popular tags:</p>

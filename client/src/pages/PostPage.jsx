@@ -13,6 +13,7 @@ import CommentingEditor from "../components/CommentingEditor";
 import InfoString from "../components/InfoString";
 import AuthrorName from "../components/AuthrorName";
 import ModalComponent from "../components/ModalComponent";
+import { useDeletePostMutation } from "../redux/apiSlice";
 
 export default function PostPage() {
   const navigate = useNavigate();
@@ -103,10 +104,11 @@ export default function PostPage() {
     }
   };
 
+  const [deletePost, deletePostMutationResult] = useDeletePostMutation();
   const handleDeletePost = async () => {
     setShowModal(false);
     try {
-      const res = await fetch(
+      /*  const res = await fetch(
         `/api/post/deletepost/${post._id}/${currentUser?._id}`,
         {
           method: "DELETE",
@@ -117,11 +119,41 @@ export default function PostPage() {
         console.log(data.message);
       } else {
         navigate(`/dashboard?tab=posts&userId=${currentUser._id}`);
-      }
-    } catch (error) {
-      console.log(error.message);
+      } */
+
+      const res = await deletePost({
+        postId: post._id,
+        userId: currentUser?._id,
+      }).unwrap();
+      console.log("res  in PostEditor : ", res);
+    } catch (err) {
+      const errMsg =
+        "message" in err
+          ? err.message
+          : "error" in err
+          ? err.error
+          : JSON.stringify(err.data);
+      console.log(errMsg);
+      setError(errMsg);
     }
   };
+
+  useEffect(() => {
+    /*  if (isSuccessPost) {
+      returnData;
+      console.log("returnData  in PostEditor : ", returnData);
+      navigate(`/`);} */
+    console.log("returnData  inPostPage : ", deletePostMutationResult);
+    if (
+      deletePostMutationResult.status == "fulfilled" &&
+      deletePostMutationResult.isSuccess == true
+    ) {
+      navigate(`/dashboard?tab=posts&userId=${currentUser._id}`);
+    }
+    if (deletePostMutationResult.isError == true) {
+      setError(deletePostMutationResult.error.message);
+    }
+  }, [deletePostMutationResult]);
 
   if (loading)
     return (

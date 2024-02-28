@@ -26,12 +26,12 @@ export default function TinyMCEEditor({ value2, onChange, toCom = false }) {
 
   let skinSt = theme === "light" ? "oxide" : "oxide-dark";
   let conSt = theme === "light" ? "/index.css" : "/index.css,dark";
-  console.log("theme:", theme);
+  /*   console.log("theme:", theme);
   console.log("skinStyle:", skinStyle);
   console.log("contentStyle:", contentStyle);
   console.log("theme === 'light':", theme === "light");
   console.log("skinSt:", skinSt);
-  console.log("conSt:", conSt);
+  console.log("conSt:", conSt); */
 
   useEffect(() => {
     //editorRef.current.focus();
@@ -78,7 +78,7 @@ export default function TinyMCEEditor({ value2, onChange, toCom = false }) {
             freeTiny.style.display = "none";
           }, */
           init_instance_callback: function (editor) {
-            console.log(`init_instance_callback:`);
+            //console.log(`init_instance_callback:`);
             skinSt = theme === "light" ? "oxide" : "oxide-dark";
             conSt = theme === "light" ? "/index.css" : "/index.css,dark";
             setSkinStyle(theme === "light" ? "oxide" : "oxide-dark");

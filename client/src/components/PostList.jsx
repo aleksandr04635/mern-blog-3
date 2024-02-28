@@ -8,6 +8,7 @@ import { changePageSize } from "../redux/pageSize/pageSizeSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import ModalComponent from "./ModalComponent";
+import { useDeletePostMutation } from "../redux/apiSlice";
 
 export default function PostList({ deleteSignal }) {
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ export default function PostList({ deleteSignal }) {
   const [tagInfo, setTagInfo] = useState("");
   const [userInfo, setUserInfo] = useState({});
   const [isUsersPage, setIsUsersPage] = useState(false);
-  console.log("isUsersPage in PostList: ", isUsersPage);
+  //console.log("isUsersPage in PostList: ", isUsersPage);
   //console.log("userInfo in PostList: ", userInfo);
   /*   console.log("totalPosts in state: ", totalPosts);
   console.log("page in state: ", page);
@@ -133,7 +134,7 @@ export default function PostList({ deleteSignal }) {
     fetchPosts();
   }, [location, pageSizeStore]);
 
-  const handleDeletePost = async () => {
+  const handleDeletePostOLD = async () => {
     setShowModal(false);
     console.log(" from PostList DELETE a post: ", postToDelete);
     try {
@@ -166,6 +167,48 @@ export default function PostList({ deleteSignal }) {
       console.log(error.message);
     }
   };
+
+  //NEW
+  const [deletePost, deletePostMutationResult] = useDeletePostMutation();
+  const handleDeletePost = async () => {
+    setShowModal(false);
+    try {
+      const res = await deletePost({
+        postId: postToDelete,
+        userId: currentUser?._id,
+      }).unwrap();
+      console.log("res  in PostEditor : ", res);
+    } catch (err) {
+      const errMsg =
+        "message" in err
+          ? err.message
+          : "error" in err
+          ? err.error
+          : JSON.stringify(err.data);
+      console.log(errMsg);
+      setErrorMessage(errMsg);
+    }
+  };
+  useEffect(() => {
+    console.log("returnData  inPostPage : ", deletePostMutationResult);
+    if (
+      deletePostMutationResult.status == "fulfilled" &&
+      deletePostMutationResult.isSuccess == true
+    ) {
+      const newTopPage = Math.floor((totalPosts - 1) / pageSizeStore) || 1;
+      const urlParams3 = new URLSearchParams(location.search);
+      urlParams3.set("page", newTopPage);
+      let searchQuery3 = urlParams3.toString();
+      console.log(
+        " calling fetchPostsQ from  handleDeletePost  with : ",
+        searchQuery3
+      );
+      fetchPostsByQuerryString(searchQuery3);
+    }
+    if (deletePostMutationResult.isError == true) {
+      setErrorMessage(deletePostMutationResult.error.message);
+    }
+  }, [deletePostMutationResult]);
 
   function ControlBar() {
     return (

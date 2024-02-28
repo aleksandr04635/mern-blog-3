@@ -7,6 +7,7 @@ import Tag from "../models/tag.model.js";
 const create = async (req, res, next) => {
   try {
     console.log("req.body from create:", req.body);
+    console.log("req.user.id from create:", req.user.id);
     connectDB();
     /*   if (!req.user.isAdmin) {
     return next(errorHandler(403, "You are not allowed to create a post"));
@@ -232,6 +233,8 @@ const deletepost = async (req, res, next) => {
 };
 
 const updatepost = async (req, res, next) => {
+  console.log("req.body from updatepost:", req.body);
+  console.log("req.user.id from updatepost:", req.user.id);
   connectDB();
   //console.log("req.body: ", req.body);
   /*   console.log("req.user.id: ", req.user.id);

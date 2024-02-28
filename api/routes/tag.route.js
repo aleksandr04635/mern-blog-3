@@ -37,10 +37,16 @@ const getAllTags = async (req, res, next) => {
   //console.log("getAllTags querried");
   connectDB();
   try {
-    const tags = await Tag.find({ number_of_posts: { $gte: 1 } }).sort({
-      number_of_posts: -1,
-    });
-    res.status(200).json({ tags });
+    const tags = await Tag.find({ number_of_posts: { $gte: 1 } })
+      .sort({
+        number_of_posts: -1,
+      })
+      .limit(10);
+    // console.log("tags:", tags);
+    //.slice(0, 10);
+    //.limit(10);
+    //.slice(0, 10)
+    res.status(200).json(tags);
   } catch (error) {
     next(error);
   }

@@ -25,7 +25,7 @@ export default function CommentSection({
 
   const getComments = async () => {
     setCloader(true);
-    console.log("getComments started in CommentSection: ");
+    //console.log("getComments started in CommentSection: ");
     try {
       const qs = `/api/comment/get${
         level == 1 ? `Post` : `Comment`
