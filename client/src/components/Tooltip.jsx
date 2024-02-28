@@ -6,7 +6,7 @@ export default function Tooltip({
   style = "norm",
   position = "bottom",
 }) {
-  const tooltipRef = useRef(null);
+  //const tooltipRef = useRef(null);
   const groupRef = useRef(null);
 
   const [tooltipHeight, setTooltipHeight] = useState(0);
@@ -83,7 +83,7 @@ export default function Tooltip({
     <div ref={groupRef} className="group relative flex">
       {children}
       <span
-        ref={tooltipRef}
+        /* ref={tooltipRef} */
         className={
           `absolute hidden bg-white dark:bg-dark-active-bg group-hover:block z-10 border rounded-md 
        px-2 py-1 text-sm  ` +

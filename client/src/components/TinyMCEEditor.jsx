@@ -26,12 +26,12 @@ export default function TinyMCEEditor({ value2, onChange, toCom = false }) {
 
   let skinSt = theme === "light" ? "oxide" : "oxide-dark";
   let conSt = theme === "light" ? "/index.css" : "/index.css,dark";
-  /*   console.log("theme:", theme);
+  console.log("theme:", theme);
   console.log("skinStyle:", skinStyle);
   console.log("contentStyle:", contentStyle);
   console.log("theme === 'light':", theme === "light");
   console.log("skinSt:", skinSt);
-  console.log("conSt:", conSt); */
+  console.log("conSt:", conSt);
 
   useEffect(() => {
     //editorRef.current.focus();
@@ -78,7 +78,14 @@ export default function TinyMCEEditor({ value2, onChange, toCom = false }) {
             freeTiny.style.display = "none";
           }, */
           init_instance_callback: function (editor) {
-            set();
+            console.log(`init_instance_callback:`);
+            skinSt = theme === "light" ? "oxide" : "oxide-dark";
+            conSt = theme === "light" ? "/index.css" : "/index.css,dark";
+            setSkinStyle(theme === "light" ? "oxide" : "oxide-dark");
+            setContentStyle(
+              theme === "light" ? "/index.css" : "/index.css,dark"
+            );
+            //set();
             // console.log(`Editor: ${editor.id} is now initialized.`);
             var freeTiny = document.querySelector(".tox-promotion");
             if (freeTiny) {
@@ -87,12 +94,11 @@ export default function TinyMCEEditor({ value2, onChange, toCom = false }) {
           },
           promotion: false, //a note about update
           height: 600,
-          skin: skinSt, //skinStyle,
+          skin: skinStyle, //skinSt, //skinStyle,
           //skin: theme === "light" ? "" : "oxide-dark",
-          //content_css: theme === "light" ? "/index.css" : "dark",
-          content_css: conSt, // contentStyle,
-          //content_css: '/myLayout.css',
+          content_css: contentStyle, // conSt, // contentStyle,
           //content_css: "/index.css",
+          //content_css: theme === "light" ? "/index.css" : "/index.css,dark",
           browser_spellcheck: true,
           language: "en",
           image_title: true,
