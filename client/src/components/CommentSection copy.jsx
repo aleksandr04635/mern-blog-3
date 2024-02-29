@@ -10,7 +10,6 @@ import { useGetCommentsQuery } from "../redux/comment/commentApiSlice";
 export default function CommentSection({
   level,
   idOfParentPostOrComment,
-  idOfAncestorPostOrComment,
   reloadSwitch,
   reloadParentSection,
 }) {
@@ -24,11 +23,9 @@ export default function CommentSection({
   const navigate = useNavigate();
 
   //console.log("level  from CommentSection.jsx:", level);
-  //{ comments }
-  // let comments = [];
+
   const {
-    data: { comments = [] } = {},
-    //data: comments = [],
+    data: comments = [],
     isLoading,
     isFetching: cloader,
     isSuccess,
@@ -39,12 +36,9 @@ export default function CommentSection({
   if (isLoading) {
     // console.log("isLoading in CommentSection : ", isLoading);
   } else if (isSuccess) {
-    //console.log("data in CommentSection : ", data);
     console.log("comments in CommentSection : ", comments);
-    // comments = data?.comments;
   } else if (isError) {
     console.log("error in CommentSection : ", error);
-    setCommentsError(error);
   }
   //console.log("cloader2  from CommentSection.jsx:", cloader2);
   //console.log("comments2  from CommentSection.jsx:", comments2);
@@ -85,7 +79,7 @@ export default function CommentSection({
         navigate("/sign-in");
         return;
       }
-      console.log("type, ac from handleLike in CommentSection: ", type, ac);
+      //console.log("type, ac from handleLike: ", type, ac);
       const res = await fetch(`/api/comment/likeComment/${commentId}`, {
         method: "PUT",
         headers: {
@@ -120,12 +114,11 @@ export default function CommentSection({
   };
 
   const handleEditInSection = async (comment, editedContent) => {
-    refetch();
-    /*     setComments(
+    setComments(
       comments.map((c) =>
         c._id === comment._id ? { ...c, content: editedContent } : c
       )
-    ); */
+    );
   };
 
   const handleDelete = async (commentId) => {
@@ -144,10 +137,9 @@ export default function CommentSection({
 
         if (data == "Comment has been deleted") {
           console.log(
-            "one comment deleted. Only setComments started in CommentSection from handleDelete "
+            "only setComments started in CommentSection from handleDelete "
           );
-          refetch();
-          // setComments(comments.filter((comment) => comment._id !== commentId));
+          setComments(comments.filter((comment) => comment._id !== commentId));
         } else if (data == "Comment was set to be deleted") {
           console.log(
             " a comment was not deleted but changed in CommentSection from handleDelete "
@@ -179,7 +171,7 @@ export default function CommentSection({
       ) : (
         /*   <div className="flex flex-col border-l"> */
         <div className="flex flex-col">
-          {!comments || comments?.length === 0 ? (
+          {comments.length === 0 ? (
             <></>
           ) : (
             /*  <p className="text-sm my-1">No comments yet</p> */
@@ -198,8 +190,6 @@ export default function CommentSection({
                   {comments.length == 1 ? <p>comment:</p> : <p>comments:</p>}
                 </div>
               )}
-              {/*    {comments &&
-                comments.length > 0 && */}
               {comments.map((comment) => (
                 <Comment
                   key={comment._id}
@@ -211,7 +201,6 @@ export default function CommentSection({
                     setShowModal(true);
                     setCommentToDelete(commentId);
                   }}
-                  idOfAncestorPostOrComment={idOfAncestorPostOrComment}
                   reloadParentSection={() => {
                     getComments();
                   }}

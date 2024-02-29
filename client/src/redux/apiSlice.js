@@ -4,7 +4,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 // Define our single API slice object
 export const apiSlice = createApi({
   reducerPath: "api",
-  tagTypes: ["Tags"],
+  tagTypes: ["Tags", "CommentsToComment", "CommentsToPost"],
   baseQuery: fetchBaseQuery({ baseUrl: "/api" }),
   endpoints: (builder) => ({
     getTags: builder.query({

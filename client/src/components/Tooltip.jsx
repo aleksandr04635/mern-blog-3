@@ -82,23 +82,25 @@ export default function Tooltip({
   return (
     <div ref={groupRef} className="group relative flex">
       {children}
-      <span
-        /* ref={tooltipRef} */
-        className={
-          `absolute hidden bg-white dark:bg-dark-active-bg group-hover:block z-10 border rounded-md 
+      {!!mes && (
+        <span
+          /* ref={tooltipRef} */
+          className={
+            `absolute hidden bg-white dark:bg-dark-active-bg group-hover:block z-10 border rounded-md 
        px-2 py-1 text-sm  ` +
-          colorStyleString +
-          positionStyleString
-        }
-      >
-        {
-          mes /* +
+            colorStyleString +
+            positionStyleString
+          }
+        >
+          {
+            mes /* +
           " bottom " +
           groupRef?.current?.getBoundingClientRect().bottom +
           " window.scrollY " +
           window.scrollY */
-        }
-      </span>
+          }
+        </span>
+      )}
     </div>
   );
 }

@@ -90,7 +90,7 @@ export default function Header() {
           </form>
 
           <button
-            className=" w-[40px] h-[40px] sm:inline rounded-full border border-gray-300 text-center"
+            className=" w-[40px] h-[40px] sm:inline rounded-full border border-teal-500 text-center"
             color="gray"
             onClick={() => dispatch(toggleTheme())}
           >

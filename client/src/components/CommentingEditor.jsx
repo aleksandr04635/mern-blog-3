@@ -10,6 +10,7 @@ export default function CommentingEditor({
   commandReload,
   toPost,
   idOfParentPostOrComment,
+  idOfAncestorPostOrComment, //should be reloaded in edit mode
   onEdit,
   onClose,
 }) {
@@ -23,7 +24,7 @@ export default function CommentingEditor({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (comment.length > 400) {
+    if (comment.length > 600) {
       return;
     }
     if (mode == "edit") {
@@ -32,6 +33,7 @@ export default function CommentingEditor({
       onClose();
       return;
     }
+    //if (mode == "create")
     try {
       const reqO = toPost
         ? {
@@ -122,7 +124,7 @@ export default function CommentingEditor({
           /> */}
           <div className="flex justify-between items-center mt-5">
             <p className="text-gray-500 text-xs">
-              {400 - comment.length ?? 0} characters remaining
+              {600 - comment.length ?? 0} characters remaining
             </p>
             <div className="flex justify-between gap-2">
               <Button gradientDuoTone="purpleToBlue" type="submit">
@@ -132,7 +134,7 @@ export default function CommentingEditor({
                 onClick={onClose}
                 outline
                 gradientDuoTone="purpleToBlue"
-                type="submit"
+                type="button"
               >
                 Cancel
               </Button>

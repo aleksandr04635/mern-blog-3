@@ -31,7 +31,7 @@ export default function TagsTable(reloadSwitch) {
     isError,
     error,
     refetch,
-  } = useGetTagsQuery();
+  } = useGetTagsQuery({ refetchOnMountOrArgChange: true });
   if (isLoading) {
     console.log("isLoading in TagsTable : ", isLoading);
   } else if (isSuccess) {

@@ -71,7 +71,7 @@ export default function PostEditor({ mode, postId }) {
     isSuccess,
     isError,
     error,
-  } = useGetTagsQuery({ pollingInterval: 20 * 1000 }); //{ pollingInterval: 10000 }
+  } = useGetTagsQuery(); //{ pollingInterval: 10 }
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -256,17 +256,9 @@ export default function PostEditor({ mode, postId }) {
           navigate(`/post/${data.slug}`);
         } */
       }
-      console.log("res  in PostEditor : ", res);
+      console.log("response came in function in PostEditor! res: ", res);
+      navigate(`/post/${res?.slug}`);
     } catch (err) {
-      //Querry error
-      /*   errMsgQ =
-        "status" in error
-          ? "error" in error
-            ? error.error
-            : JSON.stringify(error.data)
-          : error.message; */
-
-      //Mutation error
       const errMsg =
         "message" in err
           ? err.message
@@ -277,13 +269,9 @@ export default function PostEditor({ mode, postId }) {
       //setPublishError("Something went wrong");
     }
   };
-
+  /* 
   useEffect(() => {
-    /*  if (isSuccessPost) {
-      returnData;
-      console.log("returnData  in PostEditor : ", returnData);
-      navigate(`/`);} */
-    console.log("returnData  in PostEditor : ", createMutationResult);
+    console.log("createMutationResult  in PostEditor : ", createMutationResult);
     if (
       createMutationResult.status == "fulfilled" &&
       createMutationResult.isSuccess == true
@@ -296,11 +284,7 @@ export default function PostEditor({ mode, postId }) {
   }, [createMutationResult]);
 
   useEffect(() => {
-    /*  if (isSuccessPost) {
-      returnData;
-      console.log("returnData  in PostEditor : ", returnData);
-      navigate(`/`);} */
-    console.log("returnData  in PostEditor : ", editMutationResult);
+    console.log("editMutationResult  in PostEditor : ", editMutationResult);
     if (
       editMutationResult.status == "fulfilled" &&
       editMutationResult.isSuccess == true
@@ -311,14 +295,7 @@ export default function PostEditor({ mode, postId }) {
       setPublishError(editMutationResult.error.message);
     }
   }, [editMutationResult]);
-
-  /*   useEffect(() => {
-    if (isSuccessPost) {
-      returnData;
-      console.log("returnData  in PostEditor : ", returnData);
-      navigate(`/`);
-    }
-  }, [isSuccessPost]); */
+ */
 
   return (
     <div className="p-1 pr-2  max-w-3xl mx-auto min-h-screen">

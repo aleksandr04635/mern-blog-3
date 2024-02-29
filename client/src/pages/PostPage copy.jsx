@@ -1,8 +1,12 @@
 import { Alert, Button, Spinner } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 import { useSelector } from "react-redux";
+import { Table } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
+import { formatISO9075 } from "date-fns";
 import TagLinksList from "../components/TagLinksList";
 import CommentSection from "../components/CommentSection";
 import CommentingEditor from "../components/CommentingEditor";
@@ -40,7 +44,11 @@ export default function PostPage() {
         const res = await fetch(`/api/post/getposts?slug=${postSlug}`);
         const data = await res.json();
         console.log("fetched data in PostPage: ", data);
+
         if (!res.ok) {
+          //const data = await res.json();
+          //if (!res.ok) {
+          //setPublishError(data.message);
           setError(data.message);
           console.log("!res.ok ", error);
           setLoading(false);
@@ -121,8 +129,7 @@ export default function PostPage() {
         postId: post._id,
         userId: currentUser?._id,
       }).unwrap();
-      console.log("res from handleDeletePost in PostEditor : ", res);
-      navigate(`/dashboard?tab=posts&userId=${currentUser._id}`);
+      console.log("res  in PostEditor : ", res);
     } catch (err) {
       const errMsg =
         "message" in err
@@ -134,9 +141,13 @@ export default function PostPage() {
       setError(errMsg);
     }
   };
-  /* 
+
   useEffect(() => {
-       console.log(
+    /*  if (isSuccessPost) {
+      returnData;
+      console.log("returnData  in PostEditor : ", returnData);
+      navigate(`/`);} */
+    console.log(
       "returnData from deletePostMutationResult in PostPage : ",
       deletePostMutationResult
     );
@@ -149,7 +160,7 @@ export default function PostPage() {
     if (deletePostMutationResult.isError == true) {
       setError(deletePostMutationResult.error.message);
     }
-  }, [deletePostMutationResult]); */
+  }, [deletePostMutationResult]);
 
   if (loading)
     return (
@@ -169,7 +180,16 @@ export default function PostPage() {
               className=" p-3    object-contain "
             />
           )}
+
           <InfoString className="" post={post} />
+          {/*           <div className="flex justify-between p-3 border-b border-slate-500  w-full text-xs">
+            <span>{formatISO9075(new Date(post.createdAt))}</span>
+                     <span>{new Date(post.createdAt).toUTCString()}</span> 
+            {post && <span>importance: {post.importance}</span>}
+            <span className="italic">
+              {post && (post.content.length / 1000).toFixed(0)} mins read
+            </span>
+          </div> */}
           <div className="mx-auto pt-2">
             {post && post.userId.username && <AuthrorName post={post} />}
           </div>
@@ -185,9 +205,63 @@ export default function PostPage() {
             dangerouslySetInnerHTML={{ __html: post && post.content }}
           ></div>
           <TagLinksList post={post} />
+          {/*               <div className="flex  w-full items-center mt-2  font-semibold">
+            <span>Tags: </span>
+            <TagLinksList post={post} />
+          </div> */}
           <div className="flex flex-col border-l-0  border-teal-500 sm:flex-row items-center justify-between w-full">
+            {/* Likes sm:w-[150px] flex-col sm: */}
             <div className="flex flex-row items-center justify-between w-full">
               <Likes type={"post"} comment={post} onLike={onLike} />
+              {/*   <div className="flex flex-row h-[50px] w-full p-2 text-lg items-center dark:border-gray-700  gap-2">
+                <button
+                  type="button"
+                  disabled={!currentUser}
+                  onClick={() =>
+                    onLike(
+                      "l",
+                      post.likes.includes(currentUser._id) ? "-" : "+"
+                    )
+                  }
+                  className={`text-gray-400 hover:text-blue-500 ${
+                    currentUser &&
+                    post.likes.includes(currentUser._id) &&
+                    "!text-blue-500"
+                  }`}
+                >
+                  <FaThumbsUp className="text-lg" />
+                </button>
+                <p className="text-gray-400">
+                  {post.numberOfLikes > 0 &&
+                    post.numberOfLikes +
+                      " " +
+                      (post.numberOfLikes === 1 ? "like" : "likes")}
+                </p>
+                <button
+                  type="button"
+                  disabled={!currentUser}
+                  onClick={() =>
+                    onLike(
+                      "d",
+                      post.dislikes.includes(currentUser._id) ? "-" : "+"
+                    )
+                  }
+                  className={`text-gray-400 hover:text-blue-500 ${
+                    currentUser &&
+                    post.dislikes.includes(currentUser._id) &&
+                    "!text-blue-500"
+                  }`}
+                >
+                  <FaThumbsDown className="text-lg" />
+                </button>
+                <p className="text-gray-400">
+                  {post.numberOfDislikes > 0 &&
+                    post.numberOfDislikes +
+                      " " +
+                      (post.numberOfDislikes === 1 ? "dislike" : "dislikes")}
+                </p>
+              </div> */}
+
               <Button
                 onClick={() => setTocomment(!tocomment)}
                 outline

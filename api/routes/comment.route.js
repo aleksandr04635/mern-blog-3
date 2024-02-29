@@ -56,6 +56,7 @@ const createComment = async (req, res, next) => {
 
 const getPostComments = async (req, res, next) => {
   connectDB();
+  console.log("req.params in getPostComments : ", req.params);
   try {
     const comments = await Comment.find({ post: req.params.postId })
       .populate("userId", ["username", "_id", "profilePicture"])
@@ -187,7 +188,10 @@ const editComment = async (req, res, next) => {
         errorHandler(403, "You are not allowed to edit this comment")
       );
     }
-
+    if (comment.deleted == true) {
+      comment.deleted = false;
+      await comment.save();
+    }
     const editedComment = await Comment.findByIdAndUpdate(
       req.params.commentId,
       {

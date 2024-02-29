@@ -1,5 +1,8 @@
 import { Link } from "react-router-dom";
+import { Button, Spinner } from "flowbite-react";
 import { useSelector } from "react-redux";
+import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
+import { formatISO9075 } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { BiEdit } from "react-icons/bi";
 import { MdDelete } from "react-icons/md";
@@ -7,26 +10,29 @@ import Tooltip from "./Tooltip";
 import TagLinksList from "./TagLinksList";
 import InfoString from "./InfoString";
 import AuthrorName from "./AuthrorName";
-import Likes from "./Likes";
 
 export default function PostCard({ post, onDelete }) {
   const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
 
+  // overflow-hidden
   /*   GOOD         
             <img
               src={post.image}
               alt="post cover"
               className="w-full sm:min-h-full sm:h-[260px] sm:w-[360px] object-cover"
             />
-          */
+            md:min-h-full
+            md:h-fit 
+*/
+
   return (
     <div
       className="flex flex-col md:flex-row w-full md:items-stretch border border-teal-500
      outline-teal-500  outline-1 hover:outline  rounded-lg  "
     >
       {post.image && (
-        <div className="grow-0 shrink-0 rounded-tr-lg md:rounded-tr-none rounded-tl-lg  md:rounded-bl-lg overflow-hidden">
+        <div className=" grow-0 shrink-0 rounded-tr-lg md:rounded-tr-none rounded-tl-lg  md:rounded-bl-lg overflow-hidden">
           <Link
             to={`/post/${post.slug}`}
             target="_blank"
@@ -40,7 +46,7 @@ export default function PostCard({ post, onDelete }) {
           </Link>
         </div>
       )}
-      <div className="md:pl-2 md:py-1 flex flex-col grow justify-around ">
+      <div className="md:pl-2 flex flex-col grow justify-around ">
         <InfoString post={post} />
         <Link
           to={`/post/${post.slug}`}
@@ -61,7 +67,49 @@ export default function PostCard({ post, onDelete }) {
         {post.intro && <div className="px-2 text-justify ">{post.intro}</div>}
         <TagLinksList post={post} />
         <div className=" px-2 flex items-center justify-between w-full">
-          <Likes type={"card"} comment={post} />
+          {/*  Likes */}
+          <Tooltip
+            message="You can upvote a post only after reading it"
+            style="warning"
+            position="bottom"
+          >
+            <div className=" group flex  items-center    text-lg  dark:border-gray-700  gap-2">
+              <button
+                type="button"
+                className={`text-gray-500 cursor-default ${
+                  currentUser &&
+                  post.likes.includes(currentUser._id) &&
+                  "!text-blue-500"
+                }`}
+              >
+                <FaThumbsUp className="text-base" />
+              </button>
+              <p className="text-gray-500">
+                {post.numberOfLikes > 0 && post.numberOfLikes}
+              </p>
+              <p className="text-gray-500">|</p>
+              <button
+                type="button"
+                className={`text-gray-500 cursor-default ${
+                  currentUser &&
+                  post.dislikes.includes(currentUser._id) &&
+                  "!text-blue-500"
+                }`}
+              >
+                <FaThumbsDown className="text-base" />
+              </button>
+              <p className="text-gray-500">
+                {post.numberOfDislikes > 0 && post.numberOfDislikes}
+              </p>
+              {/* <div className=" scale-0 group-hover:scale-100 text-sm text-orange-500 absolute z-50 bottom-[1px] left-[90px]"> */}
+              {/*              <div
+                className="hidden group-hover:block text-sm w-[280px]
+             text-orange-500 absolute z-50 bottom-[1px] left-[90px]"
+              >
+                You can upvote a post only after reading it
+              </div> */}
+            </div>
+          </Tooltip>
           {/*  Controls */}
           {currentUser &&
             (post.userId._id == currentUser._id || currentUser.isAdmin) && (
