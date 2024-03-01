@@ -21,11 +21,12 @@ export default function AuthrorName({ post }) {
            group-hover:border-blue-800 border-gray-300 dark:border-purple-500`}
           />
         </div>
-        <h1 className="text-lg  p-1  text-center font-serif  ">
-          {post.userId.username}
+        <h1 className="text-lg  p-1  text-center  ">
+          {post.userId.username.split(" ").join("\u00A0")}
         </h1>
       </div>
     </Link>
   );
 }
 //      key={tag._id}
+//font-serif

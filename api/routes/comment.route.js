@@ -7,33 +7,47 @@ import Post from "../models/post.model.js";
 const createComment = async (req, res, next) => {
   connectDB();
   try {
+    return next(errorHandler(403, "Test error createComment"));
     console.log("req.body to newComment : ", req.body);
-    const { content, postId, commentId, userId } = req.body;
-    if (userId !== req.user.id) {
+    console.log("req.user.id from create:", req.user.id);
+    if (!req.user.id) {
+      return next(
+        errorHandler(403, "You are not allowed to edit this comment")
+      );
+    }
+    //const { content, postId, commentId, userId } = req.body;
+    // const { content, postId, commentId } = req.body;
+    const { level, idOfPostOrCommentWhichIsCommented, content } = req.body;
+    /*     if (userId !== req.user.id) {
       return next(
         errorHandler(403, "You are not allowed to create this comment")
       );
-    }
-    console.log("postId exist newComment : ", postId);
-    let comObj;
-    if (postId) {
+    } */
+    //console.log("postId exist newComment : ", postId);
+    /*     console.log(
+      "level, idOfPostOrCommentWhichIsCommented, content  in newComment : ",
+      level,
+      idOfPostOrCommentWhichIsCommented,
+      content
+    ) */ let comObj;
+    if (level == 1) {
       comObj = {
         content,
-        post: postId,
-        userId,
+        post: idOfPostOrCommentWhichIsCommented,
+        userId: req.user.id,
       };
-    }
-    if (commentId) {
+    } else {
       comObj = {
         content,
-        commentto: commentId,
-        userId,
+        commentto: idOfPostOrCommentWhichIsCommented,
+        userId: req.user.id,
       };
     }
+    //console.log("comObj in newComment : ", comObj);
     const newComment = new Comment(comObj);
     //console.log("newComment : ", newComment);
     const nc = await newComment.save();
-    console.log("newComment : ", nc);
+    // console.log("newComment : ", nc);
     //console.log("newComment post : ", nc.post._id.toString());
 
     // const commentedPost = await Post.findById(postId);
@@ -177,8 +191,17 @@ const likeComment = async (req, res, next) => {
 };
 
 const editComment = async (req, res, next) => {
+  console.log("req.body to editComment : ", req.body);
+  console.log("req.params.commentId to editComment : ", req.params.commentId);
+  //console.log("req.user.id from create:", req.user.id);
   connectDB();
   try {
+    //return next(errorHandler(403, "Test error editComment"));
+    if (!req.user.id) {
+      return next(
+        errorHandler(403, "You are not allowed to edit this comment")
+      );
+    }
     const comment = await Comment.findById(req.params.commentId);
     if (!comment) {
       return next(errorHandler(404, "Comment not found"));

@@ -226,8 +226,8 @@ export default function PostPage() {
           </div>
           {tocomment && (
             <CommentingEditor
-              toPost={true}
-              idOfParentPostOrComment={post._id}
+              level={1}
+              idOfPostOrCommentWhichIsCommented={post._id}
               commandReload={() => {
                 setReloadSwitch(!reloadSwitch);
               }}
@@ -262,3 +262,4 @@ export default function PostPage() {
     </main>
   );
 }
+//toPost={true}

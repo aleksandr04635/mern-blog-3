@@ -10,7 +10,11 @@ export const commentsApiSlice = apiSlice.injectEndpoints({
         const qs = `/comment/get${
           level == 1 ? `Post` : `Comment`
         }Comments/${idOfParentPostOrComment}`;
-        console.log("called getComments:", qs);
+        console.log(
+          "in commentsApiSlice called getComments to level, id:",
+          level,
+          idOfParentPostOrComment
+        );
         return {
           url: qs,
         };
@@ -20,19 +24,138 @@ export const commentsApiSlice = apiSlice.injectEndpoints({
         console.log("response.data in getComments:", response.data);
         return response?.data?.comments;
       }, */
-      // providesTags: ["Comments"],
       providesTags: (result, error, arg) => {
-        console.log("arg in getComments:", arg);
+        // console.log("arg in getComments:", arg);
+        let providedTags = [];
         if (arg.level == 1) {
-          return [{ type: "CommentsToPost", id: arg.idOfParentPostOrComment }];
-        } else
-          return [
+          providedTags = [
+            { type: "CommentsToPost", id: arg.idOfParentPostOrComment },
+          ];
+        } else {
+          providedTags = [
             { type: "CommentsToComment", id: arg.idOfParentPostOrComment },
           ];
+        }
+        console.log("providedTags by getComments:", providedTags);
+        return providedTags;
+      },
+    }),
+
+    createComment: builder.mutation({
+      query: ({ level, idOfPostOrCommentWhichIsCommented, content }) => {
+        console.log(
+          "in commentsApiSlice called createComment to level, idOfCommentedOne:",
+          level,
+          idOfPostOrCommentWhichIsCommented,
+          content
+        );
+        return {
+          url: `/comment/create`,
+          method: "POST",
+          body: {
+            level,
+            idOfPostOrCommentWhichIsCommented,
+            content,
+          },
+        };
+      },
+      invalidatesTags: (result, error, arg) => {
+        console.log("result in createComment:", result);
+        //console.log("arg in createComment:", arg);
+        let invalidatedTags = [];
+        if (result) {
+          if (arg.level == 1) {
+            invalidatedTags = [
+              {
+                type: "CommentsToPost",
+                id: arg.idOfPostOrCommentWhichIsCommented,
+              },
+            ];
+          } else {
+            invalidatedTags = [
+              {
+                type: "CommentsToComment",
+                id: arg.idOfPostOrCommentWhichIsCommented,
+              },
+            ];
+          }
+        }
+        console.log("invalidatedTags by createComment:", invalidatedTags);
+        return invalidatedTags;
+      },
+    }),
+
+    updateComment: builder.mutation({
+      query: ({
+        level,
+        idOfEditedComment,
+        content,
+        idOfParentPostOrCommentOfEditedComment,
+      }) => {
+        console.log(
+          "in commentsApiSlice called updateComment to level, idOfUpdated:",
+          level,
+          idOfEditedComment,
+          content,
+          idOfParentPostOrCommentOfEditedComment
+        );
+        return {
+          url: `/comment/editComment/${idOfEditedComment}`,
+          method: "PUT",
+          body: {
+            content,
+          },
+        };
+      },
+      invalidatesTags: (result, error, arg) => {
+        console.log("result in updateComment:", result);
+        //console.log("arg in updateComment:", arg);
+        let invalidatedTags = [];
+        if (result) {
+          if (arg.level == 1) {
+            invalidatedTags = [
+              {
+                type: "CommentsToPost",
+                id: arg.idOfParentPostOrCommentOfEditedComment,
+              },
+            ];
+          } else {
+            invalidatedTags = [
+              {
+                type: "CommentsToComment",
+                id: arg.idOfParentPostOrCommentOfEditedComment,
+              },
+            ];
+          }
+        }
+        console.log("invalidatedTags by updateComment:", invalidatedTags);
+        return invalidatedTags;
       },
     }),
   }),
 });
+
+export const {
+  useGetCommentsQuery,
+  useCreateCommentMutation,
+  useUpdateCommentMutation,
+} = apiSlice;
+
+/* editPost: builder.mutation({
+  query: ({ postId, userId, formData }) => {
+    console.log("called editPost:", `post/updatepost/${postId}/${userId}`);
+    return {
+      url: `post/updatepost/${postId}/${userId}`,
+      method: "PUT",
+      // In a real app, we'd probably need to base this on user ID somehow
+      // so that a user can't do the same reaction more than once
+      body: formData,
+    };
+  },
+    invalidatesTags: (result, error, arg) => [
+      { type: 'Post', id: arg.postId },
+    ], 
+  invalidatesTags: ["Tags"], */
 
 /* mode == "edit"
 ? `/api/post/updatepost/${formData._id}/${currentUser._id}`
@@ -53,7 +176,6 @@ formData,
 }).unwrap(); */
 
 // Export the auto-generated hook for the `getPosts` query endpoint
-export const { useGetCommentsQuery } = apiSlice;
 
 /*         const restag = await fetch(`/api/tag/get-all-tags`);
         const datat = await restag.json();

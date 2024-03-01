@@ -19,7 +19,7 @@ export default function Comment({
   const [tocomment, setTocomment] = useState(false);
   const [reloadSwitch, setReloadSwitch] = useState(false);
   //It is changed from CommentingEditor to force a reload of a commentSection of this comment
-  console.log("level, comment in Comment.jsx: ", level, comment);
+  //console.log("level, comment in Comment.jsx: ", level, comment);
   //console.log("isEditing in Comment.jsx: ", isEditing);
 
   const handleSaveUponEditing = async (content) => {
@@ -58,19 +58,24 @@ export default function Comment({
             />
           </div>
           <div className="flex flex-col grow">
-            <div className="flex flex-row justify-between px-2">
+            <div className="flex flex-col sm:flex-row justify-between px-2">
               <div className="font-bold  text-xs ">
                 {comment.userId
-                  ? `${comment.userId.username}`
+                  ? `${comment.userId.username.split(" ").join("\u00A0")}`
                   : "anonymous user"}
               </div>
-              <DateTime time={comment.createdAt} variant={"comment"} />
+              <DateTime
+                crTime={comment.createdAt}
+                upTime={comment.updatedAt}
+                variant={"comment"}
+              />
             </div>
+            {/*   Edit a comment */}
             {isEditing ? (
               <CommentingEditor
-                toPost={false}
-                idOfParentPostOrComment={comment._id}
-                idOfAncestorPostOrComment={
+                level={level}
+                idOfEditedComment={comment._id}
+                idOfParentPostOrCommentOfEditedComment={
                   level == 1 ? comment.post : comment.commentto
                 }
                 initialContent={comment.content}
@@ -130,10 +135,11 @@ export default function Comment({
         </div>
       </div>
       <div>
+        {/*  Create a comment to this one */}
         {tocomment && (
           <CommentingEditor
-            toPost={false}
-            idOfParentPostOrComment={comment._id}
+            level={level + 1}
+            idOfPostOrCommentWhichIsCommented={comment._id}
             mode={"create"}
             commandReload={() => {
               setReloadSwitch(!reloadSwitch);

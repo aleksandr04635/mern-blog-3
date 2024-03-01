@@ -11,26 +11,36 @@ export default function About() {
           <div className="text-md flex flex-col gap-4">
             <p>
               This blogspot was created by me, Oleksandr Liashchenko as a
-              demonstration of my skill set.
+              demonstration of my skills set.
             </p>
             <p>
               It uses React as a front framework and Express as a back one with
-              Mongo as a database. Deployment to Vercel required the
-              minimization of the number of .js files in the API directory and a
-              new database connection for each serverless function. For UI
-              elements Flowbite library with Tailwind styles is used
+              Mongo as a database accessed through Mongoose ORM. Deployment to
+              Vercel required the minimization of the number of .js files in the
+              API directory and a new database connection for each serverless
+              function. For UI elements Flowbite library with Tailwind styles is
+              used.
             </p>
             <p>
-              Redux Toolkit was used to store user data, the theme, and the
-              number of posts per page. Note how the pagination is made: the
-              number of posts on the topmost page varies depending on the total
-              number of posts, corresponding to the query. It, and the whole
-              pagination system was made for the purpose of full correspondence
-              of shown data to the URL, so that the addition of new posts
-              doesn't change what posts are shown by the old URL, so that they
-              all can be stored in bookmarks, for example. Note how changing the
-              number of posts per page changes the URL, just like the selection
-              of author or tag, the posts of which are shown.
+              Redux Toolkit is used to store user data, the theme, and the
+              number of posts per page, persisting them in the local storage.
+              RTK querry performs comments, posts and comments fetching,
+              creating and updating by invalidating the cached querry results by
+              corresponding data mutations. For example, crate a post with tags
+              and then delete it from a posts list screen. The tags number in
+              the tags list will change by the posts mutation. The entire
+              comments tree system works in this way.
+            </p>
+            <p>
+              Note how the pagination is made: the number of posts on the
+              topmost page varies depending on the total number of posts,
+              corresponding to the query. It, and the whole pagination system
+              was made for the purpose of full correspondence of shown data to
+              the URL, so that the addition of new posts doesn't change what
+              posts are shown by the old URL, so that they all can be stored in
+              bookmarks, for example. Note how changing the number of posts per
+              page changes the URL, just like the selection of author or tag,
+              the posts of which are shown.
             </p>
             <p>
               User authentication is made with two options: email and password
@@ -39,22 +49,28 @@ export default function About() {
               or through an email password resetting mechanism, and use it just
               as a combination of email and password, or as originally, through
               a Google account. Also, appreciate how I made a password resetting
-              functionality with an email made from a template sending.
+              functionality with sending an email made from a template.
             </p>
             <p>
               For the creation of posts and comments, I use TinyMCE rich text
               editor. You can use images in it either via the existing URL or by
               uploading the images immediately from the editor during the post
-              or comment writing. Images from the editor are uploaded to
-              Firebase storage, just like user avatar images and front pictures
-              of posts, though you can find a commented variant of uploading to
-              Cloudinary in the code.
+              or comment writing. Images from the editor are automatically
+              uploaded to Firebase storage, just like user avatar images and
+              front pictures of posts, though you can find a commented variant
+              of uploading to Cloudinary in the code.
             </p>
             <p>
               Note how I made a logical tree of comments more readable with just
               a style. Also, try to delete an already commented comment. It will
               just change status and will be deleted automatically when all the
               comments to it will be deleted - try it.
+            </p>
+            <p>
+              Notice the tooltips that appear when attempting to vote for a post
+              while seeing only the post list or attempting to vote while not
+              being signed in - they change their position depending on wheather
+              the page scrol would make a tooltip invisible
             </p>
             <Link
               className="text-blue-500 hover:text-blue-800"

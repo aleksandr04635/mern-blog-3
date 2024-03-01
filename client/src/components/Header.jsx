@@ -79,7 +79,7 @@ export default function Header() {
               /*  rightIcon={AiOutlineSearch} */
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-[300px] border border-teal-500 rounded-lg"
+              className="w-[300px] border border-teal-500 dark:bg-dark-active-bg rounded-lg"
             />
             <p
               onClick={handleSubmit}

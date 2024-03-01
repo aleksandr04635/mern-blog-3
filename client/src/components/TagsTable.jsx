@@ -31,7 +31,7 @@ export default function TagsTable(reloadSwitch) {
     isError,
     error,
     refetch,
-  } = useGetTagsQuery({ refetchOnMountOrArgChange: true });
+  } = useGetTagsQuery({}, { refetchOnMountOrArgChange: true });
   if (isLoading) {
     console.log("isLoading in TagsTable : ", isLoading);
   } else if (isSuccess) {
@@ -68,9 +68,13 @@ export default function TagsTable(reloadSwitch) {
               hoverable
               className="shadow-md w-full  mx-auto  rounded-b-lg "
             >
-              <Table.Head className="font-light normal-case">
-                <Table.HeadCell>Tag</Table.HeadCell>
-                <Table.HeadCell>Posts</Table.HeadCell>
+              <Table.Head className="font-light normal-case dark:bg-[#1f2937]">
+                <Table.HeadCell className=" dark:bg-dark-active-bg">
+                  Tag
+                </Table.HeadCell>
+                <Table.HeadCell className=" dark:bg-dark-active-bg">
+                  Posts
+                </Table.HeadCell>
               </Table.Head>
               <Table.Body className="text-gray-800 dark:text-gray-200">
                 {tags.slice(0, 10).map((tag, i) => (

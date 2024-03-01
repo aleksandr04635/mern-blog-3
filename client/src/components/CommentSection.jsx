@@ -39,15 +39,11 @@ export default function CommentSection({
   if (isLoading) {
     // console.log("isLoading in CommentSection : ", isLoading);
   } else if (isSuccess) {
-    //console.log("data in CommentSection : ", data);
-    console.log("comments in CommentSection : ", comments);
-    // comments = data?.comments;
+    //console.log("comments in CommentSection : ", comments);
   } else if (isError) {
     console.log("error in CommentSection : ", error);
     setCommentsError(error);
   }
-  //console.log("cloader2  from CommentSection.jsx:", cloader2);
-  //console.log("comments2  from CommentSection.jsx:", comments2);
 
   const getComments = async () => {
     refetch();

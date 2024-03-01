@@ -1,22 +1,9 @@
-import moment from "moment";
-import { formatISO9075 } from "date-fns";
-import { useEffect, useState } from "react";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 import { useSelector } from "react-redux";
-import { Button, Textarea } from "flowbite-react";
-import CommentSection from "./CommentSection";
-import CommentingEditor from "./CommentingEditor";
-import DateTime from "./DateTime";
 import Tooltip from "./Tooltip";
 
 export default function Likes({ type, comment, onLike = () => {} }) {
-  const [isEditing, setIsEditing] = useState(false);
-  console.log("isEditing in Comment.jsx: ", isEditing);
-  const [editedContent, setEditedContent] = useState(comment.content);
   const { currentUser } = useSelector((state) => state.user);
-  const [tocomment, setTocomment] = useState(false);
-  const [reloadSwitch, setReloadSwitch] = useState(false);
-  //It is changed from CommentingEditor to force a reload of a commentSection of this comment
 
   return (
     <Tooltip

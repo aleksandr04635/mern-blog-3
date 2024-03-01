@@ -3,7 +3,11 @@ import DateTime from "./DateTime";
 export default function InfoString({ post }) {
   return (
     <div className="flex flex-col sm:flex-row justify-between items-center  px-2  border-slate-500  w-full text-sm">
-      <DateTime time={post.createdAt} variant={"post"} />
+      <DateTime
+        crTime={post.createdAt}
+        upTime={post.updatedAt}
+        variant={"post"}
+      />
       <span className="w-full sm:w-fit flex flox-row gap-5 justify-between">
         <span>
           importance:&nbsp;

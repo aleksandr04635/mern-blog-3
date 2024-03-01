@@ -19,7 +19,7 @@ export default function Comment({
   reloadParentSection,
 }) {
   const [isEditing, setIsEditing] = useState(false);
-  console.log("isEditing in Comment.jsx: ", isEditing);
+  //console.log("isEditing in Comment.jsx: ", isEditing);
   const [editedContent, setEditedContent] = useState(comment.content);
   const { currentUser } = useSelector((state) => state.user);
   const [tocomment, setTocomment] = useState(false);
@@ -73,7 +73,11 @@ export default function Comment({
                   ? `${comment.userId.username}`
                   : "anonymous user"}
               </div>
-              <DateTime time={comment.createdAt} variant={"comment"} />
+              <DateTime
+                crTime={comment.createdAt}
+                upTime={comment.updatedAt}
+                variant={"comment"}
+              />
             </div>
             {isEditing ? (
               <CommentingEditor

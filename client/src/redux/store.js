@@ -14,12 +14,14 @@ const rootReducer = combineReducers({
   [apiSlice.reducerPath]: apiSlice.reducer,
 });
 
+//https://github.com/rt2zz/redux-persist?tab=readme-ov-file#blacklist--whitelist
 const persistConfig = {
   key: "root",
   storage,
   version: 1,
+  blacklist: ["api"],
 };
-//persists all the state in a local storage
+//persists the state without api in a local storage
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({

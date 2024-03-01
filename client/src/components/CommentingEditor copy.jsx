@@ -3,19 +3,15 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import TinyMCEEditor from "../components/TinyMCEEditor";
-import {
-  useCreateCommentMutation,
-  useUpdateCommentMutation,
-} from "../redux/comment/commentApiSlice";
+import { useCreateCommentMutation } from "../redux/comment/commentApiSlice";
 
 export default function CommentingEditor({
   initialContent,
   mode,
   commandReload,
   level,
-  idOfEditedComment,
-  idOfPostOrCommentWhichIsCommented,
-  idOfParentPostOrCommentOfEditedComment, //should be reloaded in edit mode
+  idOfParentPostOrComment,
+  idOfAncestorPostOrComment, //should be reloaded in edit mode
   onEdit,
   onClose,
 }) {
@@ -25,9 +21,7 @@ export default function CommentingEditor({
 
   const [createComment, createCommentMutationResult] =
     useCreateCommentMutation();
-  const [updateComment, updateCommentMutationResult] =
-    useUpdateCommentMutation();
-  console.log("commentError in CommentingEditor.jsx", commentError);
+
   //console.log("content in CommentingEditor.jsx", comment);
   // const [comments, setComments] = useState([]);
   // const navigate = useNavigate();
@@ -37,29 +31,20 @@ export default function CommentingEditor({
     if (comment.length > 600) {
       return;
     }
+    if (mode == "edit") {
+      console.log("called to edit from CommentingEditor.jsx", comment);
+      onEdit(comment);
+      onClose();
+      return;
+    }
+    //if (mode == "create")
     try {
-      let res;
-      if (mode == "edit") {
-        console.log("called to edit from CommentingEditor.jsx", comment);
-        res = await updateComment({
-          level,
-          idOfEditedComment,
-          content: comment,
-          idOfParentPostOrCommentOfEditedComment, //should be reloaded in edit mode,
-        }).unwrap();
-        //onEdit(comment);//IMPORTANT
-        // onClose();
-        //return;
-      } else {
-        //if (mode == "create")
-        console.log("called to create from CommentingEditor.jsx", comment);
-        res = await createComment({
-          level,
-          idOfPostOrCommentWhichIsCommented,
-          content: comment,
-        }).unwrap();
-      }
-      console.log("res in CommentingEditor.jsx", res);
+      const resm = await createComment({
+        level,
+        idOfParentPostOrComment,
+        content: comment,
+      }).unwrap();
+      console.log("resm in CommentingEditor.jsx", resm);
       /*       const reqO = toPost
         ? {
             content: comment,
@@ -82,19 +67,16 @@ export default function CommentingEditor({
       console.log(" res in CommentingEditor.jsx", res); */
       //const data = await res.json();
       // if (resm.ok) {
-      if (res) {
-        setComment("");
-        setCommentError(null);
-        onClose();
-      }
-
-      /*       console.log(
+      setComment("");
+      onClose();
+      setCommentError(null);
+      console.log(
         ` giving command to comment section to REFETCH comments from commentingEditor from: ${
           level == 1 ? "post" : "comment"
         }`,
         idOfParentPostOrComment
       );
-      commandReload(); //IMPORTANT*/
+      commandReload();
       //setComments([data, ...comments]);
       /*   } else {
         const rese = await resm.json();
@@ -108,27 +90,11 @@ export default function CommentingEditor({
           : "error" in err
           ? err.error
           : JSON.stringify(err.data);
-      console.log("errMsg in CommentingEditor.jsx: ", errMsg);
+      console.log(errMsg);
       setCommentError(errMsg);
       //setCommentError(error.message);
     }
   };
-
-  /*   useEffect(() => {
-    console.log(
-      "returnData from updateCommentMutationResult in PostPage : ",
-      updateCommentMutationResult
-    );
-    if (
-      updateCommentMutationResult.status == "fulfilled" &&
-      updateCommentMutationResult.isSuccess == true
-    ) {
-      //navigate(`/dashboard?tab=posts&userId=${currentUser._id}`);
-    }
-    if (updateCommentMutationResult.isError == true) {
-      setCommentError(updateCommentMutationResult.error.message);
-    }
-  }, [updateCommentMutationResult]); */
 
   return (
     <div className="w-full p-3">
