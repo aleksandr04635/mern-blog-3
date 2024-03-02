@@ -132,6 +132,71 @@ export const commentsApiSlice = apiSlice.injectEndpoints({
         return invalidatedTags;
       },
     }),
+
+    deleteComment: builder.mutation({
+      query: ({
+        level,
+        idOfDeletedComment,
+        idOfParentPostOrCommentToDeletedComment,
+        idOfGrandparentPostOrCommentToDeletedComment,
+      }) => {
+        console.log(
+          "in commentsApiSlice called deleteComment to level, idOfDeletedComment, idOfParentPostOrCommentToDeletedComment, idOfGrandparentPostOrCommentToDeletedComment:",
+          level,
+          idOfDeletedComment,
+          idOfParentPostOrCommentToDeletedComment,
+          idOfGrandparentPostOrCommentToDeletedComment
+        );
+        return {
+          url: `/comment/deleteComment/${idOfDeletedComment}`,
+          method: "DELETE",
+        };
+      },
+      invalidatesTags: (result, error, arg) => {
+        console.log("result in deleteComment:", result);
+        //console.log("arg in deleteComment:", arg);
+        let invalidatedTags = [];
+        if (
+          result == "Comment has been deleted" ||
+          result == "Comment was set to be deleted"
+        ) {
+          if (arg.level == 1) {
+            invalidatedTags = [
+              {
+                type: "CommentsToPost",
+                id: arg.idOfParentPostOrCommentToDeletedComment,
+              },
+            ];
+          } else {
+            invalidatedTags = [
+              {
+                type: "CommentsToComment",
+                id: arg.idOfParentPostOrCommentToDeletedComment,
+              },
+            ];
+          }
+        }
+        if (result == "Comment and his parent one were deleted") {
+          if (arg.level == 2) {
+            invalidatedTags = [
+              {
+                type: "CommentsToPost",
+                id: arg.idOfGrandparentPostOrCommentToDeletedComment,
+              },
+            ];
+          } else {
+            invalidatedTags = [
+              {
+                type: "CommentsToComment",
+                id: arg.idOfGrandparentPostOrCommentToDeletedComment,
+              },
+            ];
+          }
+        }
+        console.log("invalidatedTags by deleteComment:", invalidatedTags);
+        return invalidatedTags;
+      },
+    }),
   }),
 });
 
@@ -139,6 +204,7 @@ export const {
   useGetCommentsQuery,
   useCreateCommentMutation,
   useUpdateCommentMutation,
+  useDeleteCommentMutation,
 } = apiSlice;
 
 /* editPost: builder.mutation({

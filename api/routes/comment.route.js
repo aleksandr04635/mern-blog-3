@@ -7,7 +7,7 @@ import Post from "../models/post.model.js";
 const createComment = async (req, res, next) => {
   connectDB();
   try {
-    return next(errorHandler(403, "Test error createComment"));
+    //return next(errorHandler(403, "Test error createComment"));
     console.log("req.body to newComment : ", req.body);
     console.log("req.user.id from create:", req.user.id);
     if (!req.user.id) {
@@ -230,6 +230,7 @@ const editComment = async (req, res, next) => {
 
 const deleteComment = async (req, res, next) => {
   connectDB();
+  console.log("req.params.commentId to deleteComment : ", req.params.commentId);
   try {
     const comment = await Comment.findById(req.params.commentId);
     if (!comment) {

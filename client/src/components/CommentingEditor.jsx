@@ -27,7 +27,7 @@ export default function CommentingEditor({
     useCreateCommentMutation();
   const [updateComment, updateCommentMutationResult] =
     useUpdateCommentMutation();
-  console.log("commentError in CommentingEditor.jsx", commentError);
+  //console.log("commentError in CommentingEditor.jsx", commentError);
   //console.log("content in CommentingEditor.jsx", comment);
   // const [comments, setComments] = useState([]);
   // const navigate = useNavigate();
@@ -59,7 +59,7 @@ export default function CommentingEditor({
           content: comment,
         }).unwrap();
       }
-      console.log("res in CommentingEditor.jsx", res);
+      console.log("res in CommentingEditor.jsx:", res);
       /*       const reqO = toPost
         ? {
             content: comment,

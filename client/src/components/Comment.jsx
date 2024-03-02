@@ -4,6 +4,9 @@ import CommentSection from "./CommentSection";
 import CommentingEditor from "./CommentingEditor";
 import DateTime from "./DateTime";
 import Likes from "./Likes";
+import { Alert } from "flowbite-react";
+import ModalComponent from "./ModalComponent";
+import { useDeleteCommentMutation } from "../redux/comment/commentApiSlice";
 
 export default function Comment({
   level,
@@ -11,16 +14,51 @@ export default function Comment({
   onLike,
   onEdit,
   onDelete,
-  idOfAncestorPostOrComment,
+  idOfGrandparentPostOrCommentToThisComment,
   reloadParentSection,
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const [tocomment, setTocomment] = useState(false);
+  const [commentError, setCommentError] = useState(null);
   const [reloadSwitch, setReloadSwitch] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   //It is changed from CommentingEditor to force a reload of a commentSection of this comment
   //console.log("level, comment in Comment.jsx: ", level, comment);
   //console.log("isEditing in Comment.jsx: ", isEditing);
+
+  const [deleteComment, deleteCommentMutationResult] =
+    useDeleteCommentMutation();
+
+  const Delete = async (content) => {
+    try {
+      console.log("called to delete from Comment.jsx:", comment._id);
+      const res = await deleteComment({
+        level,
+        idOfDeletedComment: comment._id,
+        idOfParentPostOrCommentToDeletedComment:
+          level == 1 ? comment.post : comment.commentto,
+        idOfGrandparentPostOrCommentToDeletedComment:
+          idOfGrandparentPostOrCommentToThisComment, //should be reloaded in edit mode,
+      }).unwrap();
+      if (res) {
+        setCommentError(null);
+      }
+    } catch (err) {
+      const errMsg =
+        "message" in err
+          ? err.message
+          : "error" in err
+          ? err.error
+          : JSON.stringify(err.data);
+      console.log(
+        "errMsg in CommentingEditor.jsx while attempting to delete a comment: ",
+        comment._id,
+        errMsg
+      );
+      setCommentError(errMsg);
+    }
+  };
 
   const handleSaveUponEditing = async (content) => {
     try {
@@ -48,6 +86,21 @@ export default function Comment({
         level % 2 == 0 ? `border-purple-500` : `border-teal-500`
       }`}
     >
+      <div>
+        comment: comment._id:
+        {comment._id}
+      </div>
+      <div>
+        comment: Parent:
+        {level == 1 ? " post " : " comment "}
+        {level == 1 ? comment.post : comment.commentto}
+      </div>
+      <div>
+        comment: idOfGrandparentPostOrCommentToThisComment:
+        {level > 1 ? " post " : " comment "}
+        {idOfGrandparentPostOrCommentToThisComment || " unknown "}
+      </div>
+
       <div>
         <div className="flex flex-row">
           <div className="flex-shrink-0 ">
@@ -124,7 +177,9 @@ export default function Comment({
                   </button>
                   <button
                     type="button"
-                    onClick={() => onDelete(comment._id)}
+                    onClick={() => setShowModal(true)}
+                    //onClick={() => Delete(comment._id)}
+                    //onClick={() => onDelete(comment._id)}
                     className="text-gray-400 hover:text-red-500"
                   >
                     Delete
@@ -133,6 +188,11 @@ export default function Comment({
               )}
           </div>
         </div>
+        {commentError && (
+          <Alert color="failure" className="mt-5">
+            {commentError}
+          </Alert>
+        )}
       </div>
       <div>
         {/*  Create a comment to this one */}
@@ -154,12 +214,21 @@ export default function Comment({
           reloadSwitch={reloadSwitch}
           key={comment._id}
           idOfParentPostOrComment={comment._id}
-          idOfAncestorPostOrComment={
+          idOfParentPostOrCommentOfCommentThisSectionBelongTo={
             level == 1 ? comment.post : comment.commentto
           }
           reloadParentSection={() => {
             reloadParentSection();
           }}
+        />
+        <ModalComponent
+          show={showModal}
+          onClose={() => setShowModal(false)}
+          onConfirm={() => {
+            setShowModal(false);
+            Delete();
+          }}
+          text={"Are you sure you want to delete this comment?"}
         />
       </div>
     </div>

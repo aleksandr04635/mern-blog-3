@@ -10,7 +10,7 @@ import { useGetCommentsQuery } from "../redux/comment/commentApiSlice";
 export default function CommentSection({
   level,
   idOfParentPostOrComment,
-  idOfAncestorPostOrComment,
+  idOfParentPostOrCommentOfCommentThisSectionBelongTo,
   reloadSwitch,
   reloadParentSection,
 }) {
@@ -184,6 +184,17 @@ export default function CommentSection({
                 level % 2 == 0 ? `border-purple-500` : `border-teal-500`
               }`}
             >
+              <div>
+                section: idOfParentPostOrComment,:
+                {level == 1 ? " post " : " comment "}
+                {idOfParentPostOrComment}
+              </div>
+              <div>
+                section: idOfParentPostOrCommentOfCommentThisSectionBelongTo:
+                {level == 2 ? " post " : " comment "}
+                {idOfParentPostOrCommentOfCommentThisSectionBelongTo ||
+                  " unknown "}
+              </div>
               {comments.length > 2 && (
                 <div
                   className={` text-sm pl-2 py-1 flex items-center gap-1 w-full `}
@@ -207,7 +218,9 @@ export default function CommentSection({
                     setShowModal(true);
                     setCommentToDelete(commentId);
                   }}
-                  idOfAncestorPostOrComment={idOfAncestorPostOrComment}
+                  idOfGrandparentPostOrCommentToThisComment={
+                    idOfParentPostOrCommentOfCommentThisSectionBelongTo
+                  }
                   reloadParentSection={() => {
                     getComments();
                   }}
