@@ -28,8 +28,25 @@ export default function About() {
               creating and updating by invalidating the cached querry results by
               corresponding data mutations. For example, crate a post with tags
               and then delete it from a posts list screen. The tags number in
-              the tags list will change by the posts mutation. The entire
-              comments tree system works in this way.
+              the tags list will change by the posts mutation. Also you can edit
+              a post in completely another window and change its tag, and upon
+              returning to the main window with tags list it will change. The
+              entire comments tree system works in this way.
+            </p>
+            <p>
+              Entire comments tree system worked in this way, by inavalidation
+              of querries in cache by mutations initially, you can still find
+              this code commented, but then I remade tags tree into manual cache
+              changing by optimistic update - changing the cache before the
+              delivery of the querry result in case of editing and liking, and
+              pessimistic update - by changing the result of previous querries
+              depending on result of new ones of another endpoint in case of
+              creation and deletion of comments. It minimised the time the user
+              sees any loading to the minimum. Possible errors are accounded for
+              to - you can uncomment commented throwing of test errors in
+              comment.route.js in API folder and see the result - the error will
+              be shown instead of date changed before, without loading
+              indicators that you can see during initial loading.
             </p>
             <p>
               Note how the pagination is made: the number of posts on the
@@ -64,7 +81,10 @@ export default function About() {
               Note how I made a logical tree of comments more readable with just
               a style. Also, try to delete an already commented comment. It will
               just change status and will be deleted automatically when all the
-              comments to it will be deleted - try it.
+              comments to it will be deleted - try it. It will work even for
+              entire branch of comments, marked for deletion while at least one
+              comment to them all remains not deleted - they all will be deleted
+              in DB and UI by deletion of that last comment
             </p>
             <p>
               Notice the tooltips that appear when attempting to vote for a post

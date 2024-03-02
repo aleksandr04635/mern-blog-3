@@ -404,11 +404,12 @@ export default function PostEditor({ mode, postId }) {
           <div className="flex flex-col">
             <h3 className=" text-lg">Tags list (optional):</h3>
             <p>Addition of already existing tags is preferable </p>
+            <p>Start printing to narrow down the list of existing tags </p>
             <div className="flex items-center ">
               <input
                 value={tagString}
                 onChange={(e) => setTagString(e.target.value)}
-                className=" py-1 outline-none h-10 w-[350px] border border-teal-500 rounded-lg mr-2"
+                className=" py-1 outline-none h-10 w-[350px] border dark:bg-dark-active-bg border-teal-500 rounded-lg mr-2"
                 placeholder="Enter a post tag"
                 /* color="success" */
                 type="text"

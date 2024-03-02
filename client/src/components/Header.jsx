@@ -68,6 +68,8 @@ export default function Header() {
           <Link
             className="text-blue-500 text-base hover:text-blue-800"
             to={`/about`}
+            target="_blank"
+            rel="noopener noreferrer"
           >
             About this project
           </Link>
@@ -90,7 +92,9 @@ export default function Header() {
           </form>
 
           <button
-            className=" w-[40px] h-[40px] sm:inline rounded-full border border-teal-500 text-center"
+            className=" w-[40px] h-[40px] sm:inline rounded-full border 
+            hover:bg-gray-100 dark:hover:bg-dark-active-bg border-teal-500 text-center 
+            outline-teal-500  outline-1 hover:outline "
             color="gray"
             onClick={() => dispatch(toggleTheme())}
           >

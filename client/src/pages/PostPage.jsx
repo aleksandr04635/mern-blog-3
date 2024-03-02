@@ -246,6 +246,8 @@ export default function PostPage() {
             level={1}
             reloadSwitch={reloadSwitch}
             idOfParentPostOrComment={post._id}
+            /*  listOfAncestorsOfCommentSection={[post._id]} */
+            listOfAncestorsOfCommentSection={post._id}
             reloadParentSection={() => {
               console.log("reloaded post's comments");
             }}

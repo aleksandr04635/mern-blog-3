@@ -11,6 +11,7 @@ export default function CommentSection({
   level,
   idOfParentPostOrComment,
   idOfParentPostOrCommentOfCommentThisSectionBelongTo,
+  listOfAncestorsOfCommentSection,
   reloadSwitch,
   reloadParentSection,
 }) {
@@ -43,6 +44,9 @@ export default function CommentSection({
   } else if (isError) {
     console.log("error in CommentSection : ", error);
     setCommentsError(error);
+  }
+  if (level == 1) {
+    console.log("comments in CommentSection.jsx : ", comments);
   }
 
   const getComments = async () => {
@@ -92,6 +96,7 @@ export default function CommentSection({
           action: ac,
         }),
       });
+      console.log("res from handleLike in CommentSection: ", res);
       if (res.ok) {
         const data = await res.json();
         //console.log("data from handleLike: ", data);
@@ -195,6 +200,10 @@ export default function CommentSection({
                 {idOfParentPostOrCommentOfCommentThisSectionBelongTo ||
                   " unknown "}
               </div>
+              <div>
+                section: listOfAncestorsOfCommentSection:
+                {listOfAncestorsOfCommentSection}
+              </div>
               {comments.length > 2 && (
                 <div
                   className={` text-sm pl-2 py-1 flex items-center gap-1 w-full `}
@@ -221,6 +230,7 @@ export default function CommentSection({
                   idOfGrandparentPostOrCommentToThisComment={
                     idOfParentPostOrCommentOfCommentThisSectionBelongTo
                   }
+                  listOfAncestorsOfComment={listOfAncestorsOfCommentSection}
                   reloadParentSection={() => {
                     getComments();
                   }}

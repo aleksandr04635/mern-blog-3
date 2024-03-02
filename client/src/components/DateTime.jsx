@@ -7,9 +7,10 @@ export default function DateTime({ crTime, upTime, variant }) {
   /*   const tb =
   "updated\u00A0" +
   formatDistanceToNow(upTime).split(" ").join("\u00A0") +
-  "\u00A0ago"; */
+  "\u00A0ago";
+  last\u00A0 */
   const tb =
-    "last\u00A0updated\u00A0" +
+    "last\u00A0change\u00A0" +
     moment(upTime).fromNow().split(" ").join("\u00A0");
 
   return (

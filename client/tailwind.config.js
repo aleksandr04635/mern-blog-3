@@ -8,9 +8,10 @@ export default {
   theme: {
     extend: {
       colors: {
-        "dark-active-bg": "#151e37",
+        "dark-active-bg": "#1c284a",
       },
     },
   },
   plugins: [require("flowbite/plugin"), require("tailwind-scrollbar")],
 };
+// "#151e37",

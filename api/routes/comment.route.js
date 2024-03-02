@@ -232,6 +232,7 @@ const deleteComment = async (req, res, next) => {
   connectDB();
   console.log("req.params.commentId to deleteComment : ", req.params.commentId);
   try {
+    //return next(errorHandler(403, "Test error deleteComment"));
     const comment = await Comment.findById(req.params.commentId);
     if (!comment) {
       return next(errorHandler(404, "Comment not found"));
@@ -262,13 +263,58 @@ const deleteComment = async (req, res, next) => {
       return;
     }
 
-    //if this comment is to a comment and not to a post
+    //let parentWasDeleted = false;
+    let numberOfDeletedParents = 0;
+    async function checkParent(com) {
+      //if this comment is to a comment and not to a post
+      let m = 0;
+      if (com.commentto) {
+        //comment to which this one is commented
+        /*       console.log(
+          "Id of comment to which this one is commented in deleteComment: ",
+          comment.commentto.toString()
+        ); */
+        const commentTo = await Comment.findById(com.commentto.toString());
+        console.log("commentTo found in deleteComment: ", commentTo);
+        if (commentTo.deleted) {
+          console.log("commentTo has deleted status in deleteComment: ");
+          const commentsTocommentTo = await Comment.find({
+            commentto: com.commentto.toString(),
+          });
+          console.log(
+            "comments to the parent of this comment in deleteComment: ",
+            commentsTocommentTo
+          );
+          if (commentsTocommentTo.length < 2) {
+            console.log(
+              "deleting commentTo that has deleted status in deleteComment: "
+            );
+            //delete commentTo
+            m = await checkParent(commentTo);
+            await Comment.findByIdAndDelete(com.commentto.toString());
+            //parentWasDeleted = true;
+            numberOfDeletedParents = numberOfDeletedParents + 1;
+            //return;
+          }
+        }
+      }
+      return m + 1;
+    }
+    let k = await checkParent(comment);
+    //if (parentWasDeleted == true) {
+    if (numberOfDeletedParents > 0) {
+      //res.status(200).json("Comment and his parent one were deleted");
+      res.status(200).json(k - 1);
+      return;
+    }
+
+    /*     //if this comment is to a comment and not to a post
     if (comment.commentto) {
       //comment to which this one is commented
-      /*       console.log(
+      /      console.log(
         "Id of comment to which this one is commented in deleteComment: ",
         comment.commentto.toString()
-      ); */
+      ); 
       const commentTo = await Comment.findById(comment.commentto.toString());
       console.log("commentTo found in deleteComment: ", commentTo);
       if (commentTo.deleted) {
@@ -277,7 +323,7 @@ const deleteComment = async (req, res, next) => {
           commentto: comment.commentto.toString(),
         });
         console.log(
-          "comments to a comment this comment is to in deleteComment: ",
+          "comments to a parent of this comment in deleteComment: ",
           commentsTocommentTo
         );
         if (commentsTocommentTo.length < 2) {
@@ -290,7 +336,8 @@ const deleteComment = async (req, res, next) => {
           return;
         }
       }
-    }
+    } */
+
     console.log("finally delete the comment in deleteComment: ");
     await Comment.findByIdAndDelete(req.params.commentId); //old
 

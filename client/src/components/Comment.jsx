@@ -15,6 +15,7 @@ export default function Comment({
   onEdit,
   onDelete,
   idOfGrandparentPostOrCommentToThisComment,
+  listOfAncestorsOfComment,
   reloadParentSection,
 }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -40,17 +41,27 @@ export default function Comment({
           level == 1 ? comment.post : comment.commentto,
         idOfGrandparentPostOrCommentToDeletedComment:
           idOfGrandparentPostOrCommentToThisComment, //should be reloaded in edit mode,
+        listOfAncestorsOfComment,
       }).unwrap();
       if (res) {
+        console.log("res from delete from Comment.jsx:", res);
         setCommentError(null);
       }
     } catch (err) {
       const errMsg =
-        "message" in err
+        "data" in err
+          ? "message" in err.data
+            ? err.data.message
+            : JSON.stringify(err.data)
+          : "message" in err
           ? err.message
           : "error" in err
           ? err.error
-          : JSON.stringify(err.data);
+          : JSON.stringify(err);
+      /*       console.log(
+        "err in CommentingEditor.jsx while attempting to delete a comment: ",
+        err
+      ); */
       console.log(
         "errMsg in CommentingEditor.jsx while attempting to delete a comment: ",
         comment._id,
@@ -100,7 +111,10 @@ export default function Comment({
         {level > 1 ? " post " : " comment "}
         {idOfGrandparentPostOrCommentToThisComment || " unknown "}
       </div>
-
+      <div>
+        comment: listOfAncestorsOfComment:
+        {listOfAncestorsOfComment}
+      </div>
       <div>
         <div className="flex flex-row">
           <div className="flex-shrink-0 ">
@@ -216,6 +230,14 @@ export default function Comment({
           idOfParentPostOrComment={comment._id}
           idOfParentPostOrCommentOfCommentThisSectionBelongTo={
             level == 1 ? comment.post : comment.commentto
+          }
+          /* listOfAncestorsOfCommentSection={listOfAncestorsOfComment.splice(
+            listOfAncestorsOfComment.length,
+            0,
+            comment._id
+          )} */
+          listOfAncestorsOfCommentSection={
+            listOfAncestorsOfComment + " " + comment._id
           }
           reloadParentSection={() => {
             reloadParentSection();

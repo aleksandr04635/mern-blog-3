@@ -31,7 +31,10 @@ export default function TagsTable(reloadSwitch) {
     isError,
     error,
     refetch,
-  } = useGetTagsQuery({}, { refetchOnMountOrArgChange: true });
+  } = useGetTagsQuery(
+    {},
+    { refetchOnMountOrArgChange: true, refetchOnFocus: true }
+  );
   if (isLoading) {
     console.log("isLoading in TagsTable : ", isLoading);
   } else if (isSuccess) {
@@ -59,7 +62,7 @@ export default function TagsTable(reloadSwitch) {
 
   return (
     <div className=" px-1  ">
-      <button onClick={refetch}>Refetch Posts</button>
+      {/*     <button onClick={refetch}>Refetch Posts</button> */}
       {tags && tags.length > 0 ? (
         <>
           <p className="py-1 ">The most popular tags:</p>

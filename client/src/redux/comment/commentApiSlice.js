@@ -10,11 +10,11 @@ export const commentsApiSlice = apiSlice.injectEndpoints({
         const qs = `/comment/get${
           level == 1 ? `Post` : `Comment`
         }Comments/${idOfParentPostOrComment}`;
-        console.log(
+        /*         console.log(
           "in commentsApiSlice called getComments to level, id:",
           level,
           idOfParentPostOrComment
-        );
+        ); */
         return {
           url: qs,
         };
@@ -25,18 +25,21 @@ export const commentsApiSlice = apiSlice.injectEndpoints({
         return response?.data?.comments;
       }, */
       providesTags: (result, error, arg) => {
+        //console.log("result in getComments:", result);
         // console.log("arg in getComments:", arg);
         let providedTags = [];
-        if (arg.level == 1) {
-          providedTags = [
-            { type: "CommentsToPost", id: arg.idOfParentPostOrComment },
-          ];
-        } else {
-          providedTags = [
-            { type: "CommentsToComment", id: arg.idOfParentPostOrComment },
-          ];
+        if (result) {
+          if (arg.level == 1) {
+            providedTags = [
+              { type: "CommentsToPost", id: arg.idOfParentPostOrComment },
+            ];
+          } else {
+            providedTags = [
+              { type: "CommentsToComment", id: arg.idOfParentPostOrComment },
+            ];
+          }
         }
-        console.log("providedTags by getComments:", providedTags);
+        //console.log("providedTags by getComments:", providedTags);
         return providedTags;
       },
     }),
@@ -59,7 +62,33 @@ export const commentsApiSlice = apiSlice.injectEndpoints({
           },
         };
       },
-      invalidatesTags: (result, error, arg) => {
+      //Pessimistic Update
+      async onQueryStarted(
+        { level, idOfPostOrCommentWhichIsCommented, content },
+        { dispatch, queryFulfilled }
+      ) {
+        try {
+          const { data: createdComment } = await queryFulfilled;
+          const patchResult = dispatch(
+            apiSlice.util.updateQueryData(
+              "getComments",
+              {
+                level,
+                idOfParentPostOrComment: idOfPostOrCommentWhichIsCommented,
+              },
+              (draft) => {
+                //console.log("draft in updateComment:", draft);
+                /* const arr = draft.comments;
+                arr = arr.push(createdComment); */
+                draft.comments.splice(draft.comments.length, 0, createdComment); //added to the end
+              }
+            )
+          );
+        } catch {
+          //patchResult.undo();
+        }
+      },
+      /*       invalidatesTags: (result, error, arg) => {
         console.log("result in createComment:", result);
         //console.log("arg in createComment:", arg);
         let invalidatedTags = [];
@@ -81,8 +110,8 @@ export const commentsApiSlice = apiSlice.injectEndpoints({
           }
         }
         console.log("invalidatedTags by createComment:", invalidatedTags);
-        return invalidatedTags;
-      },
+        return []; //invalidatedTags;
+      }, */
     }),
 
     updateComment: builder.mutation({
@@ -107,7 +136,48 @@ export const commentsApiSlice = apiSlice.injectEndpoints({
           },
         };
       },
-      invalidatesTags: (result, error, arg) => {
+      //Optimistic Update
+      async onQueryStarted(
+        {
+          level,
+          idOfEditedComment,
+          content,
+          idOfParentPostOrCommentOfEditedComment,
+        },
+        { dispatch, queryFulfilled }
+      ) {
+        const patchResult = dispatch(
+          //() => {
+          /*    console.log(
+            " apiSlice.util.updateQueryData in updateComment:",
+            apiSlice.util.updateQueryData
+          ); */
+          apiSlice.util.updateQueryData(
+            "getComments",
+            {
+              level,
+              idOfParentPostOrComment: idOfParentPostOrCommentOfEditedComment,
+            },
+            (draft) => {
+              //console.log("draft in updateComment:", draft);
+              const comment = draft.comments.find(
+                (comment) => comment._id === idOfEditedComment
+              );
+              if (comment) {
+                comment.content = content;
+              }
+              // Object.assign(draft, patch);
+            }
+          )
+          //}
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
+      /*       invalidatesTags: (result, error, arg) => {
         console.log("result in updateComment:", result);
         //console.log("arg in updateComment:", arg);
         let invalidatedTags = [];
@@ -130,7 +200,7 @@ export const commentsApiSlice = apiSlice.injectEndpoints({
         }
         console.log("invalidatedTags by updateComment:", invalidatedTags);
         return invalidatedTags;
-      },
+      }, */
     }),
 
     deleteComment: builder.mutation({
@@ -139,20 +209,129 @@ export const commentsApiSlice = apiSlice.injectEndpoints({
         idOfDeletedComment,
         idOfParentPostOrCommentToDeletedComment,
         idOfGrandparentPostOrCommentToDeletedComment,
+        listOfAncestorsOfComment,
       }) => {
         console.log(
           "in commentsApiSlice called deleteComment to level, idOfDeletedComment, idOfParentPostOrCommentToDeletedComment, idOfGrandparentPostOrCommentToDeletedComment:",
           level,
           idOfDeletedComment,
           idOfParentPostOrCommentToDeletedComment,
-          idOfGrandparentPostOrCommentToDeletedComment
+          idOfGrandparentPostOrCommentToDeletedComment,
+          listOfAncestorsOfComment
         );
         return {
           url: `/comment/deleteComment/${idOfDeletedComment}`,
           method: "DELETE",
         };
       },
-      invalidatesTags: (result, error, arg) => {
+      //Pessimistic Update
+      async onQueryStarted(
+        {
+          level,
+          idOfDeletedComment,
+          idOfParentPostOrCommentToDeletedComment,
+          idOfGrandparentPostOrCommentToDeletedComment,
+          listOfAncestorsOfComment,
+        },
+        { dispatch, queryFulfilled }
+      ) {
+        try {
+          const { data } = await queryFulfilled;
+          console.log(" data in deleteComment:", data);
+          //const { data: createdComment } = await queryFulfilled;
+          if (data == "Comment has been deleted") {
+            console.log(" Comment has been deleted in deleteComment");
+            const patchResult = dispatch(
+              apiSlice.util.updateQueryData(
+                "getComments",
+                {
+                  level,
+                  idOfParentPostOrComment:
+                    idOfParentPostOrCommentToDeletedComment,
+                },
+                (draft) => {
+                  draft.comments.splice(
+                    draft.comments.findIndex((com) => {
+                      com._id == idOfDeletedComment;
+                    }) - 1,
+                    1
+                  );
+                }
+              )
+            );
+          }
+          if (data == "Comment was set to be deleted") {
+            console.log(
+              " refetching the section of the parent of deleted comment in deleteComment"
+            );
+            const patchResult = dispatch(
+              /*               apiSlice.util.updateQueryData(
+                "getComments",
+                {
+                  level,
+                  idOfParentPostOrComment:
+                    idOfParentPostOrCommentToDeletedComment,
+                },
+                (draft) => {
+                  draft.comments.splice(
+                    draft.comments.findIndex((com) => {
+                      com._id == idOfDeletedComment;
+                    }) - 1,
+                    1
+                  );
+                }
+              ) */
+              apiSlice.endpoints.getComments.initiate(
+                {
+                  level: level,
+                  idOfParentPostOrComment:
+                    idOfParentPostOrCommentToDeletedComment,
+                },
+                { subscribe: false, forceRefetch: true }
+              )
+            );
+          } else {
+            //data=number Of Deleted Ancestors
+            //if (data == "Comment and his parent one were deleted") {
+            console.log(
+              "refetching the section of the ancestor of deleted comment in deleteComment, number of deleted generations of ancestors",
+              data
+            );
+            const arr = listOfAncestorsOfComment.split(" ");
+            console.log("arr in deleteComment: ", arr);
+            const remainingCom = arr[arr.length - data - 1];
+            console.log("remainingCom in deleteComment: ", remainingCom);
+            const patchResult = dispatch(
+              /*               apiSlice.util.updateQueryData(
+                "getComments",
+                {
+                  level,
+                  idOfParentPostOrComment:
+                    idOfParentPostOrCommentToDeletedComment,
+                },
+                (draft) => {
+                  draft.comments.splice(
+                    draft.comments.findIndex((com) => {
+                      com._id == idOfDeletedComment;
+                    }) - 1,
+                    1
+                  );
+                }
+              ) */
+              apiSlice.endpoints.getComments.initiate(
+                {
+                  level: level - data, // level-1
+                  idOfParentPostOrComment: remainingCom,
+                },
+                { subscribe: false, forceRefetch: true }
+              )
+            );
+          }
+        } catch {
+          //patchResult.undo();
+        }
+      },
+      /*        invalidatesTags: (result, error, arg) => {
         console.log("result in deleteComment:", result);
         //console.log("arg in deleteComment:", arg);
         let invalidatedTags = [];
@@ -195,7 +374,7 @@ export const commentsApiSlice = apiSlice.injectEndpoints({
         }
         console.log("invalidatedTags by deleteComment:", invalidatedTags);
         return invalidatedTags;
-      },
+      }, */
     }),
   }),
 });
@@ -206,6 +385,8 @@ export const {
   useUpdateCommentMutation,
   useDeleteCommentMutation,
 } = apiSlice;
+
+//https://redux-toolkit.js.org/rtk-query/usage/manual-cache-updates
 
 /* editPost: builder.mutation({
   query: ({ postId, userId, formData }) => {
@@ -242,60 +423,3 @@ formData,
 }).unwrap(); */
 
 // Export the auto-generated hook for the `getPosts` query endpoint
-
-/*         const restag = await fetch(`/api/tag/get-all-tags`);
-        const datat = await restag.json();
-        console.log("datat from fetch: ", datat);
-        if (!restag.ok) {
-          console.log(datat.message);
-          setPublishError(datat.message);
-          return;
-        }
-        if (restag.ok) {
-          if (datat.tags.length > 0) {
-            setAllTagsInDB(datat.tags);
-          }
-          setLoading(false);
-        } */
-
-/*        addNewPost: builder.mutation({
-          query: (initialPost) => ({
-            url: "/post/create",
-            method: "POST",
-            body: initialPost,
-          }),
-          invalidatesTags: ["Tags"],
-        }),
-        editPost: builder.mutation({
-          query: ({ postId, userId, formData }) => {
-            console.log("called editPost:", `post/updatepost/${postId}/${userId}`);
-            return {
-              url: `post/updatepost/${postId}/${userId}`,
-              method: "PUT",
-              // In a real app, we'd probably need to base this on user ID somehow
-              // so that a user can't do the same reaction more than once
-              body: formData,
-            };
-          },
-       
-          invalidatesTags: ["Tags"],
-        }),
-        deletePost: builder.mutation({
-          query: ({ postId, userId }) => {
-            console.log(
-              "called  deletePost:",
-              `post/updatepost/${postId}/${userId}`
-            );
-            return {
-              url: `post/deletepost/${postId}/${userId}`,
-              method: "DELETE",
-            };
-          },
-         
-          invalidatesTags: () => ["Tags"],
-        }),
- */
-
-/*  invalidatesTags: (result, error, arg) => [
-              { type: 'Post', id: arg.postId },
-            ], */

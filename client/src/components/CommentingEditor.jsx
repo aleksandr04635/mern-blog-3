@@ -103,11 +103,15 @@ export default function CommentingEditor({
       } */
     } catch (err) {
       const errMsg =
-        "message" in err
+        "data" in err
+          ? "message" in err.data
+            ? err.data.message
+            : JSON.stringify(err.data)
+          : "message" in err
           ? err.message
           : "error" in err
           ? err.error
-          : JSON.stringify(err.data);
+          : JSON.stringify(err);
       console.log("errMsg in CommentingEditor.jsx: ", errMsg);
       setCommentError(errMsg);
       //setCommentError(error.message);
