@@ -16,7 +16,7 @@ export default function CommentingEditor({
   idOfEditedComment,
   idOfPostOrCommentWhichIsCommented,
   idOfParentPostOrCommentOfEditedComment, //should be reloaded in edit mode
-  onEdit,
+  //onEdit,
   onClose,
 }) {
   const { currentUser } = useSelector((state) => state.user);

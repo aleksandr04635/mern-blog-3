@@ -166,7 +166,6 @@ export const commentsApiSlice = apiSlice.injectEndpoints({
               if (comment) {
                 comment.content = content;
               }
-              // Object.assign(draft, patch);
             }
           )
           //}
@@ -250,22 +249,33 @@ export const commentsApiSlice = apiSlice.injectEndpoints({
                     idOfParentPostOrCommentToDeletedComment,
                 },
                 (draft) => {
+                  let ind = 0;
+                  draft.comments.forEach((com, i) => {
+                    if (com._id == idOfDeletedComment) {
+                      ind = i;
+                    }
+                  });
+                  const comment = draft.comments.find(
+                    (comment) => comment._id === idOfDeletedComment
+                  );
+                  console.log(" ind in deleteComment", ind);
+                  /*  if (comment) {
+                    comment.content =
+                      "<p style='color:orange;  font-size: 0.875em; '>DELETED</p>";
+                  } */
                   draft.comments.splice(
-                    draft.comments.findIndex((com) => {
-                      com._id == idOfDeletedComment;
-                    }) - 1,
+                    ind, //- 1,
                     1
                   );
                 }
               )
             );
-          }
-          if (data == "Comment was set to be deleted") {
+          } else if (data == "Comment was set to be deleted") {
             console.log(
-              " refetching the section of the parent of deleted comment in deleteComment"
+              " updating the section of the parent of deleted comment in deleteComment"
             );
             const patchResult = dispatch(
-              /*               apiSlice.util.updateQueryData(
+              apiSlice.util.updateQueryData(
                 "getComments",
                 {
                   level,
@@ -273,58 +283,65 @@ export const commentsApiSlice = apiSlice.injectEndpoints({
                     idOfParentPostOrCommentToDeletedComment,
                 },
                 (draft) => {
-                  draft.comments.splice(
-                    draft.comments.findIndex((com) => {
-                      com._id == idOfDeletedComment;
-                    }) - 1,
-                    1
+                  const comment = draft.comments.find(
+                    (comment) => comment._id === idOfDeletedComment
                   );
+                  if (comment) {
+                    comment.content =
+                      "<p style='color:orange;  font-size: 0.875em; '>This comment is deleted by its author and will be deleted completely when all the comments to it will be deleted</p>";
+                  }
                 }
-              ) */
-              apiSlice.endpoints.getComments.initiate(
+              )
+              /*         apiSlice.endpoints.getComments.initiate(
                 {
                   level: level,
                   idOfParentPostOrComment:
                     idOfParentPostOrCommentToDeletedComment,
                 },
                 { subscribe: false, forceRefetch: true }
-              )
+              ) */
             );
           } else {
             //data=number Of Deleted Ancestors
             //if (data == "Comment and his parent one were deleted") {
             console.log(
-              "refetching the section of the ancestor of deleted comment in deleteComment, number of deleted generations of ancestors",
+              "updating the section of the ancestor of deleted comment in deleteComment, number of deleted generations of ancestors",
               data
             );
             const arr = listOfAncestorsOfComment.split(" ");
             console.log("arr in deleteComment: ", arr);
-            const remainingCom = arr[arr.length - data - 1];
-            console.log("remainingCom in deleteComment: ", remainingCom);
+            const idOfFirstNotDeletedAncestorPostOrComment =
+              arr[arr.length - data - 1];
+            const idOfTopmostDeletedComment = arr[arr.length - data - 1];
+            console.log(
+              "idOfFirstNotDeletedAncestorPostOrComment in deleteComment: ",
+              idOfFirstNotDeletedAncestorPostOrComment
+            );
             const patchResult = dispatch(
-              /*               apiSlice.util.updateQueryData(
+              apiSlice.util.updateQueryData(
                 "getComments",
                 {
-                  level,
+                  level: level - data,
                   idOfParentPostOrComment:
-                    idOfParentPostOrCommentToDeletedComment,
+                    idOfFirstNotDeletedAncestorPostOrComment,
                 },
                 (draft) => {
-                  draft.comments.splice(
-                    draft.comments.findIndex((com) => {
-                      com._id == idOfDeletedComment;
-                    }) - 1,
-                    1
-                  );
+                  let ind = 0;
+                  draft.comments.forEach((com, i) => {
+                    if (com._id == idOfTopmostDeletedComment) {
+                      ind = i;
+                    }
+                  });
+                  draft.comments.splice(ind, 1);
                 }
-              ) */
-              apiSlice.endpoints.getComments.initiate(
+              )
+              /*   apiSlice.endpoints.getComments.initiate(
                 {
                   level: level - data, // level-1
-                  idOfParentPostOrComment: remainingCom,
+                  idOfParentPostOrComment: firstNotDeletedCom,
                 },
                 { subscribe: false, forceRefetch: true }
-              )
+              ) */
             );
           }
         } catch {
@@ -376,6 +393,110 @@ export const commentsApiSlice = apiSlice.injectEndpoints({
         return invalidatedTags;
       }, */
     }),
+
+    likeComment: builder.mutation({
+      query: ({
+        level,
+        idOfLikedComment,
+        idOfParentPostOrCommentToLikedComment,
+        type,
+        action,
+        userId,
+      }) => {
+        console.log(
+          "in commentsApiSlice called likeComment to level, idOfLikedComment, idOfParentPostOrCommentToLikedComment,type,action, userId:",
+          level,
+          idOfLikedComment,
+          idOfParentPostOrCommentToLikedComment,
+          type,
+          action,
+          userId
+        );
+        return {
+          url: `/comment/likeComment/${idOfLikedComment}`,
+          method: "PUT",
+          //JSON.stringify
+          body: {
+            type: type,
+            action: action,
+          },
+        };
+      },
+      //Optimistic Update
+      async onQueryStarted(
+        {
+          level,
+          idOfLikedComment,
+          idOfParentPostOrCommentToLikedComment,
+          type,
+          action,
+          userId,
+        },
+        { dispatch, queryFulfilled }
+      ) {
+        const patchResult = dispatch(
+          apiSlice.util.updateQueryData(
+            "getComments",
+            {
+              level,
+              idOfParentPostOrComment: idOfParentPostOrCommentToLikedComment,
+            },
+            (draft) => {
+              const comment = draft.comments.find(
+                (comment) => comment._id === idOfLikedComment
+              );
+              if (comment) {
+                if (type == "l" && action == "+") {
+                  comment.numberOfLikes += 1;
+                  comment.likes.push(userId);
+                  const userIndexInDislikes = comment.dislikes.indexOf(userId);
+                  if (userIndexInDislikes !== -1) {
+                    comment.numberOfDislikes -= 1;
+                    comment.dislikes.splice(userIndexInDislikes, 1);
+                  }
+                }
+                if (type == "l" && action == "-") {
+                  const userIndex = comment.likes.indexOf(userId);
+                  comment.numberOfLikes -= 1;
+                  comment.likes.splice(userIndex, 1);
+                }
+                if (type == "d" && action == "+") {
+                  comment.numberOfDislikes += 1;
+                  comment.dislikes.push(userId);
+                  const userIndexInLikes = comment.likes.indexOf(userId);
+                  if (userIndexInLikes !== -1) {
+                    comment.numberOfLikes -= 1;
+                    comment.likes.splice(userIndexInLikes, 1);
+                  }
+                }
+                if (type == "d" && action == "-") {
+                  const userIndexInDislikes = comment.dislikes.indexOf(userId);
+                  comment.numberOfDislikes -= 1;
+                  comment.dislikes.splice(userIndexInDislikes, 1);
+                }
+                /*  comments.map((comment) =>
+            comment._id === commentId
+              ? {
+                  ...comment,
+                  likes: data.likes,
+                  numberOfLikes: data.likes.length,
+                  dislikes: data.dislikes,
+                  numberOfDislikes: data.dislikes.length,
+                }
+              : comment
+          ) */
+              }
+            }
+          )
+          //}
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
+    }),
   }),
 });
 
@@ -384,6 +505,7 @@ export const {
   useCreateCommentMutation,
   useUpdateCommentMutation,
   useDeleteCommentMutation,
+  useLikeCommentMutation,
 } = apiSlice;
 
 //https://redux-toolkit.js.org/rtk-query/usage/manual-cache-updates

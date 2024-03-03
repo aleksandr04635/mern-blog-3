@@ -120,16 +120,18 @@ const getCommentComments = async (req, res, next) => {
 
 const likeComment = async (req, res, next) => {
   connectDB();
+  console.log("req.body in likeComment: ", req.body);
   const type = req.body.type;
   const action = req.body.action;
   //console.log("type, action : ", type, action);
   try {
+    //return next(errorHandler(403, "Test error likeComment"));
     const comment = await Comment.findById(req.params.commentId);
     if (!comment) {
       return next(errorHandler(404, "Comment not found"));
     }
     //excessive clauses are present here, but they can be useful in case of some changes
-    if (type == "l" && action == "+") {
+    /*  if (type == "l" && action == "+") {
       const userIndexInLikes = comment.likes.indexOf(req.user.id);
       if (userIndexInLikes === -1) {
         comment.numberOfLikes += 1;
@@ -182,6 +184,34 @@ const likeComment = async (req, res, next) => {
         comment.numberOfDislikes -= 1;
         comment.dislikes.splice(userIndexInDislikes, 1);
       }
+    } */
+    if (type == "l" && action == "+") {
+      comment.numberOfLikes += 1;
+      comment.likes.push(req.user.id);
+      const userIndexInDislikes = comment.dislikes.indexOf(req.user.id);
+      if (userIndexInDislikes !== -1) {
+        comment.numberOfDislikes -= 1;
+        comment.dislikes.splice(userIndexInDislikes, 1);
+      }
+    }
+    if (type == "l" && action == "-") {
+      const userIndex = comment.likes.indexOf(req.user.id);
+      comment.numberOfLikes -= 1;
+      comment.likes.splice(userIndex, 1);
+    }
+    if (type == "d" && action == "+") {
+      comment.numberOfDislikes += 1;
+      comment.dislikes.push(req.user.id);
+      const userIndexInLikes = comment.likes.indexOf(req.user.id);
+      if (userIndexInLikes !== -1) {
+        comment.numberOfLikes -= 1;
+        comment.likes.splice(userIndexInLikes, 1);
+      }
+    }
+    if (type == "d" && action == "-") {
+      const userIndexInDislikes = comment.dislikes.indexOf(req.user.id);
+      comment.numberOfDislikes -= 1;
+      comment.dislikes.splice(userIndexInDislikes, 1);
     }
     await comment.save();
     res.status(200).json(comment);
@@ -264,7 +294,7 @@ const deleteComment = async (req, res, next) => {
     }
 
     //let parentWasDeleted = false;
-    let numberOfDeletedParents = 0;
+    //let numberOfDeletedParents = 0;
     async function checkParent(com) {
       //if this comment is to a comment and not to a post
       let m = 0;
@@ -293,7 +323,7 @@ const deleteComment = async (req, res, next) => {
             m = await checkParent(commentTo);
             await Comment.findByIdAndDelete(com.commentto.toString());
             //parentWasDeleted = true;
-            numberOfDeletedParents = numberOfDeletedParents + 1;
+            // numberOfDeletedParents = numberOfDeletedParents + 1;
             //return;
           }
         }
@@ -302,7 +332,8 @@ const deleteComment = async (req, res, next) => {
     }
     let k = await checkParent(comment);
     //if (parentWasDeleted == true) {
-    if (numberOfDeletedParents > 0) {
+    //if (numberOfDeletedParents > 0) {
+    if (k > 1) {
       //res.status(200).json("Comment and his parent one were deleted");
       res.status(200).json(k - 1);
       return;

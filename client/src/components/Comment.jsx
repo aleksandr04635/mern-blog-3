@@ -6,18 +6,23 @@ import DateTime from "./DateTime";
 import Likes from "./Likes";
 import { Alert } from "flowbite-react";
 import ModalComponent from "./ModalComponent";
-import { useDeleteCommentMutation } from "../redux/comment/commentApiSlice";
+import {
+  useDeleteCommentMutation,
+  useLikeCommentMutation,
+} from "../redux/comment/commentApiSlice";
+import { useNavigate } from "react-router-dom";
 
 export default function Comment({
   level,
   comment,
   onLike,
-  onEdit,
+  //onEdit,
   onDelete,
   idOfGrandparentPostOrCommentToThisComment,
   listOfAncestorsOfComment,
   reloadParentSection,
 }) {
+  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const [tocomment, setTocomment] = useState(false);
@@ -30,6 +35,8 @@ export default function Comment({
 
   const [deleteComment, deleteCommentMutationResult] =
     useDeleteCommentMutation();
+
+  const [likeComment] = useLikeCommentMutation();
 
   const Delete = async (content) => {
     try {
@@ -71,7 +78,7 @@ export default function Comment({
     }
   };
 
-  const handleSaveUponEditing = async (content) => {
+  /*   const handleSaveUponEditing = async (content) => {
     try {
       const res = await fetch(`/api/comment/editComment/${comment._id}`, {
         method: "PUT",
@@ -89,6 +96,82 @@ export default function Comment({
     } catch (error) {
       console.log(error.message);
     }
+  }; */
+
+  const Like = async (commentId, type, action) => {
+    try {
+      if (!currentUser) {
+        navigate("/sign-in");
+        return;
+      }
+      console.log(
+        "type, action, comment.userId._id from Like in Comment.jsx: ",
+        type,
+        action,
+        comment.userId._id
+      );
+      const res = await likeComment({
+        level,
+        idOfLikedComment: commentId,
+        idOfParentPostOrCommentToLikedComment:
+          level == 1 ? comment.post : comment.commentto,
+        type,
+        action,
+        userId: comment.userId._id,
+      }).unwrap();
+      console.log("res from Like in Comment.jsx: ", res);
+      /*    const res = await fetch(`/api/comment/likeComment/${commentId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type,
+          action,
+        }),
+      });
+      console.log("res from handleLike in Comment.jsx: ", res);
+      if (res.ok) {
+        const data = await res.json();
+        //console.log("data from handleLike: ", data);
+        //refetch();
+                 setComments(
+          comments.map((comment) =>
+            comment._id === commentId
+              ? {
+                  ...comment,
+                  likes: data.likes,
+                  numberOfLikes: data.likes.length,
+                  dislikes: data.dislikes,
+                  numberOfDislikes: data.dislikes.length,
+                }
+              : comment
+          )
+        ); 
+      } */
+    } catch (err) {
+      const errMsg =
+        "data" in err
+          ? "message" in err.data
+            ? err.data.message
+            : JSON.stringify(err.data)
+          : "message" in err
+          ? err.message
+          : "error" in err
+          ? err.error
+          : JSON.stringify(err);
+      /*       console.log(
+      "err in CommentingEditor.jsx while attempting to delete a comment: ",
+      err
+    ); */
+      console.log(
+        "errMsg in CommentingEditor.jsx while attempting to delete a comment: ",
+        comment._id,
+        errMsg
+      );
+      setCommentError(errMsg);
+      //console.log(error.message);
+    }
   };
 
   return (
@@ -97,7 +180,7 @@ export default function Comment({
         level % 2 == 0 ? `border-purple-500` : `border-teal-500`
       }`}
     >
-      <div>
+      {/* <div>
         comment: comment._id:
         {comment._id}
       </div>
@@ -114,7 +197,7 @@ export default function Comment({
       <div>
         comment: listOfAncestorsOfComment:
         {listOfAncestorsOfComment}
-      </div>
+      </div> */}
       <div>
         <div className="flex flex-row">
           <div className="flex-shrink-0 ">
@@ -150,7 +233,7 @@ export default function Comment({
                 onClose={() => {
                   setIsEditing(false);
                 }}
-                onEdit={(con) => handleSaveUponEditing(con)}
+                // onEdit={(con) => handleSaveUponEditing(con)}
               />
             ) : (
               <div
@@ -166,7 +249,12 @@ export default function Comment({
         {/*  Controls */}
         <div className="flex-1">
           <div className="flex items-center p-1 text-xs  dark:border-gray-700 max-w-fit gap-2">
-            <Likes type={"comment"} comment={comment} onLike={onLike} />
+            <Likes
+              type={"comment"}
+              comment={comment}
+              onLike={Like}
+              //onLike2={onLike}
+            />
             {currentUser && (
               <>
                 <button

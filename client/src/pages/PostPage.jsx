@@ -237,10 +237,10 @@ export default function PostPage() {
               }}
             />
           )}
-          <div>
+          {/*   <div>
             post._id:
             {post._id}
-          </div>
+          </div> */}
           <CommentSection
             key={post._id}
             level={1}

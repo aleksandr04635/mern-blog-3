@@ -20,8 +20,8 @@ export default function CommentSection({
   //const [comments, setComments] = useState([]);
 
   //const [cloader, setCloader] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [commentToDelete, setCommentToDelete] = useState(null);
+  //const [showModal, setShowModal] = useState(false);
+  //const [commentToDelete, setCommentToDelete] = useState(null);
   const navigate = useNavigate();
 
   //console.log("level  from CommentSection.jsx:", level);
@@ -120,16 +120,16 @@ export default function CommentSection({
     }
   };
 
-  const handleEditInSection = async (comment, editedContent) => {
+  /*   const handleEditInSection = async (comment, editedContent) => {
     refetch();
-    /*     setComments(
+         setComments(
       comments.map((c) =>
         c._id === comment._id ? { ...c, content: editedContent } : c
       )
-    ); */
-  };
+    ); 
+  }; */
 
-  const handleDelete = async (commentId) => {
+  /*   const handleDelete = async (commentId) => {
     setShowModal(false);
     try {
       if (!currentUser) {
@@ -169,7 +169,7 @@ export default function CommentSection({
       setCommentsError(error.message);
       console.log(error.message);
     }
-  };
+  }; */
 
   return (
     <div className="w-full ">
@@ -189,7 +189,7 @@ export default function CommentSection({
                 level % 2 == 0 ? `border-purple-500` : `border-teal-500`
               }`}
             >
-              <div>
+              {/* <div>
                 section: idOfParentPostOrComment,:
                 {level == 1 ? " post " : " comment "}
                 {idOfParentPostOrComment}
@@ -203,7 +203,7 @@ export default function CommentSection({
               <div>
                 section: listOfAncestorsOfCommentSection:
                 {listOfAncestorsOfCommentSection}
-              </div>
+              </div> */}
               {comments.length > 2 && (
                 <div
                   className={` text-sm pl-2 py-1 flex items-center gap-1 w-full `}
@@ -222,11 +222,11 @@ export default function CommentSection({
                   level={level}
                   comment={comment}
                   onLike={handleLike}
-                  onEdit={handleEditInSection}
-                  onDelete={(commentId) => {
+                  //onEdit={handleEditInSection}
+                  /*    onDelete={(commentId) => {
                     setShowModal(true);
                     setCommentToDelete(commentId);
-                  }}
+                  }} */
                   idOfGrandparentPostOrCommentToThisComment={
                     idOfParentPostOrCommentOfCommentThisSectionBelongTo
                   }
@@ -246,12 +246,12 @@ export default function CommentSection({
         </div>
       )}
 
-      <ModalComponent
+      {/*       <ModalComponent
         show={showModal}
         onClose={() => setShowModal(false)}
         onConfirm={() => handleDelete(commentToDelete)}
         text={"Are you sure you want to delete this comment?"}
-      />
+      /> */}
     </div>
   );
 }
