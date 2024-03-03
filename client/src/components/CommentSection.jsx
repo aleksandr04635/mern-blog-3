@@ -46,7 +46,7 @@ export default function CommentSection({
     setCommentsError(error);
   }
   if (level == 1) {
-    console.log("comments in CommentSection.jsx : ", comments);
+    //console.log("comments in CommentSection.jsx : ", comments);
   }
 
   const getComments = async () => {

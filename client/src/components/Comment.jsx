@@ -23,6 +23,7 @@ export default function Comment({
   reloadParentSection,
 }) {
   const navigate = useNavigate();
+
   const [isEditing, setIsEditing] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const [tocomment, setTocomment] = useState(false);
@@ -105,10 +106,10 @@ export default function Comment({
         return;
       }
       console.log(
-        "type, action, comment.userId._id from Like in Comment.jsx: ",
+        "type, action, currentUser._id from Like in Comment.jsx: ",
         type,
         action,
-        comment.userId._id
+        currentUser._id
       );
       const res = await likeComment({
         level,
@@ -117,7 +118,7 @@ export default function Comment({
           level == 1 ? comment.post : comment.commentto,
         type,
         action,
-        userId: comment.userId._id,
+        userId: currentUser._id,
       }).unwrap();
       console.log("res from Like in Comment.jsx: ", res);
       /*    const res = await fetch(`/api/comment/likeComment/${commentId}`, {

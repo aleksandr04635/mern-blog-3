@@ -312,7 +312,7 @@ export const commentsApiSlice = apiSlice.injectEndpoints({
             console.log("arr in deleteComment: ", arr);
             const idOfFirstNotDeletedAncestorPostOrComment =
               arr[arr.length - data - 1];
-            const idOfTopmostDeletedComment = arr[arr.length - data - 1];
+            const idOfTopmostDeletedComment = arr[arr.length - data];
             console.log(
               "idOfFirstNotDeletedAncestorPostOrComment in deleteComment: ",
               idOfFirstNotDeletedAncestorPostOrComment
@@ -332,6 +332,7 @@ export const commentsApiSlice = apiSlice.injectEndpoints({
                       ind = i;
                     }
                   });
+                  console.log("ind in deleteComment: ", ind);
                   draft.comments.splice(ind, 1);
                 }
               )

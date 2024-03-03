@@ -5,6 +5,18 @@ import Tooltip from "./Tooltip";
 export default function Likes({ type, comment, onLike = () => {} }) {
   const { currentUser } = useSelector((state) => state.user);
 
+  /*   console.log("currentUser._id in Likes.jsx: ", currentUser._id);
+  console.log(
+    "comment.numberOfLikes comment.likes in Likes.jsx: ",
+    comment.numberOfLikes,
+    comment.likes
+  );
+  console.log(
+    "comment.numberOfDislikes, comment.dislikes in Likes.jsx: ",
+    comment.numberOfDislikes,
+    comment.dislikes
+  );
+ */
   return (
     <Tooltip
       message={
