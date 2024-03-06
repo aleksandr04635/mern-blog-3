@@ -95,7 +95,7 @@ export default function About() {
               the page scroll would make a tooltip invisible.
             </p>
             <Link
-              className="text-blue-500 hover:text-blue-800"
+              className="link-stand"
               to={`https://github.com/aleksandr04635/mern-blog-3`}
             >
               You can see the code here

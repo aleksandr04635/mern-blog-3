@@ -15,12 +15,12 @@ import { useNavigate } from "react-router-dom";
 export default function Comment({
   level,
   comment,
-  onLike,
+  //onLike,
   //onEdit,
-  onDelete,
+  //onDelete,
   idOfGrandparentPostOrCommentToThisComment,
   listOfAncestorsOfComment,
-  reloadParentSection,
+  //reloadParentSection,
 }) {
   const navigate = useNavigate();
 
@@ -28,7 +28,7 @@ export default function Comment({
   const { currentUser } = useSelector((state) => state.user);
   const [tocomment, setTocomment] = useState(false);
   const [commentError, setCommentError] = useState(null);
-  const [reloadSwitch, setReloadSwitch] = useState(false);
+  //const [reloadSwitch, setReloadSwitch] = useState(false);
   const [showModal, setShowModal] = useState(false);
   //It is changed from CommentingEditor to force a reload of a commentSection of this comment
   //console.log("level, comment in Comment.jsx: ", level, comment);
@@ -39,7 +39,7 @@ export default function Comment({
 
   const [likeComment] = useLikeCommentMutation();
 
-  const Delete = async (content) => {
+  const Delete = async () => {
     try {
       console.log("called to delete from Comment.jsx:", comment._id);
       const res = await deleteComment({
@@ -48,7 +48,7 @@ export default function Comment({
         idOfParentPostOrCommentToDeletedComment:
           level == 1 ? comment.post : comment.commentto,
         idOfGrandparentPostOrCommentToDeletedComment:
-          idOfGrandparentPostOrCommentToThisComment, //should be reloaded in edit mode,
+          idOfGrandparentPostOrCommentToThisComment,
         listOfAncestorsOfComment,
       }).unwrap();
       if (res) {
@@ -178,7 +178,7 @@ export default function Comment({
   return (
     <div
       className={` flex flex-col w-full pt-2 pl-1 sm:pl-2 pb-0 pr-0  border-b  rounded-bl-lg ${
-        level % 2 == 0 ? `border-purple-500` : `border-teal-500`
+        level % 2 == 0 ? `border-secondary-border` : `border-teal-500`
       }`}
     >
       {/* <div>
@@ -304,9 +304,9 @@ export default function Comment({
             level={level + 1}
             idOfPostOrCommentWhichIsCommented={comment._id}
             mode={"create"}
-            commandReload={() => {
+            /* commandReload={() => {
               setReloadSwitch(!reloadSwitch);
-            }}
+            }} */
             onClose={() => {
               setTocomment(false);
             }}
@@ -314,7 +314,7 @@ export default function Comment({
         )}
         <CommentSection
           level={level + 1}
-          reloadSwitch={reloadSwitch}
+          //reloadSwitch={reloadSwitch}
           key={comment._id}
           idOfParentPostOrComment={comment._id}
           idOfParentPostOrCommentOfCommentThisSectionBelongTo={
@@ -328,9 +328,9 @@ export default function Comment({
           listOfAncestorsOfCommentSection={
             listOfAncestorsOfComment + " " + comment._id
           }
-          reloadParentSection={() => {
+          /*   reloadParentSection={() => {
             reloadParentSection();
-          }}
+          }} */
         />
         <ModalComponent
           show={showModal}

@@ -11,7 +11,7 @@ import {
 export default function CommentingEditor({
   initialContent,
   mode,
-  commandReload,
+  //commandReload,
   level,
   idOfEditedComment,
   idOfPostOrCommentWhichIsCommented,

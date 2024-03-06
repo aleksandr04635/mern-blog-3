@@ -237,7 +237,7 @@ export default function PostList({ deleteSignal }) {
                   src={userInfo.profilePicture}
                   alt="user"
                   className={`rounded-full w-full h-full object-cover border-2 
-                    border-gray-300 dark:border-purple-500`}
+                    border-gray-300 dark:border-secondary-border`}
                 />
               </div>
               <p className="pl-3">{userInfo.description}</p>

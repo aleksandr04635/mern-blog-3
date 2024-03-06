@@ -9,6 +9,7 @@ export default {
     extend: {
       colors: {
         "dark-active-bg": "#1c284a",
+        "secondary-border": "#a855f7",
       },
     },
   },

@@ -12,17 +12,17 @@ export default function CommentSection({
   idOfParentPostOrComment,
   idOfParentPostOrCommentOfCommentThisSectionBelongTo,
   listOfAncestorsOfCommentSection,
-  reloadSwitch,
-  reloadParentSection,
+  //reloadSwitch,
+  //reloadParentSection,
 }) {
-  const { currentUser } = useSelector((state) => state.user);
+  //const { currentUser } = useSelector((state) => state.user);
   const [commentsError, setCommentsError] = useState(null);
   //const [comments, setComments] = useState([]);
 
   //const [cloader, setCloader] = useState(false);
   //const [showModal, setShowModal] = useState(false);
   //const [commentToDelete, setCommentToDelete] = useState(null);
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
   //console.log("level  from CommentSection.jsx:", level);
   //{ comments }
@@ -45,13 +45,13 @@ export default function CommentSection({
     console.log("error in CommentSection : ", error);
     setCommentsError(error);
   }
-  if (level == 1) {
-    //console.log("comments in CommentSection.jsx : ", comments);
-  }
+  /*   if (level == 1) {
+    console.log("comments in CommentSection.jsx : ", comments);
+  } */
 
-  const getComments = async () => {
+  /*   const getComments = async () => {
     refetch();
-  };
+  }; */
   /* const getComments = async () => {
     setCloader(true);
     //console.log("getComments started in CommentSection: ");
@@ -75,11 +75,11 @@ export default function CommentSection({
     }
   };*/
 
-  useEffect(() => {
+  /*  useEffect(() => {
     getComments();
-  }, [idOfParentPostOrComment, reloadSwitch]); //reloadSwitch commands a reload of this commentSection from its parent comment component
+  }, [idOfParentPostOrComment, reloadSwitch]); */ //reloadSwitch commands a reload of this commentSection from its parent comment component
 
-  const handleLike = async (commentId, type, ac) => {
+  /*   const handleLike = async (commentId, type, ac) => {
     try {
       if (!currentUser) {
         navigate("/sign-in");
@@ -100,8 +100,8 @@ export default function CommentSection({
       if (res.ok) {
         const data = await res.json();
         //console.log("data from handleLike: ", data);
-        refetch();
-        /*         setComments(
+        refetch(); */
+  /*         setComments(
           comments.map((comment) =>
             comment._id === commentId
               ? {
@@ -114,11 +114,11 @@ export default function CommentSection({
               : comment
           )
         ); */
-      }
+  /*       }
     } catch (error) {
       console.log(error.message);
     }
-  };
+  }; */
 
   /*   const handleEditInSection = async (comment, editedContent) => {
     refetch();
@@ -186,7 +186,7 @@ export default function CommentSection({
             /*  <p className="text-sm my-1">No comments yet</p> */
             <div
               className={`mb-1 w-full border-l  rounded-bl-lg ${
-                level % 2 == 0 ? `border-purple-500` : `border-teal-500`
+                level % 2 == 0 ? `border-secondary-border` : `border-teal-500`
               }`}
             >
               {/* <div>
@@ -221,7 +221,7 @@ export default function CommentSection({
                   key={comment._id}
                   level={level}
                   comment={comment}
-                  onLike={handleLike}
+                  //onLike={handleLike}
                   //onEdit={handleEditInSection}
                   /*    onDelete={(commentId) => {
                     setShowModal(true);
@@ -231,9 +231,9 @@ export default function CommentSection({
                     idOfParentPostOrCommentOfCommentThisSectionBelongTo
                   }
                   listOfAncestorsOfComment={listOfAncestorsOfCommentSection}
-                  reloadParentSection={() => {
+                  /*  reloadParentSection={() => {
                     getComments();
-                  }}
+                  }} */
                 />
               ))}
             </div>

@@ -114,7 +114,7 @@ export default function PostEditor({ mode, postId }) {
             return;
           }
           if (res.ok) {
-            console.log("data.posts[0]: ", data.posts[0]);
+            console.log("data.posts[0] in PostEditor.jsx: ", data.posts[0]);
             setPublishError(null);
             setFormData(data.posts[0]);
             if (data.posts[0].tags && data.posts[0].tags?.length > 0) {
@@ -128,7 +128,7 @@ export default function PostEditor({ mode, postId }) {
       }
     };
     fetchPost();
-  }, [postId]);
+  }, [mode, postId]);
 
   function slugFromString(str) {
     return str
@@ -256,15 +256,19 @@ export default function PostEditor({ mode, postId }) {
           navigate(`/post/${data.slug}`);
         } */
       }
-      console.log("response came in function in PostEditor! res: ", res);
+      console.log("response came in function in PostEditor. res: ", res);
       navigate(`/post/${res?.slug}`);
     } catch (err) {
       const errMsg =
-        "message" in err
+        "data" in err
+          ? "message" in err.data
+            ? err.data.message
+            : JSON.stringify(err.data)
+          : "message" in err
           ? err.message
           : "error" in err
           ? err.error
-          : JSON.stringify(err.data);
+          : JSON.stringify(err);
       setPublishError(errMsg);
       //setPublishError("Something went wrong");
     }
@@ -411,15 +415,8 @@ export default function PostEditor({ mode, postId }) {
                 onChange={(e) => setTagString(e.target.value)}
                 className=" py-1 outline-none h-10 w-[350px] border dark:bg-dark-active-bg border-teal-500 rounded-lg mr-2"
                 placeholder="Enter a post tag"
-                /* color="success" */
                 type="text"
               />
-              {/*              <div
-                onClick={addTag}
-                className="bg-teal-500 rounded-lg text-white px-4 py-2 font-semibold cursor-pointer"
-              >
-                Add
-              </div> */}
               <Button
                 onClick={addTag}
                 outline

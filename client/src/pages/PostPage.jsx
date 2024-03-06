@@ -244,13 +244,13 @@ export default function PostPage() {
           <CommentSection
             key={post._id}
             level={1}
-            reloadSwitch={reloadSwitch}
+            /* reloadSwitch={reloadSwitch} */
             idOfParentPostOrComment={post._id}
             /*  listOfAncestorsOfCommentSection={[post._id]} */
             listOfAncestorsOfCommentSection={post._id}
-            reloadParentSection={() => {
+            /*   reloadParentSection={() => {
               console.log("reloaded post's comments");
-            }}
+            }} */
           />
           <ModalComponent
             show={showModal}

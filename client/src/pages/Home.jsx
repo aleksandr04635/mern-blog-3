@@ -13,16 +13,10 @@ export default function Home() {
       </div>
       <div className=" lg:w-9/12 flex-0 flex flex-col gap-3 py-3 px-2 max-w-6xl  ">
         <h3 className="text-xl font-semibold ">Welcome to my Blog</h3>
-        <Link
-          to={"/about"}
-          className="text-lg text-blue-500 hover:text-blue-800"
-        >
+        <Link to={"/about"} className=" link-stand text-lg ">
           Here is the full description of this app and all its features
         </Link>
-        <Link
-          to={"/search"}
-          className="text-lg text-blue-500 hover:text-blue-800"
-        >
+        <Link to={"/search"} className="link-stand text-lg">
           Here you can search in the posts list
         </Link>
         <h3 className="text-stone-800 dark:text-purple-500 text-xl ">

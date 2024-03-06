@@ -330,12 +330,11 @@ const deleteComment = async (req, res, next) => {
       }
       return m + 1;
     }
-    let k = await checkParent(comment);
+    let k = (await checkParent(comment)) - 1; //k is the number of deleted ancestors
     //if (parentWasDeleted == true) {
     //if (numberOfDeletedParents > 0) {
-    if (k > 1) {
-      //res.status(200).json("Comment and his parent one were deleted");
-      res.status(200).json(k - 1);
+    if (k > 0) {
+      res.status(200).json(k);
       return;
     }
 

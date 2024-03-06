@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.link-stand {
+  @apply text-blue-500 text-base hover:text-cyan-500 dark:hover:text-cyan-500;
+}
+
 /* These styles are for the shown content, not that in the editor */
 body {
   box-sizing: border-box;

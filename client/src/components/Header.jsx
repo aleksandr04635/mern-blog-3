@@ -56,17 +56,33 @@ export default function Header() {
       <div className="flex flex-col w-full">
         <div className="flex w-full items-center justify-between ">
           {/* <Navbar className="m-auto max-w-6xl max-w-[1200px]  border border-gray-400  rounded"></Navbar> */}
-          <Link className="" to={`/`}>
+          {/*  <Link className="" to={`/`}>
             <Button
               outline
               gradientDuoTone="purpleToBlue"
-              className=" font-semibold w-[100px]"
+              className=" font-semibold w-[100px] focus:ring-0 "
             >
               <h2> My Blog</h2>
             </Button>
+          </Link> */}
+          <Link className="" to={`/`}>
+            <button
+              className=" flex justify-center items-center font-semibold w-[100px] h-[40px]    
+            rounded-lg bg-gradient-to-tr from-cyan-400 to-blue-700
+              dark:hover:bg-dark-active-bg     "
+            >
+              <div
+                className="mx-auto flex justify-center items-center w-[96px] h-[36px] rounded-lg 
+             bg-white text-slate-900 hover:text-white 
+             hover:bg-gradient-to-tr from-cyan-400 to-blue-700 
+             dark:bg-[#1f2937] dark:text-white "
+              >
+                My Blog
+              </div>
+            </button>
           </Link>
           <Link
-            className="text-blue-500 text-base hover:text-blue-800"
+            className=" link-stand text-base "
             to={`/about`}
             target="_blank"
             rel="noopener noreferrer"
@@ -90,8 +106,26 @@ export default function Header() {
               <AiOutlineSearch />
             </p>
           </form>
-
           <button
+            className="   w-[40px] h-[40px] sm:inline   
+            rounded-full bg-gradient-to-tr from-cyan-400 to-blue-700
+              dark:hover:bg-dark-active-bg  text-center    "
+            onClick={() => dispatch(toggleTheme())}
+          >
+            <div
+              className="mx-auto flex justify-center items-center w-[36px] h-[36px] rounded-full
+             bg-white text-slate-900 hover:text-white 
+             hover:bg-gradient-to-tr from-cyan-400 to-blue-700 
+             dark:bg-[#1f2937] dark:text-white "
+            >
+              {theme === "light" ? (
+                <FaMoon className="mx-auto " />
+              ) : (
+                <FaSun className="mx-auto" />
+              )}
+            </div>
+          </button>
+          {/*    <button
             className=" w-[40px] h-[40px] sm:inline rounded-full border 
             hover:bg-gray-100 dark:hover:bg-dark-active-bg border-teal-500 text-center 
             outline-teal-500  outline-1 hover:outline "
@@ -103,7 +137,7 @@ export default function Header() {
             ) : (
               <FaSun className="mx-auto" />
             )}
-          </button>
+          </button> */}
           {currentUser ? (
             <Dropdown
               arrowIcon={false}
