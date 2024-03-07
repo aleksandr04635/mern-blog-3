@@ -1,8 +1,4 @@
 import { Table, Button } from "flowbite-react";
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { HiOutlineExclamationCircle } from "react-icons/hi";
-import { FaCheck, FaTimes } from "react-icons/fa";
 import TagLink from "./TagLink";
 
 //import { changePageSize } from "../redux/pageSize/pageSizeSlice";
@@ -33,12 +29,12 @@ export default function TagsTable(reloadSwitch) {
     refetch,
   } = useGetTagsQuery(
     {},
-    { refetchOnMountOrArgChange: true, refetchOnFocus: true }
+    { refetchOnMountOrArgChange: true, refetchOnFocus: true },
   );
   if (isLoading) {
-    console.log("isLoading in TagsTable : ", isLoading);
+    // console.log("isLoading in TagsTable : ", isLoading);
   } else if (isSuccess) {
-    console.log("tags in TagsTable : ", tags);
+    //console.log("tags in TagsTable : ", tags);
   } else if (isError) {
     console.log("error in TagsTable : ", error);
   }
@@ -66,10 +62,10 @@ export default function TagsTable(reloadSwitch) {
       {tags && tags.length > 0 ? (
         <>
           <p className="py-1 ">The most popular tags:</p>
-          <div className="border border-teal-500 rounded-lg overflow-hidden">
+          <div className="overflow-hidden rounded-lg border border-teal-500">
             <Table
               hoverable
-              className="shadow-md w-full  mx-auto  rounded-b-lg "
+              className="mx-auto w-full  rounded-b-lg  shadow-md "
             >
               <Table.Head className="font-light normal-case dark:bg-[#1f2937]">
                 <Table.HeadCell className=" dark:bg-dark-active-bg">
@@ -83,12 +79,12 @@ export default function TagsTable(reloadSwitch) {
                 {tags.slice(0, 10).map((tag, i) => (
                   <Table.Row
                     key={i}
-                    className="py-1 bg-white dark:border-gray-700 dark:bg-gray-800"
+                    className="bg-white py-1 dark:border-gray-700 dark:bg-gray-800"
                   >
-                    <Table.Cell className="pl-2 py-1 max-w-[150px] overflow-hidden">
+                    <Table.Cell className="max-w-[150px] overflow-hidden py-1 pl-2">
                       <TagLink tag={tag} />
                     </Table.Cell>
-                    <Table.Cell className="w-[70px] py-1">
+                    <Table.Cell className="w-[60px] py-1 text-center">
                       {tag.number_of_posts}
                     </Table.Cell>
                   </Table.Row>

@@ -9,9 +9,9 @@ export default function Tooltip({
   //const tooltipRef = useRef(null);
   const groupRef = useRef(null);
 
-  const [tooltipHeight, setTooltipHeight] = useState(0);
+  /*   const [tooltipHeight, setTooltipHeight] = useState(0);
   const [groupHeight, setGroupHeight] = useState(0);
-  const [groupBot, setGroupBot] = useState(0);
+  const [groupBot, setGroupBot] = useState(0); */
 
   //console.log("groupRef.current.scrollTop: " + groupRef?.current?.scrollTop);
   //console.log("document.scrollTop: " + document.scrollTop);
@@ -30,7 +30,7 @@ export default function Tooltip({
     }
   }, [window.scrollY]); */
 
-  const [scrollYPosition, setScrollYPosition] = useState(0);
+  /*   const [scrollYPosition, setScrollYPosition] = useState(0);
   const handleScroll = () => {
     const newScrollYPosition = window.scrollY;
     setScrollYPosition(newScrollYPosition);
@@ -40,7 +40,7 @@ export default function Tooltip({
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, []); */
 
   // Now the vertical position is available with `scrollYPosition`
   // console.log("scrollYPosition", scrollYPosition);
@@ -69,10 +69,11 @@ export default function Tooltip({
     default:
       positionStyleString = "";
   }
+
   let colorStyleString;
   switch (style) {
     case "warning":
-      colorStyleString = "text-orange-600";
+      colorStyleString = "text-orange-600  dark:text-orange-300";
       break;
     default:
       colorStyleString = "text-blue-800 dark:text-blue-200";
@@ -86,19 +87,13 @@ export default function Tooltip({
         <span
           /* ref={tooltipRef} */
           className={
-            `absolute hidden bg-white dark:bg-dark-active-bg group-hover:block z-10 border rounded-md 
-       px-2 py-1 text-sm  ` +
+            `absolute z-10 hidden rounded-md border bg-white px-2 py-1 text-sm 
+       font-medium group-hover:block dark:bg-dark-active-bg  ` +
             colorStyleString +
             positionStyleString
           }
         >
-          {
-            mes /* +
-          " bottom " +
-          groupRef?.current?.getBoundingClientRect().bottom +
-          " window.scrollY " +
-          window.scrollY */
-          }
+          {mes}
         </span>
       )}
     </div>

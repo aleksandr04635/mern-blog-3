@@ -7,20 +7,23 @@ import {
   BsGithub,
   BsDribbble,
 } from "react-icons/bs";
+import { useSelector, useDispatch } from "react-redux";
+
 export default function FooterCom() {
+  const { pageSize } = useSelector((state) => state.pageSize);
   const location = useLocation();
-  console.log(" window.location.origin: ", window.location.origin);
+  //console.log(" window.location.origin: ", window.location.origin);
 
   return (
     <Footer
       container
-      className=" rounded-none sm:border-t border-gray-500 m-auto  "
+      className=" m-auto rounded-none border-gray-500 sm:border-t  "
     >
-      <div className="w-full max-w-7xl mx-auto">
-        <div className="w-full flex items-center justify-between">
+      <div className="mx-auto w-full max-w-7xl">
+        <div className="flex w-full items-center justify-between">
           <Link
             className="link-stand"
-            to={window.location.origin}
+            to={window.location.origin + `?pageSize=${pageSize}`}
             target="_blank"
             rel="noopener noreferrer"
           >

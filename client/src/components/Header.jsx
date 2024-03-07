@@ -8,6 +8,7 @@ import { signoutSuccess } from "../redux/user/userSlice";
 import { useEffect, useState } from "react";
 
 export default function Header() {
+  const { pageSize } = useSelector((state) => state.pageSize);
   const path = useLocation().pathname;
   const location = useLocation();
   const navigate = useNavigate();
@@ -67,7 +68,7 @@ export default function Header() {
               <h2> My Blog</h2>
             </Button>
           </Link> */}
-          <Link className="" to={`/`}>
+          <Link className="" to={`/?pageSize=${pageSize}`}>
             <button
               className=" flex h-[40px] w-[100px] items-center justify-center rounded-[7px]    
             bg-gradient-to-tr from-cyan-400 to-blue-700 font-semibold
@@ -99,7 +100,8 @@ export default function Header() {
               /*  rightIcon={AiOutlineSearch} */
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-[300px] rounded-lg border border-teal-500 dark:bg-dark-active-bg"
+              className="w-[300px] rounded-lg border
+               border-teal-500 focus:border-teal-500 focus:ring-teal-500 dark:bg-dark-active-bg"
             />
             <p
               onClick={handleSubmit}

@@ -13,13 +13,13 @@
   -moz-appearance: none;
   appearance: none;
 } */
-select:not([size]) {
+/* select:not([size]) {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
   padding-right: 1.5rem;
-  @apply bg-transparent/*  bg-none; */;
-}
+  @apply bg-transparent  bg-none; ;
+} */
 /* [&:not([size])]:pr-5 */
 .link-stand {
   @apply text-base text-blue-500 hover:text-cyan-500 dark:hover:text-cyan-500;

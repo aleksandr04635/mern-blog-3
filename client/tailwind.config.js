@@ -10,10 +10,11 @@ export default {
     extend: {
       colors: {
         "dark-active-bg": "#1c284a",
+        "active-bg": "#e6faff",
         "secondary-border": "#a855f7",
       },
     },
   },
   plugins: [require("flowbite/plugin"), require("tailwind-scrollbar")],
 };
-// "#151e37",
+// "#151e37", "#e6ffff" #e6fdff

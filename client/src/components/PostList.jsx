@@ -61,14 +61,17 @@ export default function PostList({ deleteSignal }) {
       setLoading(false);
       setErrorMessage(null);
       const data = await res.json();
-      console.log(" data fetched: ", data);
+      console.log(
+        " data fetched by fetchPostsByQuerryString in PostList.jsx: ",
+        data,
+      );
       //console.log("checking if page and pageSize exist in location.search ");
       const urlParams5 = new URLSearchParams(location.search);
       let pageFromUrl = parseInt(urlParams5.get("page"));
       let pageSizeFromUrl = parseInt(urlParams5.get("pageSize"));
       //console.log("pageFromUrl: ", pageFromUrl);
       //console.log("pageSizeFromUrl: ", pageSizeFromUrl);
-      if (
+      /*    if (
         pageFromUrl &&
         pageFromUrl == data.page &&
         pageSizeFromUrl &&
@@ -76,18 +79,18 @@ export default function PostList({ deleteSignal }) {
       ) {
         console.log(
           "page and pageSize exist in URL and are equal to that in data. SETTING posts and totalposts from data",
-        );
-        setPosts(data.posts);
-        setTotalPosts(data.totalPosts);
-        //setPageSize(data.pageSize);
-        setTotalPages(data.totalPages);
-        setPage(data.page);
-        setIsUsersPage(false);
-        if (data.user) {
-          setUserInfo(data.user);
-          setIsUsersPage(true);
-        }
-      } else {
+        ); */
+      setPosts(data.posts);
+      setTotalPosts(data.totalPosts);
+      //setPageSize(data.pageSize);
+      setTotalPages(data.totalPages);
+      setPage(data.page);
+      setIsUsersPage(false);
+      if (data.user) {
+        setUserInfo(data.user);
+        setIsUsersPage(true);
+      }
+      /* } else {
         console.log(
           "no page or pageSize exist in URL or are not equal to that in data. ",
         );
@@ -100,7 +103,7 @@ export default function PostList({ deleteSignal }) {
           `${location.pathname}?${searchQuery3}`,
         );
         navigate(`${location.pathname}?${searchQuery3}`);
-      }
+      } */
     }
   };
 
@@ -116,13 +119,14 @@ export default function PostList({ deleteSignal }) {
       );
       if (parseInt(pageSizeFromUrl) != pageSizeStore) {
         urlParams.set("pageSize", pageSizeStore);
-        urlParams.set("page", 0);
+        urlParams.set("page", "");
         let searchQuery = urlParams.toString();
         console.log(
           "in useEffect navigate to: ",
           `${location.pathname}?${searchQuery}`,
         );
         navigate(`${location.pathname}?${searchQuery}`);
+        return;
       }
       let searchQuery = urlParams.toString();
       console.log(
@@ -134,7 +138,7 @@ export default function PostList({ deleteSignal }) {
     fetchPosts();
   }, [location, pageSizeStore]);
 
-  const handleDeletePostOLD = async () => {
+  /*   const handleDeletePostOLD = async () => {
     setShowModal(false);
     console.log(" from PostList DELETE a post: ", postToDelete);
     try {
@@ -166,7 +170,7 @@ export default function PostList({ deleteSignal }) {
     } catch (error) {
       console.log(error.message);
     }
-  };
+  }; */
 
   //NEW
   const [deletePost, deletePostMutationResult] = useDeletePostMutation();
@@ -177,20 +181,39 @@ export default function PostList({ deleteSignal }) {
         postId: postToDelete,
         userId: currentUser?._id,
       }).unwrap();
-      console.log("res  in PostEditor : ", res);
+      console.log("res from deletePost in PostList.jsx : ", res);
+      if (res) {
+        const newTopPage = Math.floor((totalPosts - 1) / pageSizeStore) || 1;
+        const urlParams3 = new URLSearchParams(location.search);
+        urlParams3.set("page", newTopPage);
+        let searchQuery3 = urlParams3.toString();
+        console.log(
+          "in handleDeletePost setting searchQuery and navigate to: ",
+          `${location.pathname}?${searchQuery3}`,
+        );
+        navigate(`${location.pathname}?${searchQuery3}`);
+      }
     } catch (err) {
       const errMsg =
-        "message" in err
-          ? err.message
-          : "error" in err
-            ? err.error
-            : JSON.stringify(err.data);
+        "data" in err
+          ? "message" in err.data
+            ? err.data.message
+            : JSON.stringify(err.data)
+          : "message" in err
+            ? err.message
+            : "error" in err
+              ? err.error
+              : JSON.stringify(err);
       console.log(errMsg);
       setErrorMessage(errMsg);
     }
   };
-  useEffect(() => {
-    console.log("returnData  inPostPage : ", deletePostMutationResult);
+
+  /* useEffect(() => {
+    console.log(
+      "returnData in useEffect from deletePost in PostList.jsx : ",
+      deletePostMutationResult,
+    );
     if (
       deletePostMutationResult.status == "fulfilled" &&
       deletePostMutationResult.isSuccess == true
@@ -208,7 +231,7 @@ export default function PostList({ deleteSignal }) {
     if (deletePostMutationResult.isError == true) {
       setErrorMessage(deletePostMutationResult.error.message);
     }
-  }, [deletePostMutationResult]);
+  }, [deletePostMutationResult]); */
 
   function ControlBar() {
     return (

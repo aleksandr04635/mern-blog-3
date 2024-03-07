@@ -20,13 +20,13 @@ export default function PaginationBar({ currentPage, totalPages }) {
 
   const cName = (n) => {
     let cn =
-      "  border border-teal-500 px-2 outline-teal-500  outline-1 hover:outline";
+      "  border border-teal-500 px-2 dark:text-white outline-teal-500  outline-1 hover:outline";
     if (n == currentPage) {
-      cn += " dark:bg-cyan-900 bg-cyan-50";
+      cn += " dark:bg-dark-active-bg bg-active-bg";
     }
     if (n != currentPage) {
       cn +=
-        " dark:bg-slate-900 dark:hover:bg-dark-active-bg hover:bg-gray-100 ";
+        " dark:bg-slate-900 dark:hover:bg-dark-active-bg hover:bg-active-bg ";
     }
     if (n == totalPages) {
       cn += " rounded-l-lg ";
@@ -76,7 +76,7 @@ export default function PaginationBar({ currentPage, totalPages }) {
   return (
     <>
       {/* <div className=" hidden sm:block"> */}
-      <div className="flex flex-row">
+      <div className="ml-0.5 flex flex-row">
         {currentPage < totalPages && (
           <Link to={`${makeQuery(currentPage + 1)}`} key={totalPages + 1}>
             <div className={cName(totalPages + 1)}>

@@ -2,13 +2,15 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 export default function AuthrorName({ post }) {
+  const { pageSize } = useSelector((state) => state.pageSize);
   const { currentUser } = useSelector((state) => state.user);
+
   return (
     <Link
       to={
         currentUser && currentUser._id && post.userId._id == currentUser._id
-          ? `/dashboard?tab=posts&userId=${currentUser._id}`
-          : `/search?userId=${post.userId._id}`
+          ? `/dashboard?tab=posts&userId=${currentUser._id}&pageSize=${pageSize}`
+          : `/search?userId=${post.userId._id}&pageSize=${pageSize}`
       }
       className="text-slate-800 hover:text-blue-800 dark:text-purple-500 dark:hover:text-blue-500"
     >

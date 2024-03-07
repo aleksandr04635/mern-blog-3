@@ -6,7 +6,7 @@ export default function PageSizeControl() {
   const { pageSize } = useSelector((state) => state.pageSize);
 
   return (
-    <div className="flex items-center gap-1    ">
+    <div className="mr-0.5 flex items-center  gap-1  ">
       <label htmlFor="pageSize" className="text-sm">
         page&nbsp;size:{" "}
       </label>
@@ -17,12 +17,12 @@ export default function PageSizeControl() {
         }}
         value={pageSize || import.meta.env.VITE_FIREBASE_API_KEY}
         id="pageSize"
-        className="flex appearance-none   rounded-lg 
-         border border-teal-500  bg-transparent 
-         pb-0 pl-2  pt-0 
-        outline-1 outline-teal-500 hover:bg-stone-50     hover:outline
-          hover:ring-teal-500 focus:border-teal-500  focus:ring-teal-500 
-          dark:bg-slate-900 dark:hover:bg-dark-active-bg  "
+        className="hover:bg-active-bg flex   appearance-none 
+         rounded-lg border  border-teal-500 
+         bg-transparent pb-0  pl-1 
+        pt-0 text-center outline-1     outline-teal-500
+          hover:outline hover:ring-teal-500  focus:border-teal-500 
+          focus:ring-teal-500 dark:bg-slate-900  dark:hover:bg-dark-active-bg [&:not([size])]:pr-7"
       >
         {/* [&:not([size])]:pr-5  */}
         <option className="" value="2">
