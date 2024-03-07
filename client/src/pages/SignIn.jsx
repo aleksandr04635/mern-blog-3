@@ -44,7 +44,7 @@ export default function SignIn() {
     return !!String(email)
       .toLowerCase()
       .match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
       );
   };
 
@@ -76,13 +76,13 @@ export default function SignIn() {
 
   return (
     <div className="min-h-screen sm:mt-20">
-      <div className="flex p-3 max-w-lg mx-auto flex-col  md:items-center gap-5">
-        <h3 className="text-lg font-semibold text-center">
+      <div className="mx-auto flex max-w-lg flex-col gap-5  p-3 md:items-center">
+        <h3 className="text-center text-lg font-semibold">
           You can sign in with your email and password or with Google.
         </h3>
         <div className="flex-1">
           <form
-            className="flex flex-col w-[300px] mx-auto gap-4"
+            className="mx-auto flex w-[300px] flex-col gap-4"
             onSubmit={handleSubmit}
           >
             <div>
@@ -114,7 +114,7 @@ export default function SignIn() {
               />
               <p
                 onClick={() => setVisible(!visible)}
-                className="cursor-pointer border-none w-12 h-10 absolute text-xl top-[35px] right-[-21px]"
+                className="absolute right-[-21px] top-[35px] h-10 w-12 cursor-pointer border-none text-xl"
               >
                 {visible ? <BsEyeSlash /> : <BsEye />}
               </p>

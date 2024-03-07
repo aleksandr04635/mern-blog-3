@@ -2,10 +2,10 @@ import { Link } from "react-router-dom";
 
 export default function About() {
   return (
-    <div className="min-h-screen flex ">
-      <div className="max-w-2xl text-justify mx-auto p-3 ">
+    <div className="flex min-h-screen ">
+      <div className="mx-auto max-w-2xl p-3 text-justify ">
         <div>
-          <h1 className="text-2xl font font-semibold text-center my-5">
+          <h1 className="font my-5 text-center text-2xl font-semibold">
             About My Blog
           </h1>
           <div className="text-md flex flex-col gap-4">

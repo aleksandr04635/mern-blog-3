@@ -10,18 +10,18 @@ export default function AuthrorName({ post }) {
           ? `/dashboard?tab=posts&userId=${currentUser._id}`
           : `/search?userId=${post.userId._id}`
       }
-      className="text-slate-800 dark:text-purple-500 dark:hover:text-blue-500 hover:text-blue-800"
+      className="text-slate-800 hover:text-blue-800 dark:text-purple-500 dark:hover:text-blue-500"
     >
-      <div className="group flex  items- max-w-full ">
-        <div className=" relative w-10 h-10 self-center shadow-md overflow-hidden rounded-full">
+      <div className="items- group  flex max-w-full ">
+        <div className=" relative h-10 w-10 self-center overflow-hidden rounded-full shadow-md">
           <img
             src={post.userId.profilePicture}
             alt="user"
-            className={`rounded-full w-full h-full object-cover border-2 dark:group-hover:border-blue-500
-           group-hover:border-blue-800 border-gray-300 dark:border-purple-500`}
+            className={`h-full w-full rounded-full border-2 border-gray-300 object-cover
+           group-hover:border-blue-800 dark:border-purple-500 dark:group-hover:border-blue-500`}
           />
         </div>
-        <h1 className="text-lg  p-1  text-center  ">
+        <h1 className="p-1  text-center  text-lg  ">
           {post.userId.username.split(" ").join("\u00A0")}
         </h1>
       </div>

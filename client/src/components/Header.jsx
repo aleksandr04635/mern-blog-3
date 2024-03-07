@@ -68,14 +68,14 @@ export default function Header() {
           <Link className="" to={`/`}>
             <button
               className=" flex justify-center items-center font-semibold w-[100px] h-[40px]    
-            rounded-lg bg-gradient-to-tr from-cyan-400 to-blue-700
+            rounded-[7px] bg-gradient-to-tr from-cyan-400 to-blue-700
               dark:hover:bg-dark-active-bg     "
             >
               <div
-                className="mx-auto flex justify-center items-center w-[96px] h-[36px] rounded-lg 
+                className="mx-auto flex justify-center items-center w-[96px] h-[36px] rounded-[5px] 
              bg-white text-slate-900 hover:text-white 
              hover:bg-gradient-to-tr from-cyan-400 to-blue-700 
-             dark:bg-[#1f2937] dark:text-white "
+             dark:bg-[#1f2937] dark:text-white text-sm"
               >
                 My Blog
               </div>

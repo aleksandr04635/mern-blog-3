@@ -2,6 +2,9 @@ import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 
+import { HiMiniArrowSmallLeft } from "react-icons/hi2";
+import { HiMiniArrowSmallRight } from "react-icons/hi2";
+
 export default function PaginationBar({ currentPage, totalPages }) {
   const location = useLocation();
   const { pageSize: pageSizeStore } = useSelector((state) => state.pageSize);
@@ -31,6 +34,15 @@ export default function PaginationBar({ currentPage, totalPages }) {
     if (n == 1) {
       cn += " rounded-r-lg ";
     }
+    if (n == totalPages + 1) {
+      cn += " rounded-l-lg px-1 sm:px-5 mr-2 sm:mr-5";
+      /*   if (currentPage == totalPages) {
+        cn += " invisible cursor-default";
+      } */
+    }
+    if (n == 0) {
+      cn += " rounded-r-lg px-1 sm:px-5 ml-2 sm:ml-5";
+    }
     return cn;
   };
 
@@ -38,7 +50,7 @@ export default function PaginationBar({ currentPage, totalPages }) {
     let urlParams = new URLSearchParams(location.search);
     urlParams.set("page", page);
     urlParams.set("pageSize", pageSizeStore);
-    return urlParams.toString();
+    return location.pathname + "?" + urlParams.toString();
   };
 
   //const maxPage = Math.min(totalPages, Math.max(currentPage + 4, 10));
@@ -54,14 +66,10 @@ export default function PaginationBar({ currentPage, totalPages }) {
           {page}
         </div>
       ) : (
-        <Link
-          key={page}
-          to={`${location.pathname}?${makeQuery(page)}`}
-          className=""
-        >
+        <Link key={page} to={`${makeQuery(page)}`} className="">
           <div className={cName(page)}>{page}</div>
         </Link>
-      )
+      ),
     );
   }
 
@@ -69,11 +77,15 @@ export default function PaginationBar({ currentPage, totalPages }) {
     <>
       {/* <div className=" hidden sm:block"> */}
       <div className="flex flex-row">
+        {currentPage < totalPages && (
+          <Link to={`${makeQuery(currentPage + 1)}`} key={totalPages + 1}>
+            <div className={cName(totalPages + 1)}>
+              <HiMiniArrowSmallLeft className="text-2xl" />
+            </div>
+          </Link>
+        )}
         {maxPage < totalPages && (
-          <Link
-            to={`${location.pathname}?${makeQuery(totalPages)}`}
-            key={totalPages}
-          >
+          <Link to={`${makeQuery(totalPages)}`} key={totalPages}>
             <div className={cName(totalPages)}>{totalPages}</div>
           </Link>
         )}
@@ -81,8 +93,15 @@ export default function PaginationBar({ currentPage, totalPages }) {
         {numberedPageItems}
         {minPage > 2 && <div className="px-2 ">...</div>}
         {minPage > 1 && (
-          <Link to={`${location.pathname}?${makeQuery(1)}`} key={1}>
+          <Link to={`${makeQuery(1)}`} key={1}>
             <div className={cName(1)}>{1}</div>
+          </Link>
+        )}
+        {currentPage > 1 && (
+          <Link to={`${makeQuery(currentPage - 1)}`} key={0}>
+            <div className={cName(0)}>
+              <HiMiniArrowSmallRight className="text-2xl" />
+            </div>
           </Link>
         )}
       </div>

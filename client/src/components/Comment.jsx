@@ -62,10 +62,10 @@ export default function Comment({
             ? err.data.message
             : JSON.stringify(err.data)
           : "message" in err
-          ? err.message
-          : "error" in err
-          ? err.error
-          : JSON.stringify(err);
+            ? err.message
+            : "error" in err
+              ? err.error
+              : JSON.stringify(err);
       /*       console.log(
         "err in CommentingEditor.jsx while attempting to delete a comment: ",
         err
@@ -73,7 +73,7 @@ export default function Comment({
       console.log(
         "errMsg in CommentingEditor.jsx while attempting to delete a comment: ",
         comment._id,
-        errMsg
+        errMsg,
       );
       setCommentError(errMsg);
     }
@@ -109,7 +109,7 @@ export default function Comment({
         "type, action, currentUser._id from Like in Comment.jsx: ",
         type,
         action,
-        currentUser._id
+        currentUser._id,
       );
       const res = await likeComment({
         level,
@@ -157,10 +157,10 @@ export default function Comment({
             ? err.data.message
             : JSON.stringify(err.data)
           : "message" in err
-          ? err.message
-          : "error" in err
-          ? err.error
-          : JSON.stringify(err);
+            ? err.message
+            : "error" in err
+              ? err.error
+              : JSON.stringify(err);
       /*       console.log(
       "err in CommentingEditor.jsx while attempting to delete a comment: ",
       err
@@ -168,7 +168,7 @@ export default function Comment({
       console.log(
         "errMsg in CommentingEditor.jsx while attempting to delete a comment: ",
         comment._id,
-        errMsg
+        errMsg,
       );
       setCommentError(errMsg);
       //console.log(error.message);
@@ -177,7 +177,7 @@ export default function Comment({
 
   return (
     <div
-      className={` flex flex-col w-full pt-2 pl-1 sm:pl-2 pb-0 pr-0  border-b  rounded-bl-lg ${
+      className={` flex w-full flex-col rounded-bl-lg border-b pb-0 pl-1 pr-0  pt-2  sm:pl-2 ${
         level % 2 == 0 ? `border-secondary-border` : `border-teal-500`
       }`}
     >
@@ -203,14 +203,14 @@ export default function Comment({
         <div className="flex flex-row">
           <div className="flex-shrink-0 ">
             <img
-              className="w-10 h-10 rounded-full object-cover bg-gray-200"
+              className="h-10 w-10 rounded-full bg-gray-200 object-cover"
               src={comment.userId.profilePicture}
               alt={comment.userId.username}
             />
           </div>
-          <div className="flex flex-col grow">
-            <div className="flex flex-col sm:flex-row justify-between px-2">
-              <div className="font-bold  text-xs ">
+          <div className="flex grow flex-col">
+            <div className="flex flex-col justify-between px-2 sm:flex-row">
+              <div className="text-xs  font-bold ">
                 {comment.userId
                   ? `${comment.userId.username.split(" ").join("\u00A0")}`
                   : "anonymous user"}
@@ -238,8 +238,8 @@ export default function Comment({
               />
             ) : (
               <div
-                className="comment-content px-2 p-1 text-justify text-base mx-auto w-full 
-                   rounded-lg bg-slate-50 dark:bg-slate-800"
+                className="comment-content mx-auto w-full rounded-lg bg-slate-50 p-1 px-2 
+                   text-justify text-base dark:bg-slate-800"
                 dangerouslySetInnerHTML={{
                   __html: comment && comment.content,
                 }}
@@ -249,7 +249,7 @@ export default function Comment({
         </div>
         {/*  Controls */}
         <div className="flex-1">
-          <div className="flex items-center p-1 text-xs  dark:border-gray-700 max-w-fit gap-2">
+          <div className="flex max-w-fit items-center gap-2  p-1 text-xs dark:border-gray-700">
             <Likes
               type={"comment"}
               comment={comment}

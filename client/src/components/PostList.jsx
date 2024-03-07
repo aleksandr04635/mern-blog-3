@@ -47,7 +47,7 @@ export default function PostList({ deleteSignal }) {
     setLoading(true);
     console.log(
       "fetched by fetchPostsByQuerryString: ",
-      `/api/post/getposts?${q}`
+      `/api/post/getposts?${q}`,
     );
     const res = await fetch(`/api/post/getposts?${q}`);
     if (!res.ok) {
@@ -75,7 +75,7 @@ export default function PostList({ deleteSignal }) {
         pageSizeFromUrl == data.pageSize
       ) {
         console.log(
-          "page and pageSize exist in URL and are equal to that in data. SETTING posts and totalposts from data"
+          "page and pageSize exist in URL and are equal to that in data. SETTING posts and totalposts from data",
         );
         setPosts(data.posts);
         setTotalPosts(data.totalPosts);
@@ -89,7 +89,7 @@ export default function PostList({ deleteSignal }) {
         }
       } else {
         console.log(
-          "no page or pageSize exist in URL or are not equal to that in data. "
+          "no page or pageSize exist in URL or are not equal to that in data. ",
         );
         const urlParams4 = new URLSearchParams(location.search);
         urlParams4.set("pageSize", data.pageSize);
@@ -97,7 +97,7 @@ export default function PostList({ deleteSignal }) {
         let searchQuery3 = urlParams4.toString();
         console.log(
           "in fetchPostsByQuerryString setting searchQuery and navigate to: ",
-          `${location.pathname}?${searchQuery3}`
+          `${location.pathname}?${searchQuery3}`,
         );
         navigate(`${location.pathname}?${searchQuery3}`);
       }
@@ -112,7 +112,7 @@ export default function PostList({ deleteSignal }) {
       console.log(
         "pageSizeFromUrl , pageSizeStore: ",
         pageSizeFromUrl,
-        pageSizeStore
+        pageSizeStore,
       );
       if (parseInt(pageSizeFromUrl) != pageSizeStore) {
         urlParams.set("pageSize", pageSizeStore);
@@ -120,14 +120,14 @@ export default function PostList({ deleteSignal }) {
         let searchQuery = urlParams.toString();
         console.log(
           "in useEffect navigate to: ",
-          `${location.pathname}?${searchQuery}`
+          `${location.pathname}?${searchQuery}`,
         );
         navigate(`${location.pathname}?${searchQuery}`);
       }
       let searchQuery = urlParams.toString();
       console.log(
         "given command to fetch: ",
-        `/api/post/getposts?${searchQuery}`
+        `/api/post/getposts?${searchQuery}`,
       );
       fetchPostsByQuerryString(searchQuery);
     };
@@ -142,7 +142,7 @@ export default function PostList({ deleteSignal }) {
         `/api/post/deletepost/${postToDelete}/${currentUser?._id}`,
         {
           method: "DELETE",
-        }
+        },
       );
       //const data = await res.json();
       if (!res.ok) {
@@ -158,7 +158,7 @@ export default function PostList({ deleteSignal }) {
         let searchQuery3 = urlParams3.toString();
         console.log(
           " calling fetchPostsQ from  handleDeletePost  with : ",
-          searchQuery3
+          searchQuery3,
         );
         fetchPostsByQuerryString(searchQuery3);
         deleteSignal(); //signals to the parent component
@@ -183,8 +183,8 @@ export default function PostList({ deleteSignal }) {
         "message" in err
           ? err.message
           : "error" in err
-          ? err.error
-          : JSON.stringify(err.data);
+            ? err.error
+            : JSON.stringify(err.data);
       console.log(errMsg);
       setErrorMessage(errMsg);
     }
@@ -201,7 +201,7 @@ export default function PostList({ deleteSignal }) {
       let searchQuery3 = urlParams3.toString();
       console.log(
         " calling fetchPostsQ from  handleDeletePost  with : ",
-        searchQuery3
+        searchQuery3,
       );
       fetchPostsByQuerryString(searchQuery3);
     }
@@ -212,7 +212,7 @@ export default function PostList({ deleteSignal }) {
 
   function ControlBar() {
     return (
-      <div className="flex justify-between items-center gap-2">
+      <div className="flex flex-col items-center justify-between gap-2 sm:flex-row">
         <PaginationBar currentPage={page} totalPages={totalPages} />
         <PageSizeControl />
       </div>
@@ -224,20 +224,20 @@ export default function PostList({ deleteSignal }) {
       <div className="  text-lg">
         {/*         <h3 className="text-xl font-semibold  py-1  ">Querry results:</h3> */}
         {isUsersPage && userInfo.username && (
-          <div className=" flex flex-col max-w-full ">
-            <div className=" items-center flex max-w-full ">
+          <div className=" flex max-w-full flex-col ">
+            <div className=" flex max-w-full items-center ">
               <p>Posts by </p>
-              <h1 className="text-xl  p-1 my-1 text-center font-serif  ">
+              <h1 className="my-1  p-1 text-center font-serif text-xl  ">
                 {userInfo.username}
               </h1>
             </div>
-            <div className=" items-center flex max-w-full ">
-              <div className=" relative w-20 h-20 self-center shadow-md overflow-hidden rounded-full">
+            <div className=" flex max-w-full items-center ">
+              <div className=" relative h-20 w-20 self-center overflow-hidden rounded-full shadow-md">
                 <img
                   src={userInfo.profilePicture}
                   alt="user"
-                  className={`rounded-full w-full h-full object-cover border-2 
-                    border-gray-300 dark:border-secondary-border`}
+                  className={`h-full w-full rounded-full border-2 border-gray-300 
+                    object-cover dark:border-secondary-border`}
                 />
               </div>
               <p className="pl-3">{userInfo.description}</p>
@@ -263,7 +263,7 @@ export default function PostList({ deleteSignal }) {
         )}
         {/* <div className="flex justify-center items-center min-h-screen"> */}
         {loading && (
-          <div className="flex justify-center items-center ">
+          <div className="flex items-center justify-center ">
             <Spinner size="xl" />
             <p className="text-xl text-gray-500">Loading...</p>
           </div>
@@ -283,7 +283,7 @@ export default function PostList({ deleteSignal }) {
         <ControlBar />
       </div>
       {errorMessage && (
-        <Alert className={`mt-5 text-justify w-60`} color="failure">
+        <Alert className={`mt-5 w-60 text-justify`} color="failure">
           {/* it can be failure or success */}
           {errorMessage}
         </Alert>
