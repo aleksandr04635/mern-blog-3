@@ -41,3 +41,7 @@ https://github.com/ksekwamote/password_recovery/blob/master/server/app.js
 
 about problems with nodemailer on vercel
 https://stackoverflow.com/questions/65631481/nodemailer-in-vercel-not-sending-email-in-production
+
+Helmet
+https://designcode.io/react-hooks-handbook-seo-and-metadata
+

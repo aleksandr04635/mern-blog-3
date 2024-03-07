@@ -43,17 +43,19 @@ export default function Header() {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    const urlParams = new URLSearchParams(location.search);
-    urlParams.set("searchTerm", searchTerm);
-    urlParams.set("page", "");
-    const searchQuery = urlParams.toString();
-    navigate(`/search?${searchQuery}`);
+    if (!!searchTerm) {
+      e.preventDefault();
+      const urlParams = new URLSearchParams(location.search);
+      urlParams.set("searchTerm", searchTerm);
+      urlParams.set("page", "");
+      const searchQuery = urlParams.toString();
+      navigate(`/search?${searchQuery}`);
+    }
   };
 
   return (
-    <Navbar className="sm:border-b border-gray-500">
-      <div className="flex flex-col w-full">
+    <Navbar className="border-gray-500 sm:border-b">
+      <div className="flex w-full flex-col">
         <div className="flex w-full items-center justify-between ">
           {/* <Navbar className="m-auto max-w-6xl max-w-[1200px]  border border-gray-400  rounded"></Navbar> */}
           {/*  <Link className="" to={`/`}>
@@ -67,15 +69,15 @@ export default function Header() {
           </Link> */}
           <Link className="" to={`/`}>
             <button
-              className=" flex justify-center items-center font-semibold w-[100px] h-[40px]    
-            rounded-[7px] bg-gradient-to-tr from-cyan-400 to-blue-700
+              className=" flex h-[40px] w-[100px] items-center justify-center rounded-[7px]    
+            bg-gradient-to-tr from-cyan-400 to-blue-700 font-semibold
               dark:hover:bg-dark-active-bg     "
             >
               <div
-                className="mx-auto flex justify-center items-center w-[96px] h-[36px] rounded-[5px] 
-             bg-white text-slate-900 hover:text-white 
-             hover:bg-gradient-to-tr from-cyan-400 to-blue-700 
-             dark:bg-[#1f2937] dark:text-white text-sm"
+                className="mx-auto flex h-[36px] w-[96px] items-center justify-center rounded-[5px] 
+             bg-white from-cyan-400 to-blue-700 
+             text-sm text-slate-900 hover:bg-gradient-to-tr 
+             hover:text-white dark:bg-[#1f2937] dark:text-white"
               >
                 My Blog
               </div>
@@ -97,25 +99,25 @@ export default function Header() {
               /*  rightIcon={AiOutlineSearch} */
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-[300px] border border-teal-500 dark:bg-dark-active-bg rounded-lg"
+              className="w-[300px] rounded-lg border border-teal-500 dark:bg-dark-active-bg"
             />
             <p
               onClick={handleSubmit}
-              className="cursor-pointer border-none w-12 h-10 absolute text-xl top-[12px] right-[-21px]"
+              className="absolute right-[-21px] top-[12px] h-10 w-12 cursor-pointer border-none text-xl"
             >
               <AiOutlineSearch />
             </p>
           </form>
           <button
-            className="   w-[40px] h-[40px] sm:inline   
-            rounded-full bg-gradient-to-tr from-cyan-400 to-blue-700
-              dark:hover:bg-dark-active-bg  text-center    "
+            className="   h-[40px] w-[40px] rounded-full   
+            bg-gradient-to-tr from-cyan-400 to-blue-700 text-center
+              dark:hover:bg-dark-active-bg  sm:inline    "
             onClick={() => dispatch(toggleTheme())}
           >
             <div
-              className="mx-auto flex justify-center items-center w-[36px] h-[36px] rounded-full
-             bg-white text-slate-900 hover:text-white 
-             hover:bg-gradient-to-tr from-cyan-400 to-blue-700 
+              className="mx-auto flex h-[36px] w-[36px] items-center justify-center rounded-full
+             bg-white from-cyan-400 to-blue-700 
+             text-slate-900 hover:bg-gradient-to-tr hover:text-white 
              dark:bg-[#1f2937] dark:text-white "
             >
               {theme === "light" ? (
@@ -146,7 +148,7 @@ export default function Header() {
               label={
                 /*       <Avatar alt="user" img={currentUser.profilePicture} rounded /> */
                 <img
-                  className="w-10 h-10 object-cover rounded-full"
+                  className="h-10 w-10 rounded-full object-cover"
                   src={currentUser.profilePicture}
                   alt={"user"}
                 />
@@ -154,7 +156,7 @@ export default function Header() {
             >
               <Dropdown.Header>
                 <span className="block text-sm">{currentUser.username}</span>
-                <span className="block text-sm font-medium truncate">
+                <span className="block truncate text-sm font-medium">
                   {currentUser.email}
                 </span>
               </Dropdown.Header>
@@ -180,7 +182,7 @@ export default function Header() {
         </div>
         <form
           onSubmit={handleSubmit}
-          className="relative  sm:hidden mx-auto mt-1"
+          className="relative  mx-auto mt-1 sm:hidden"
         >
           <TextInput
             type="text"
@@ -192,7 +194,7 @@ export default function Header() {
           />
           <p
             onClick={handleSubmit}
-            className="cursor-pointer border-none w-12 h-10 absolute text-xl top-[12px] right-[-21px]"
+            className="absolute right-[-21px] top-[12px] h-10 w-12 cursor-pointer border-none text-xl"
           >
             <AiOutlineSearch />
           </p>

@@ -244,7 +244,7 @@ export default function PostList({ deleteSignal }) {
             </div>
           </div>
         )}
-        <p>Total number of posts found: {totalPosts}</p>
+        <p className="text-base">Total number of posts found: {totalPosts}</p>
         {/*  <p>Page size: {pageSize}</p>
               <p>Total number of pages: {totalPages}</p>
         <p>Page: {page}</p> */}

@@ -12,14 +12,14 @@ export default function Home() {
         <TagsTable reloadSwitch={reloadSwitch} />
       </div>
       <div className=" flex-0 flex max-w-6xl flex-col gap-3 px-2 py-3 lg:w-9/12  ">
-        <h3 className="text-xl font-semibold ">Welcome to my Blog</h3>
+        <h1 className="text-xl font-semibold ">Welcome to my Blog</h1>
         <Link to={"/about"} className=" link-stand text-lg ">
           Here is the full description of this app and all its features
         </Link>
         <Link to={"/search"} className="link-stand text-lg">
           Here you can search in the posts list
         </Link>
-        <h3 className="text-xl text-stone-800 dark:text-purple-500 ">
+        <h3 className="text-base text-stone-800 dark:text-purple-500 ">
           Here you see the list of all posts:
         </h3>
         <PostList
