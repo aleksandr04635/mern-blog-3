@@ -186,7 +186,7 @@ export default function PostEditor({ mode, postId }) {
             setImageUploadError(null);
             setFormData({ ...formData, image: downloadURL });
           });
-        }
+        },
       );
     } catch (error) {
       setImageUploadError("Image upload failed");
@@ -265,10 +265,10 @@ export default function PostEditor({ mode, postId }) {
             ? err.data.message
             : JSON.stringify(err.data)
           : "message" in err
-          ? err.message
-          : "error" in err
-          ? err.error
-          : JSON.stringify(err);
+            ? err.message
+            : "error" in err
+              ? err.error
+              : JSON.stringify(err);
       setPublishError(errMsg);
       //setPublishError("Something went wrong");
     }
@@ -302,12 +302,12 @@ export default function PostEditor({ mode, postId }) {
  */
 
   return (
-    <div className="p-1 pr-2  max-w-3xl mx-auto min-h-screen">
-      <h1 className="text-center text-2xl my-2 font-semibold">
+    <div className="post-editor mx-auto min-h-screen  max-w-3xl p-1 pr-2">
+      <h1 className="my-2 text-center text-2xl font-semibold">
         {mode == "edit" ? "Update a post" : "Create a post"}
       </h1>
       {loading ? (
-        <div className="h-[80vh] flex justify-center items-center w-full">
+        <div className="flex h-[80vh] w-full items-center justify-center">
           <Spinner size="xl" />
         </div>
       ) : (
@@ -315,11 +315,11 @@ export default function PostEditor({ mode, postId }) {
           {/* importance */}
           <div className="flex flex-col ">
             <div className="flex flex-row items-center gap-1">
-              <div className="text-lg px-1">Importance:</div>
+              <div className="px-1 text-lg">Importance:</div>
               <div className="text-lg">{formData?.importance || 1}</div>
               <div className="flex flex-col   text-sm">
                 <button
-                  className=" relative border border-teal-500 items-center text-lg text-center rounded-t-lg w-[19px] h-[16px] overflow-hidden"
+                  className=" hover:bg-active-bg border-main-border relative h-[16px] w-[19px] items-center overflow-hidden rounded-t-lg border text-center text-lg dark:hover:bg-dark-active-bg"
                   type="button"
                   onClick={() => {
                     return setFormData({
@@ -331,18 +331,18 @@ export default function PostEditor({ mode, postId }) {
                   }}
                 >
                   {/*   importance: (formData.importance || 1) + 1, */}
-                  <p className="top-[-1px] right-[3px] absolute align-middle leading-3">
+                  <p className="absolute right-[3px] top-[-1px] align-middle leading-3">
                     +
                   </p>
                 </button>
                 <button
-                  className=" relative border border-teal-500 items-center text-2xl text-center rounded-b-lg w-[19px] h-[16px] overflow-hidden"
+                  className="hover:bg-active-bg border-main-border relative h-[16px] w-[19px] items-center overflow-hidden rounded-b-lg border text-center text-2xl dark:hover:bg-dark-active-bg"
                   type="button"
                   onClick={() => {
                     if (!!formData.importance & (formData.importance > 1)) {
                       console.log(
                         "formData.importance before - : ",
-                        formData.importance
+                        formData.importance,
                       );
                       return setFormData({
                         ...formData,
@@ -351,13 +351,13 @@ export default function PostEditor({ mode, postId }) {
                     }
                   }}
                 >
-                  <p className="top-[-12px] right-[4px] absolute align-middle h-[3px]">
+                  <p className="absolute right-[4px] top-[-12px] h-[3px] align-middle">
                     -
                   </p>
                 </button>
               </div>
             </div>
-            <div className="text-base px-1">
+            <div className="px-1 text-base">
               Your posts are sorted by importance on your page. Don't set it
               above 1 without real purpose
             </div>
@@ -366,30 +366,38 @@ export default function PostEditor({ mode, postId }) {
           {/* image */}
           <div>
             <h3 className="p-1 text-lg">Front image (optional):</h3>
-            <div className="flex gap-4 items-center justify-between border border-teal-500 rounded-lg p-3">
+            <div className="border-main-border flex items-center justify-between gap-4 rounded-lg border p-3">
               <FileInput
                 type="file"
                 accept="image/*"
                 color="gray"
                 onChange={(e) => setFile(e.target.files[0])}
+                /*   className="bg-active-bg mr-4 flex w-[350px] cursor-pointer items-center justify-start space-x-2 
+                  rounded-lg px-2 py-1 dark:bg-dark-active-bg dark:text-white" */
               />
+              {/*      <input
+                type="file"
+                accept="image/*"
+                color="gray"
+                onChange={(e) => setFile(e.target.files[0])}
+              /> */}
               <Button
                 type="button"
                 gradientDuoTone="purpleToBlue"
                 size="sm"
                 outline
                 onClick={handleUpdloadImage}
-                disabled={imageUploadProgress}
+                disabled={!file || imageUploadProgress}
               >
                 {imageUploadProgress ? (
-                  <div className="w-16 h-16">
+                  <div className="h-16 w-16">
                     <CircularProgressbar
                       value={imageUploadProgress}
                       text={`${imageUploadProgress || 0}%`}
                     />
                   </div>
                 ) : (
-                  "Upload Image"
+                  "Upload\u00A0Image"
                 )}
               </Button>
             </div>
@@ -409,11 +417,11 @@ export default function PostEditor({ mode, postId }) {
             <h3 className=" text-lg">Tags list (optional):</h3>
             <p>Addition of already existing tags is preferable </p>
             <p>Start printing to narrow down the list of existing tags </p>
-            <div className="flex items-center ">
+            <div className="flex flex-col items-start sm:flex-row ">
               <input
                 value={tagString}
                 onChange={(e) => setTagString(e.target.value)}
-                className=" py-1 outline-none h-10 w-[350px] border dark:bg-dark-active-bg border-teal-500 rounded-lg mr-2"
+                className=" border-main-border mr-2 h-10  w-full rounded-lg border py-1 outline-none dark:bg-dark-active-bg sm:w-[350px]"
                 placeholder="Enter a post tag"
                 type="text"
               />
@@ -427,22 +435,23 @@ export default function PostEditor({ mode, postId }) {
                 Create&nbsp;a&nbsp;new&nbsp;tag
               </Button>
             </div>
-            <div className="flex flex-col  mt-1">
+            <div className="mt-1 flex  flex-col">
               <p>Tags to the post:</p>
               {tags?.map((t, i) => (
                 <div
                   onClick={() => setTags(tags.filter((e, n) => n != i))}
                   key={i}
-                  className="flex cursor-pointer justify-start w-[350px] dark:text-gray-200 items-center space-x-2 mr-4 dark:bg-gray-700 bg-gray-100 px-2 py-1 rounded-lg"
+                  className="bg-active-bg mr-4 flex w-full cursor-pointer items-center justify-start space-x-2 rounded-lg 
+                  px-2 py-1 dark:bg-dark-active-bg dark:text-white sm:w-[350px]"
                 >
-                  <p className="text-white bg-gray-500 rounded-full  p-1 text-sm">
+                  <p className="bg-main-border rounded-full p-1  text-sm text-white">
                     <TiMinus />
                   </p>
                   <p>{t.name}</p>
                 </div>
               ))}
             </div>
-            <div className="flex flex-col  mt-1">
+            <div className="mt-1 flex  flex-col">
               <p>Already existing tags: </p>
               {allTagsInDB
                 ?.filter((t) => allowedToAddFromDB(t))
@@ -456,19 +465,22 @@ export default function PostEditor({ mode, postId }) {
                     }}
                     className={`${
                       allowedToAddFromDB(t) ? "cursor-pointer" : ""
-                    } flex justify-start w-[350px] dark:text-gray-200 
-                    items-start space-x-2 mr-4 dark:bg-gray-700 bg-gray-100 px-2 py-1 rounded-lg`}
+                    } bg-active-bg mr-4 flex w-full items-start 
+                    justify-start space-x-2 rounded-lg px-2 py-1 dark:bg-dark-active-bg dark:text-white sm:w-[350px]`}
                   >
-                    <p
-                      /*  onClick={() => deleteTag(i)} */
-                      className="text-white bg-gray-500 rounded-full cursor-pointer p-1 text-sm"
-                    >
-                      <FaPlus />
-                    </p>
-                    <p className="w-[235px]">{t.name}</p>{" "}
-                    <p>
-                      {t.number_of_posts}{" "}
-                      {t.number_of_posts > 1 ? "posts" : "post"}{" "}
+                    <div className=" flex w-full items-start space-x-2 ">
+                      <p
+                        /*  onClick={() => deleteTag(i)} */
+                        className="bg-main-border cursor-pointer rounded-full p-1 text-sm text-white"
+                      >
+                        <FaPlus />
+                      </p>
+                      <p /* className="w-[235px]" */>{t.name}</p>
+                    </div>
+                    <p className="w-[110px] text-center">
+                      {t.number_of_posts}
+                      {"\u00A0"}
+                      {t.number_of_posts > 1 ? "posts" : "post"}
                     </p>
                   </div>
                 ))}
@@ -499,7 +511,7 @@ export default function PostEditor({ mode, postId }) {
                 formData.title?.length > 5 ? "" : "minimum 6 characters"
               }
             />
-            <p className="text-gray-500 p-1 text-xs">
+            <p className="p-1 text-xs text-gray-500">
               {150 - (formData.title?.length ?? 0)} characters remaining
             </p>
           </div>
@@ -521,13 +533,13 @@ export default function PostEditor({ mode, postId }) {
               onChange={(e) =>
                 setFormData({ ...formData, intro: e.target.value })
               }
-              className="h-[160px] sm:h-[80px] text-justify text-sm "
+              className="h-[160px] text-justify text-sm sm:h-[80px] "
               value={formData.intro || ""}
               helperText={
                 formData.intro?.length > 5 ? "" : "minimum 6 characters"
               }
             />
-            <p className="text-gray-500 text-xs">
+            <p className="text-xs text-gray-500">
               {300 - (formData.intro?.length ?? 0)} characters remaining
             </p>
           </div>
@@ -552,7 +564,7 @@ export default function PostEditor({ mode, postId }) {
           />
 
           {/* Controls */}
-          <div className="flex gap-2 items-center justify-around  ">
+          <div className="flex items-center justify-around gap-2  ">
             <Button
               type="submit"
               disabled={

@@ -44,7 +44,7 @@ export default function Header() {
   };
 
   const handleSubmit = (e) => {
-    if (!!searchTerm) {
+    if (searchTerm) {
       e.preventDefault();
       const urlParams = new URLSearchParams(location.search);
       urlParams.set("searchTerm", searchTerm);
@@ -55,7 +55,7 @@ export default function Header() {
   };
 
   return (
-    <Navbar className="border-gray-500 sm:border-b">
+    <Navbar className="border-gray-500 pl-1 pr-2 pt-1 sm:border-b sm:pb-2.5 sm:pt-2.5">
       <div className="flex w-full flex-col">
         <div className="flex w-full items-center justify-between ">
           {/* <Navbar className="m-auto max-w-6xl max-w-[1200px]  border border-gray-400  rounded"></Navbar> */}
@@ -100,8 +100,8 @@ export default function Header() {
               /*  rightIcon={AiOutlineSearch} */
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-[300px] rounded-lg border
-               border-teal-500 focus:border-teal-500 focus:ring-teal-500 dark:bg-dark-active-bg"
+              className="border-main-border focus:border-main-border focus:ring-main-border
+               w-[300px] rounded-lg border dark:bg-dark-active-bg"
             />
             <p
               onClick={handleSubmit}
@@ -131,8 +131,8 @@ export default function Header() {
           </button>
           {/*    <button
             className=" w-[40px] h-[40px] sm:inline rounded-full border 
-            hover:bg-gray-100 dark:hover:bg-dark-active-bg border-teal-500 text-center 
-            outline-teal-500  outline-1 hover:outline "
+            hover:bg-gray-100 dark:hover:bg-dark-active-bg border-main-border text-center 
+            outline-main-border  outline-1 hover:outline "
             color="gray"
             onClick={() => dispatch(toggleTheme())}
           >

@@ -1,8 +1,16 @@
+import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 
 export default function About() {
   return (
     <div className="flex min-h-screen ">
+      <Helmet>
+        <title>About this blog</title>
+        <meta
+          name="description"
+          content="Description of this blog and tecnologies used to create it"
+        />
+      </Helmet>
       <div className="mx-auto max-w-2xl p-3 text-justify ">
         <div>
           <h1 className="font my-5 text-center text-2xl font-semibold">

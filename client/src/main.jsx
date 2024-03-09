@@ -15,7 +15,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <HelmetProvider>
         {/*  this Helmet component can be enywhere in the project */}
         <Helmet>
-          <title>My Blog - Main page</title>
+          <title>My Blog</title>
           <meta
             name="description"
             content="A demonstration project of a MERN blogspot with a rich text editor 

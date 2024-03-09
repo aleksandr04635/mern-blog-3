@@ -11,6 +11,7 @@ import AuthrorName from "../components/AuthrorName";
 import ModalComponent from "../components/ModalComponent";
 import { useDeletePostMutation } from "../redux/apiSlice";
 import Likes from "../components/Likes";
+import { Helmet } from "react-helmet-async";
 
 export default function PostPage() {
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ export default function PostPage() {
         setError("");
         console.log(
           "fetching in PostPage: ",
-          `/api/post/getposts?slug=${postSlug}`
+          `/api/post/getposts?slug=${postSlug}`,
         );
         const res = await fetch(`/api/post/getposts?slug=${postSlug}`);
         const data = await res.json();
@@ -125,11 +126,15 @@ export default function PostPage() {
       navigate(`/dashboard?tab=posts&userId=${currentUser._id}`);
     } catch (err) {
       const errMsg =
-        "message" in err
-          ? err.message
-          : "error" in err
-          ? err.error
-          : JSON.stringify(err.data);
+        "data" in err
+          ? "message" in err.data
+            ? err.data.message
+            : JSON.stringify(err.data)
+          : "message" in err
+            ? err.message
+            : "error" in err
+              ? err.error
+              : JSON.stringify(err);
       console.log(errMsg);
       setError(errMsg);
     }
@@ -153,20 +158,25 @@ export default function PostPage() {
 
   if (loading)
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="flex min-h-screen items-center justify-center">
         <Spinner size="xl" />
       </div>
     );
 
   return (
-    <main className="px-1 sm:p-3   max-w-6xl mx-auto min-h-screen">
+    <main className="mx-auto min-h-screen   max-w-6xl px-1 sm:p-3">
+      <Helmet>
+        <title>{post.title}</title>
+        <meta name="description" content={post.title} />
+        <meta property="og:image" content="post.image" />
+      </Helmet>
       {post && (
-        <div className="flex flex-col max-w-3xl w-full mx-auto    ">
+        <div className="mx-auto flex w-full max-w-3xl flex-col    ">
           {post && post.image && (
             <img
               src={post && post.image}
               alt={post && post.title}
-              className=" p-3    object-contain "
+              className=" object-contain    p-3 "
             />
           )}
           <InfoString className="" post={post} />
@@ -174,33 +184,33 @@ export default function PostPage() {
             {post && post.userId.username && <AuthrorName post={post} />}
           </div>
 
-          <h1 className="text-3xl  p-1 text-center font-serif  lg:text-2xl">
+          <h1 className="p-1  text-center font-serif text-3xl  lg:text-2xl">
             {post && post.title}
           </h1>
-          <div className=" p-2  text-base post-content ">
+          <div className=" post-content  p-2 text-base ">
             {post && post.intro}
           </div>
           <div
-            className="p-2   post-content"
+            className="post-content   p-2"
             dangerouslySetInnerHTML={{ __html: post && post.content }}
           ></div>
           <TagLinksList post={post} />
-          <div className="flex flex-col border-l-0  border-teal-500 sm:flex-row items-center justify-between w-full">
-            <div className="flex flex-row items-center justify-between w-full">
+          <div className="border-main-border flex w-full  flex-col items-center justify-between border-l-0 sm:flex-row">
+            <div className="flex w-full flex-row items-center justify-between">
               <Likes type={"post"} comment={post} onLike={onLike} />
               <Button
                 onClick={() => setTocomment(!tocomment)}
                 outline
                 gradientDuoTone="purpleToBlue"
                 type="submit"
-                className="flex-none w-[150px] mx-1"
+                className="mx-1 w-[150px] flex-none"
               >
                 {tocomment ? "Cancel" : "Comment"}
               </Button>
             </div>
             {currentUser &&
               (post.userId._id == currentUser._id || currentUser.isAdmin) && (
-                <div className="flex justify-between sm:justify-end gap-2 w-full items-center  ">
+                <div className="flex w-full items-center justify-between gap-2 sm:justify-end  ">
                   <Button
                     outline
                     gradientDuoTone="purpleToBlue"
@@ -214,7 +224,7 @@ export default function PostPage() {
                   <Button
                     outline
                     gradientDuoTone="pinkToOrange"
-                    className="w-[150px] mx-1"
+                    className="mx-1 w-[150px]"
                     onClick={() => {
                       setShowModal(true);
                     }}

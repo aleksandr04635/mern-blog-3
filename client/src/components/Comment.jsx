@@ -178,7 +178,7 @@ export default function Comment({
   return (
     <div
       className={` flex w-full flex-col rounded-bl-lg border-b pb-0 pl-1 pr-0  pt-2  sm:pl-2 ${
-        level % 2 == 0 ? `border-secondary-border` : `border-teal-500`
+        level % 2 == 0 ? `border-secondary-border` : `border-main-border`
       }`}
     >
       {/* <div>

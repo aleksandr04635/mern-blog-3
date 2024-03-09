@@ -174,7 +174,7 @@ export default function CommentSection({
   return (
     <div className="w-full ">
       {cloader ? (
-        <div className="h-[80vh] flex justify-center items-center w-full">
+        <div className="flex h-[80vh] w-full items-center justify-center">
           <Spinner size="xl" />
         </div>
       ) : (
@@ -185,8 +185,10 @@ export default function CommentSection({
           ) : (
             /*  <p className="text-sm my-1">No comments yet</p> */
             <div
-              className={`mb-1 w-full border-l  rounded-bl-lg ${
-                level % 2 == 0 ? `border-secondary-border` : `border-teal-500`
+              className={`mb-1 w-full rounded-bl-lg  border-l ${
+                level % 2 == 0
+                  ? `border-secondary-border`
+                  : `border-main-border`
               }`}
             >
               {/* <div>
@@ -206,7 +208,7 @@ export default function CommentSection({
               </div> */}
               {comments.length > 2 && (
                 <div
-                  className={` text-sm pl-2 py-1 flex items-center gap-1 w-full `}
+                  className={` flex w-full items-center gap-1 py-1 pl-2 text-sm `}
                 >
                   <div className=" py-1  ">
                     <p>{comments.length}</p>

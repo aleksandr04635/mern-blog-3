@@ -3,16 +3,16 @@ import { HiOutlineExclamationCircle } from "react-icons/hi";
 
 export default function ModalComponent({ show, onClose, onConfirm, text }) {
   return (
-    <div className=" flex justify-center items-center">
+    <div className=" flex items-center justify-center">
       <Modal
         show={show}
         onClose={onClose}
         popup
         size="md"
-        className=" flex justify-center items-center  "
+        className=" flex items-center justify-center  "
       >
         <div>
-          <div className="border border-teal-500 rounded-lg overflow-hidden">
+          <div className="border-main-border overflow-hidden rounded-lg border">
             <Modal.Header />
             <Modal.Body>
               <div className="text-center ">

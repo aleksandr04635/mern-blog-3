@@ -108,10 +108,10 @@ export default function CommentingEditor({
             ? err.data.message
             : JSON.stringify(err.data)
           : "message" in err
-          ? err.message
-          : "error" in err
-          ? err.error
-          : JSON.stringify(err);
+            ? err.message
+            : "error" in err
+              ? err.error
+              : JSON.stringify(err);
       console.log("errMsg in CommentingEditor.jsx: ", errMsg);
       setCommentError(errMsg);
       //setCommentError(error.message);
@@ -137,22 +137,22 @@ export default function CommentingEditor({
   return (
     <div className="w-full p-3">
       {currentUser ? (
-        <div className="flex items-center gap-1 my-5 text-gray-500 text-sm">
+        <div className="my-5 flex items-center gap-1 text-sm text-gray-500">
           <p>You are signed in as: </p>
           <img
-            className="h-5 w-5 object-cover rounded-full"
+            className="h-5 w-5 rounded-full object-cover"
             src={currentUser.profilePicture}
             alt=""
           />
           <Link
             to={"/dashboard?tab=profile"}
-            className="text-xs text-cyan-600 hover:underline"
+            className="text-xs text-cyan-500 hover:underline"
           >
             {currentUser.username}
           </Link>
         </div>
       ) : (
-        <div className="text-sm text-teal-500 my-5 flex gap-1">
+        <div className="text-main-border my-5 flex gap-1 text-sm">
           You must be signed in to comment.
           <Link className="text-blue-500 hover:underline" to={"/sign-in"}>
             Sign In
@@ -162,7 +162,7 @@ export default function CommentingEditor({
       {currentUser && (
         <form
           onSubmit={handleSubmit}
-          className=" border border-teal-500 rounded-md p-3"
+          className=" border-main-border rounded-md border p-3"
         >
           <TinyMCEEditor
             value2={comment}
@@ -178,8 +178,8 @@ export default function CommentingEditor({
             onChange={(e) => setComment(e.target.value)}
             value={comment}
           /> */}
-          <div className="flex justify-between items-center mt-5">
-            <p className="text-gray-500 text-xs">
+          <div className="mt-5 flex items-center justify-between">
+            <p className="text-xs text-gray-500">
               {600 - comment.length ?? 0} characters remaining
             </p>
             <div className="flex justify-between gap-2">

@@ -17,12 +17,12 @@ export default function PageSizeControl() {
         }}
         value={pageSize || import.meta.env.VITE_FIREBASE_API_KEY}
         id="pageSize"
-        className="hover:bg-active-bg flex   appearance-none 
-         rounded-lg border  border-teal-500 
-         bg-transparent pb-0  pl-1 
-        pt-0 text-center outline-1     outline-teal-500
-          hover:outline hover:ring-teal-500  focus:border-teal-500 
-          focus:ring-teal-500 dark:bg-slate-900  dark:hover:bg-dark-active-bg [&:not([size])]:pr-7"
+        className="hover:bg-active-bg border-main-border   outline-main-border 
+         hover:ring-main-border focus:border-main-border  focus:ring-main-border 
+         flex appearance-none  rounded-lg 
+        border bg-transparent pb-0     pl-1
+          pt-0 text-center  outline-1 
+          hover:outline dark:bg-slate-900  dark:hover:bg-dark-active-bg [&:not([size])]:pr-7"
       >
         {/* [&:not([size])]:pr-5  */}
         <option className="" value="2">

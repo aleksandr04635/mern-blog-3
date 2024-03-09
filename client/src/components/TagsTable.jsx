@@ -62,7 +62,7 @@ export default function TagsTable(reloadSwitch) {
       {tags && tags.length > 0 ? (
         <>
           <p className="py-1 ">The most popular tags:</p>
-          <div className="overflow-hidden rounded-lg border border-teal-500">
+          <div className="border-main-border overflow-hidden rounded-lg border">
             <Table
               hoverable
               className="mx-auto w-full  rounded-b-lg  shadow-md "
@@ -75,7 +75,7 @@ export default function TagsTable(reloadSwitch) {
                   Posts
                 </Table.HeadCell>
               </Table.Head>
-              <Table.Body className="text-gray-800 dark:text-gray-200">
+              <Table.Body className="text-gray-800 dark:text-white">
                 {tags.slice(0, 10).map((tag, i) => (
                   <Table.Row
                     key={i}

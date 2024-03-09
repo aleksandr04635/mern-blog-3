@@ -24,6 +24,14 @@
 .link-stand {
   @apply text-base text-blue-500 hover:text-cyan-500 dark:hover:text-cyan-500;
 }
+.post-editor input[type="file"]::file-selector-button {
+  @apply bg-active-bg border-main-border mr-4 cursor-pointer space-x-2 rounded-lg border-2 py-1.5 pl-2 pr-2 
+  text-center text-gray-900 dark:bg-dark-active-bg dark:text-white;
+}
+
+.post-editor input[type="file"] {
+  @apply border-main-border dark:bg-dark-additional-bg bg-white py-1 pl-5 pr-1;
+}
 
 /* These styles are for the shown content, not that in the editor */
 body {
@@ -71,9 +79,9 @@ body {
   text-decoration: underline;
 }
 
-.dark .post-content a {
+/* .dark .post-content a {
   color: red;
-}
+} */
 
 /* .mce-content-body {
   text-align: justify;

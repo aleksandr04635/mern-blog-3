@@ -122,7 +122,7 @@ export default function PostList({ deleteSignal }) {
         urlParams.set("page", "");
         let searchQuery = urlParams.toString();
         console.log(
-          "in useEffect navigate to: ",
+          "in useEffect NAVIGATE to: ",
           `${location.pathname}?${searchQuery}`,
         );
         navigate(`${location.pathname}?${searchQuery}`);
@@ -267,6 +267,7 @@ export default function PostList({ deleteSignal }) {
             </div>
           </div>
         )}
+
         <p className="text-base">Total number of posts found: {totalPosts}</p>
         {/*  <p>Page size: {pageSize}</p>
               <p>Total number of pages: {totalPages}</p>

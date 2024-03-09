@@ -22,11 +22,11 @@ export default function PostCard({ post, onDelete }) {
           */
   return (
     <div
-      className="flex flex-col md:flex-row w-full md:items-stretch border border-teal-500
-     outline-teal-500  outline-1 hover:outline  rounded-lg  "
+      className="border-main-border outline-main-border flex w-full flex-col rounded-lg border
+     outline-1  hover:outline md:flex-row  md:items-stretch  "
     >
       {post.image && (
-        <div className="grow-0 shrink-0 rounded-tr-lg md:rounded-tr-none rounded-tl-lg  md:rounded-bl-lg overflow-hidden">
+        <div className="shrink-0 grow-0 overflow-hidden rounded-tl-lg rounded-tr-lg  md:rounded-bl-lg md:rounded-tr-none">
           <Link
             to={`/post/${post.slug}`}
             target="_blank"
@@ -35,12 +35,12 @@ export default function PostCard({ post, onDelete }) {
             <img
               src={post.image}
               alt="post cover"
-              className="w-full  md:min-h-full md:h-[230px] md:max-h-full md:w-[300px] object-cover"
+              className="w-full  object-cover md:h-[230px] md:max-h-full md:min-h-full md:w-[300px]"
             />
           </Link>
         </div>
       )}
-      <div className="md:pl-2 md:py-1 flex flex-col grow justify-around ">
+      <div className="flex grow flex-col justify-around md:py-1 md:pl-2 ">
         <InfoString post={post} />
         <Link
           to={`/post/${post.slug}`}
@@ -48,24 +48,24 @@ export default function PostCard({ post, onDelete }) {
           rel="noopener noreferrer"
         >
           <h2
-            className="text-xl text-center md:text-justify px-2 w-fit mx-auto md:w-full 
-           text-stone-800 dark:text-purple-500 dark:hover:text-blue-500 hover:text-blue-800 
-           font-semibold "
+            className="mx-auto w-fit px-2 text-center text-xl font-semibold text-stone-800 
+           hover:text-blue-800 dark:text-purple-500 dark:hover:text-blue-500 md:w-full 
+           md:text-justify "
           >
             {post.title}
           </h2>
         </Link>
-        <div className="px-2 w-fit mx-auto md:w-full ">
+        <div className="mx-auto w-fit px-2 md:w-full ">
           <AuthrorName post={post} />
         </div>
         {post.intro && <div className="px-2 text-justify ">{post.intro}</div>}
         <TagLinksList post={post} />
-        <div className=" px-2 flex items-center justify-between w-full">
+        <div className=" flex w-full items-center justify-between px-2">
           <Likes type={"card"} comment={post} />
           {/*  Controls */}
           {currentUser &&
             (post.userId._id == currentUser._id || currentUser.isAdmin) && (
-              <div className="flex items-center justify-between px-5 w-[100px] gap-2 text-gray-500">
+              <div className="flex w-[100px] items-center justify-between gap-2 px-5 text-gray-500">
                 <Tooltip message="Edit">
                   <div
                     onClick={() => {
@@ -95,8 +95,8 @@ export default function PostCard({ post, onDelete }) {
   /* Old version  
     
   <div
-className="flex flex-col md:flex-row w-full  border border-teal-500
-outline-teal-500  outline-1 hover:outline  rounded-lg  "
+className="flex flex-col md:flex-row w-full  border border-main-border
+outline-main-border  outline-1 hover:outline  rounded-lg  "
 >
 {post.image && (
   <div className=" grow-0 shrink-0 rounded-tr-lg md:rounded-tr-none rounded-tl-lg  md:rounded-bl-lg overflow-hidden">
@@ -125,7 +125,7 @@ outline-teal-500  outline-1 hover:outline  rounded-lg  "
 </div>
 
 
-         <div className=" relative w-full  border outline-teal-500 border-teal-500 outline-2 hover:outline h-[400px] overflow-hidden rounded-lg sm:w-[360px] transition-all">
+         <div className=" relative w-full  border outline-main-border border-main-border outline-2 hover:outline h-[400px] overflow-hidden rounded-lg sm:w-[360px] transition-all">
         <Link to={`/post/${post.slug}`}>
           {post.image && (
             <img
