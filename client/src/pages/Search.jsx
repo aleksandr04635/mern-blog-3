@@ -2,6 +2,7 @@ import { Button, Select, TextInput, Spinner, Alert } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import PostList from "../components/PostList";
+import { Helmet } from "react-helmet-async";
 
 export default function Search() {
   const navigate = useNavigate();
@@ -11,11 +12,11 @@ export default function Search() {
     sort: "desc",
   });
 
-  console.log("sidebarData: ", sidebarData);
+  console.log("sidebarData in Search.jsx: ", sidebarData);
 
   useEffect(() => {
-    console.log("USEEFFECT RUN. location.search: ", location.search);
-    console.log("location: ", location);
+    console.log("USEEFFECT RUN. location in Search.jsx: ", location);
+    //console.log("location: ", location);
     const urlParams = new URLSearchParams(location.search);
     const searchTermFromUrl = urlParams.get("searchTerm");
     const sortFromUrl = urlParams.get("sort");
@@ -91,8 +92,12 @@ export default function Search() {
 
   return (
     <div className="flex flex-col xl:flex-row">
+      {/* <Helmet>
+        <title>Searching for {sidebarData.searchTerm} </title>
+        <meta name="description" content="My Blog - Main page" />
+      </Helmet> */}
       <div
-        className="w-full border-gray-500 bg-gray-50 px-3 py-1  dark:bg-gray-800 
+        className="w-full border-gray-500 bg-white px-3 py-1  dark:bg-gray-800 
       xl:min-h-screen xl:w-[300px] xl:flex-none xl:border-r xl:py-3"
       >
         <form className="flex flex-col gap-1 xl:gap-8" onSubmit={handleSubmit}>
@@ -100,24 +105,48 @@ export default function Search() {
             <label className="whitespace-nowrap font-semibold">
               Search Term:
             </label>
-            <TextInput
+            {/*  <TextInput
               placeholder="Search..."
-              id="searchTerm"
+              id="searchTerm2"
               type="text"
               value={sidebarData.searchTerm}
               onChange={handleChange}
+            /> */}
+            <input
+              type="text"
+              placeholder="Search..."
+              id="searchTerm"
+              value={sidebarData.searchTerm}
+              onChange={handleChange}
+              className="border-main-border focus:border-main-border focus:ring-main-border
+       w-full rounded-lg border py-1.5 dark:bg-dark-active-bg"
             />
           </div>
           <div className="flex items-center gap-2">
             <label className="font-semibold">Sort:</label>
-            <Select
+            {/*  <Select
               onChange={handleChange}
               value={sidebarData.sort || "desc"}
-              id="sort"
+              id="sort2"
             >
               <option value="desc">Latest on top</option>
               <option value="asc">Oldest on top</option>
-            </Select>
+            </Select> */}
+            <select
+              onChange={handleChange}
+              value={sidebarData.sort || "desc"}
+              id="sort"
+              className="hover:bg-active-bg border-main-border   outline-main-border 
+         hover:ring-main-border focus:border-main-border  focus:ring-main-border 
+         flex appearance-none  rounded-lg 
+        border bg-transparent pb-1     pl-1
+          pt-1 text-center  outline-1 
+          hover:outline dark:bg-slate-900  dark:hover:bg-dark-active-bg [&:not([size])]:pr-7"
+            >
+              {/* [&:not([size])]:pr-5  */}
+              <option value="desc">Latest on top</option>
+              <option value="asc">Oldest on top</option>
+            </select>
           </div>
           <Button
             type="submit"

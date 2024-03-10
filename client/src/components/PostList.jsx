@@ -9,6 +9,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import ModalComponent from "./ModalComponent";
 import { useDeletePostMutation } from "../redux/apiSlice";
+import Loading from "./Loading";
+import ControlBar from "./ControlBar";
 
 export default function PostList({ deleteSignal }) {
   const navigate = useNavigate();
@@ -233,15 +235,6 @@ export default function PostList({ deleteSignal }) {
     }
   }, [deletePostMutationResult]); */
 
-  function ControlBar() {
-    return (
-      <div className="flex flex-col items-center justify-between gap-2 sm:flex-row">
-        <PaginationBar currentPage={page} totalPages={totalPages} />
-        <PageSizeControl />
-      </div>
-    );
-  }
-
   return (
     <div className="flex flex-col  gap-2 ">
       <div className="  text-lg">
@@ -274,23 +267,24 @@ export default function PostList({ deleteSignal }) {
         <p>Page: {page}</p> */}
         <p className="pt-1 text-justify text-sm">
           Note that the number of posts on the topmost page varies depending on
-          their total number and querry to ensure that a specific URL will
-          correspond to the concrete set of posts in the future, when other
-          posts are added
+          total number of posts corresponding to a query in order to ensure that
+          a specific URL will correspond to the concrete set of posts in the
+          future, when other posts are added
         </p>
       </div>
 
       <div className=" flex flex-col gap-2">
-        <ControlBar />
+        <ControlBar page={page} totalPages={totalPages} />
         {!loading && posts.length === 0 && (
           <p className="text-xl text-gray-500">No posts found.</p>
         )}
         {/* <div className="flex justify-center items-center min-h-screen"> */}
         {loading && (
-          <div className="flex items-center justify-center ">
-            <Spinner size="xl" />
-            <p className="text-xl text-gray-500">Loading...</p>
-          </div>
+          <Loading />
+          /*         <div className="flex items-center justify-center ">
+            <Spinner className="fill-main-border" size="xl" />
+            <p className="text-main-border pl-3 text-xl">Loading...</p>
+          </div> */
         )}
         {!loading &&
           posts &&
@@ -304,7 +298,7 @@ export default function PostList({ deleteSignal }) {
               post={post}
             />
           ))}
-        <ControlBar />
+        <ControlBar page={page} totalPages={totalPages} />
       </div>
       {errorMessage && (
         <Alert className={`mt-5 w-60 text-justify`} color="failure">

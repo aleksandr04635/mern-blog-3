@@ -32,6 +32,7 @@ import {
 } from "../redux/apiSlice.js";
 
 import TinyMCEEditor from "../components/TinyMCEEditor";
+import Loading from "./Loading";
 
 export default function PostEditor({ mode, postId }) {
   const navigate = useNavigate();
@@ -307,10 +308,11 @@ export default function PostEditor({ mode, postId }) {
         {mode == "edit" ? "Update a post" : "Create a post"}
       </h1>
       {loading ? (
-        <div className="flex h-[80vh] w-full items-center justify-center">
-          <Spinner size="xl" />
-        </div>
+        <Loading className="my-10 " />
       ) : (
+        /*  <div className="flex h-[80vh] w-full items-center justify-center">
+          <Spinner size="xl" />
+        </div> */
         <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
           {/* importance */}
           <div className="flex flex-col ">
@@ -319,7 +321,7 @@ export default function PostEditor({ mode, postId }) {
               <div className="text-lg">{formData?.importance || 1}</div>
               <div className="flex flex-col   text-sm">
                 <button
-                  className=" hover:bg-active-bg border-main-border relative h-[16px] w-[19px] items-center overflow-hidden rounded-t-lg border text-center text-lg dark:hover:bg-dark-active-bg"
+                  className=" hover:bg-active-bg border-main-border outline-main-border relative h-[16px] w-[19px]  items-center overflow-hidden rounded-t-lg border text-center text-lg outline-1 hover:outline dark:hover:bg-dark-active-bg"
                   type="button"
                   onClick={() => {
                     return setFormData({
@@ -336,7 +338,7 @@ export default function PostEditor({ mode, postId }) {
                   </p>
                 </button>
                 <button
-                  className="hover:bg-active-bg border-main-border relative h-[16px] w-[19px] items-center overflow-hidden rounded-b-lg border text-center text-2xl dark:hover:bg-dark-active-bg"
+                  className="hover:bg-active-bg border-main-border outline-main-border relative h-[16px] w-[19px] items-center  overflow-hidden rounded-b-lg border text-center text-2xl outline-1 hover:outline dark:hover:bg-dark-active-bg"
                   type="button"
                   onClick={() => {
                     if (!!formData.importance & (formData.importance > 1)) {
@@ -370,8 +372,9 @@ export default function PostEditor({ mode, postId }) {
               <FileInput
                 type="file"
                 accept="image/*"
-                color="gray"
+                /*  color="info" */
                 onChange={(e) => setFile(e.target.files[0])}
+                /* className="border-cyan-500 bg-cyan-50 text-cyan-900 placeholder-cyan-700 focus:border-cyan-500 focus:ring-cyan-500 dark:border-cyan-400 dark:bg-cyan-100 dark:focus:border-cyan-500 dark:focus:ring-cyan-500" */
                 /*   className="bg-active-bg mr-4 flex w-[350px] cursor-pointer items-center justify-start space-x-2 
                   rounded-lg px-2 py-1 dark:bg-dark-active-bg dark:text-white" */
               />

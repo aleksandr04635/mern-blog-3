@@ -32,6 +32,7 @@ import { useDispatch } from "react-redux";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { Link } from "react-router-dom";
 import ModalComponent from "./ModalComponent";
+import Loading from "./Loading";
 
 export default function DashProfile() {
   const { currentUser, error, loading } = useSelector((state) => state.user);
@@ -86,7 +87,7 @@ export default function DashProfile() {
     return !!String(email)
       .toLowerCase()
       .match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
       );
   };
 
@@ -117,7 +118,7 @@ export default function DashProfile() {
       },
       (error) => {
         setImageFileUploadError(
-          "Could not upload image (File must be less than 3MB)"
+          "Could not upload image (File must be less than 3MB)",
         );
         setImageFileUploadProgress(null);
         setImageFile(null);
@@ -130,7 +131,7 @@ export default function DashProfile() {
           setFormData({ ...formData, profilePicture: downloadURL });
           setImageFileUploading(false);
         });
-      }
+      },
     );
   };
 
@@ -211,16 +212,15 @@ export default function DashProfile() {
   };
 
   if (loadingPage) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <Spinner size="xl" />
-      </div>
-    );
+    return <Loading />;
   }
+  /* <div className="flex justify-center items-center min-h-screen">
+        <Spinner size="xl" />
+      </div> */
 
   return (
-    <div className="max-w-lg mx-auto px-3 w-full">
-      <h1 className="my-2 text-center font-semibold text-xl">Profile</h1>
+    <div className="mx-auto w-full max-w-lg px-3">
+      <h1 className="my-2 text-center text-xl font-semibold">Profile</h1>
       <h3 className=" my-1 text-center  text-base">
         Here you can change your avatar image or data. Don't enter the data you
         don't want to change
@@ -234,7 +234,7 @@ export default function DashProfile() {
           hidden
         />
         <div
-          className="relative w-32 h-32 self-center cursor-pointer shadow-md overflow-hidden rounded-full"
+          className="relative h-32 w-32 cursor-pointer self-center overflow-hidden rounded-full shadow-md"
           onClick={() => filePickerRef.current.click()}
         >
           {imageFileUploadProgress && (
@@ -262,7 +262,7 @@ export default function DashProfile() {
           <img
             src={imageFileUrl || currentUser.profilePicture}
             alt="user"
-            className={`rounded-full w-full h-full object-cover border-2 border-[lightgray] ${
+            className={`h-full w-full rounded-full border-2 border-[lightgray] object-cover ${
               imageFileUploadProgress &&
               imageFileUploadProgress < 100 &&
               "opacity-60"
@@ -373,7 +373,7 @@ export default function DashProfile() {
           />
           <p
             onClick={() => setVisible(!visible)}
-            className="cursor-pointer border-none w-12 h-10 absolute text-xl top-[35px] right-[-21px]"
+            className="absolute right-[-21px] top-[35px] h-10 w-12 cursor-pointer border-none text-xl"
           >
             {visible ? <BsEyeSlash /> : <BsEye />}
           </p>
@@ -391,11 +391,12 @@ export default function DashProfile() {
           }
         >
           {loading ? (
-            <>
+            <Loading />
+          ) : (
+            /*  <>
               <Spinner size="sm" />
               <span className="pl-3">Loading...</span>
-            </>
-          ) : (
+            </> */
             "Update"
           )}
         </Button>
@@ -417,7 +418,7 @@ export default function DashProfile() {
           </Alert>
         )}
       </form>
-      <div className="flex justify-around gap-4 mt-4">
+      <div className="mt-4 flex justify-around gap-4">
         <Button
           type="button"
           outline
@@ -442,7 +443,7 @@ export default function DashProfile() {
           type="button"
           outline
           gradientDuoTone="purpleToBlue"
-          className="w-full mt-10"
+          className="mt-10 w-full"
         >
           Create a post
         </Button>

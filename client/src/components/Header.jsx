@@ -7,6 +7,36 @@ import { toggleTheme } from "../redux/theme/themeSlice";
 import { signoutSuccess } from "../redux/user/userSlice";
 import { useEffect, useState } from "react";
 
+function SearchForm({ type, searchTerm, change, handleSubmit }) {
+  return (
+    <form
+      onSubmit={handleSubmit}
+      className={
+        type == "wide"
+          ? "relative hidden sm:inline"
+          : "relative  mx-auto mt-1 sm:hidden"
+      }
+    >
+      {/* <TextInput */}
+      <input
+        type="text"
+        placeholder="Search..."
+        /*  rightIcon={AiOutlineSearch} */
+        value={searchTerm}
+        onChange={(e) => change(e.target.value)}
+        className="border-main-border focus:border-main-border focus:ring-main-border
+       w-[300px] rounded-lg border py-1.5 dark:bg-dark-active-bg"
+      />
+      <p
+        onClick={handleSubmit}
+        className="absolute right-[-21px] top-[10px] h-10 w-12 cursor-pointer border-none text-xl"
+      >
+        <AiOutlineSearch />
+      </p>
+    </form>
+  );
+}
+
 export default function Header() {
   const { pageSize } = useSelector((state) => state.pageSize);
   const path = useLocation().pathname;
@@ -17,6 +47,7 @@ export default function Header() {
   const { theme } = useSelector((state) => state.theme);
   const [searchTerm, setSearchTerm] = useState("");
   //console.log(" currentUser from header: ", currentUser)
+  console.log(" searchTerm from header: ", searchTerm);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
@@ -49,6 +80,7 @@ export default function Header() {
       const urlParams = new URLSearchParams(location.search);
       urlParams.set("searchTerm", searchTerm);
       urlParams.set("page", "");
+      urlParams.set("pageSize", pageSize);
       const searchQuery = urlParams.toString();
       navigate(`/search?${searchQuery}`);
     }
@@ -92,24 +124,12 @@ export default function Header() {
           >
             About this project
           </Link>
-          <form onSubmit={handleSubmit} className="relative hidden sm:inline">
-            {/* <TextInput */}
-            <input
-              type="text"
-              placeholder="Search..."
-              /*  rightIcon={AiOutlineSearch} */
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="border-main-border focus:border-main-border focus:ring-main-border
-               w-[300px] rounded-lg border dark:bg-dark-active-bg"
-            />
-            <p
-              onClick={handleSubmit}
-              className="absolute right-[-21px] top-[12px] h-10 w-12 cursor-pointer border-none text-xl"
-            >
-              <AiOutlineSearch />
-            </p>
-          </form>
+          <SearchForm
+            type="wide"
+            change={(v) => setSearchTerm(v)}
+            handleSubmit={handleSubmit}
+            searchTerm={searchTerm}
+          />
           <button
             className="   h-[40px] w-[40px] rounded-full   
             bg-gradient-to-tr from-cyan-400 to-blue-700 text-center
@@ -182,25 +202,32 @@ export default function Header() {
             </Link>
           )}
         </div>
-        <form
+        <SearchForm
+          type="narrow"
+          change={(v) => setSearchTerm(v)}
+          handleSubmit={handleSubmit}
+          searchTerm={searchTerm}
+        />
+
+        {/*  <form
           onSubmit={handleSubmit}
           className="relative  mx-auto mt-1 sm:hidden"
         >
           <TextInput
             type="text"
             placeholder="Search..."
-            /*  rightIcon={AiOutlineSearch} */
+          
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-[300px]"
+            className="w-[300px] py-1.5"
           />
           <p
             onClick={handleSubmit}
-            className="absolute right-[-21px] top-[12px] h-10 w-12 cursor-pointer border-none text-xl"
+            className="absolute right-[-21px] top-[10px] h-10 w-12 cursor-pointer border-none text-xl"
           >
             <AiOutlineSearch />
           </p>
-        </form>
+        </form> */}
       </div>
     </Navbar>
   );

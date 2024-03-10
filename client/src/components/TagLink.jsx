@@ -7,7 +7,7 @@ export default function TagLink({ tag }) {
   return (
     <Link
       to={`/search?tag=${tag.slug}&pageSize=${pageSize}`}
-      className="rounded border border-secondary-border px-2 py-1 text-sm  
+      className="rounded-md border border-secondary-border px-2 py-1 text-sm  
       font-normal outline-1 outline-secondary-border
       hover:bg-purple-50  hover:outline dark:hover:bg-dark-active-bg"
     >

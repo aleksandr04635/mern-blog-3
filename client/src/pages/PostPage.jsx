@@ -12,6 +12,7 @@ import ModalComponent from "../components/ModalComponent";
 import { useDeletePostMutation } from "../redux/apiSlice";
 import Likes from "../components/Likes";
 import { Helmet } from "react-helmet-async";
+import Loading from "../components/Loading";
 
 export default function PostPage() {
   const navigate = useNavigate();
@@ -156,18 +157,23 @@ export default function PostPage() {
     }
   }, [deletePostMutationResult]); */
 
-  if (loading)
-    return (
-      <div className="flex min-h-screen items-center justify-center">
+  if (loading) return <Loading />;
+  {
+    /* <div className="flex min-h-screen items-center justify-center">
         <Spinner size="xl" />
-      </div>
-    );
-
+      </div> */
+  }
+  {
+    /* <Loading /> */
+  }
   return (
     <main className="mx-auto min-h-screen   max-w-6xl px-1 sm:p-3">
       <Helmet>
         <title>{post.title}</title>
-        <meta name="description" content={post.title} />
+        <meta
+          name="description"
+          content={post.title + " by " + post.userId.username}
+        />
         <meta property="og:image" content="post.image" />
       </Helmet>
       {post && (
