@@ -17,7 +17,7 @@ export default function FooterCom() {
   return (
     <Footer
       container
-      className=" m-auto rounded-none border-gray-500 sm:border-t  "
+      className=" m-auto rounded-none border-t border-gray-500  "
     >
       <div className="mx-auto w-full max-w-7xl">
         <div className="flex w-full items-center justify-between">

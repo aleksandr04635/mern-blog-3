@@ -8,16 +8,21 @@ import { signoutSuccess } from "../redux/user/userSlice";
 import { useEffect, useState } from "react";
 
 function SearchForm({ type, searchTerm, change, handleSubmit }) {
+  const location = useLocation();
+  console.log(" location from SearchForm: ", location);
+
   return (
     <form
       onSubmit={handleSubmit}
       className={
-        type == "wide"
+        "w-full sm:w-[300px] " +
+        (type == "wide"
           ? "relative hidden sm:inline"
-          : "relative  mx-auto mt-1 sm:hidden"
+          : location.pathname !== "/search"
+            ? "relative  mx-auto mt-1 sm:hidden"
+            : "hidden")
       }
     >
-      {/* <TextInput */}
       <input
         type="text"
         placeholder="Search..."
@@ -25,7 +30,7 @@ function SearchForm({ type, searchTerm, change, handleSubmit }) {
         value={searchTerm}
         onChange={(e) => change(e.target.value)}
         className="border-main-border focus:border-main-border focus:ring-main-border
-       w-[300px] rounded-lg border py-1.5 dark:bg-dark-active-bg"
+       w-full rounded-lg border py-1.5 dark:bg-dark-active-bg sm:w-[300px]"
       />
       <p
         onClick={handleSubmit}
@@ -87,7 +92,7 @@ export default function Header() {
   };
 
   return (
-    <Navbar className="border-gray-500 pl-1 pr-2 pt-1 sm:border-b sm:pb-2.5 sm:pt-2.5">
+    <Navbar className="border-b border-gray-500 pb-1 pl-1 pr-2 pt-1 dark:border-gray-500 sm:pb-2.5 sm:pt-2.5">
       <div className="flex w-full flex-col">
         <div className="flex w-full items-center justify-between ">
           {/* <Navbar className="m-auto max-w-6xl max-w-[1200px]  border border-gray-400  rounded"></Navbar> */}
@@ -101,7 +106,7 @@ export default function Header() {
             </Button>
           </Link> */}
           <Link className="" to={`/?pageSize=${pageSize}`}>
-            <button
+            {/*   <button
               className=" flex h-[40px] w-[100px] items-center justify-center rounded-[7px]    
             bg-gradient-to-tr from-cyan-400 to-blue-700 font-semibold
               dark:hover:bg-dark-active-bg     "
@@ -114,8 +119,36 @@ export default function Header() {
               >
                 My Blog
               </div>
+              
+            </button> */}
+            {/*   <button
+              className=" flex h-[40px] w-[100px] items-center justify-center rounded-[7px]    
+            bg-gradient-to-tr from-cyan-400 via-blue-500 to-purple-600 font-semibold
+              dark:hover:bg-dark-active-bg     "
+            >
+              <div
+                className="dark:bg-dark-additional-bg mx-auto flex h-[36px] w-[96px] items-center justify-center 
+             rounded-[5px] bg-white text-sm text-slate-900 hover:bg-transparent 
+             hover:text-white dark:text-white dark:hover:bg-transparent"
+              >
+                My Blog
+              </div>
+            </button> */}
+            <button
+              className=" flex  w-fit items-center justify-center rounded-[7px] bg-gradient-to-tr
+             from-cyan-400   via-blue-500 to-purple-600 p-[2px] font-semibold
+              dark:hover:bg-dark-active-bg     "
+            >
+              <div
+                className="dark:bg-dark-additional-bg flex w-fit items-center  justify-center  rounded-[5px] bg-white 
+             px-5 py-2 text-sm text-slate-900 hover:bg-transparent 
+             hover:text-white dark:text-white dark:hover:bg-transparent"
+              >
+                My Blog
+              </div>
             </button>
           </Link>
+
           <Link
             className=" link-stand text-base "
             to={`/about`}
@@ -132,13 +165,13 @@ export default function Header() {
           />
           <button
             className="   h-[40px] w-[40px] rounded-full   
-            bg-gradient-to-tr from-cyan-400 to-blue-700 text-center
+            bg-gradient-to-tr from-cyan-400 via-blue-500 to-purple-600 text-center
               dark:hover:bg-dark-active-bg  sm:inline    "
             onClick={() => dispatch(toggleTheme())}
           >
             <div
               className="mx-auto flex h-[36px] w-[36px] items-center justify-center rounded-full
-             bg-white from-cyan-400 to-blue-700 
+             bg-white from-cyan-400 via-blue-500 to-purple-600
              text-slate-900 hover:bg-gradient-to-tr hover:text-white 
              dark:bg-[#1f2937] dark:text-white "
             >

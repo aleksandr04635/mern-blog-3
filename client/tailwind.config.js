@@ -13,7 +13,7 @@ export default {
         "active-bg": "#f2faff",
         "dark-main-bg": "#10172a",
         "dark-additional-bg": "#1f2937",
-        "secondary-border": "#a855f7",
+        "secondary-border": "#6366F1",
         "main-border": "#078493",
       },
     },
@@ -21,4 +21,4 @@ export default {
   plugins: [require("flowbite/plugin"), require("tailwind-scrollbar")],
 };
 // "#151e37", "#e6ffff" #e6fdff   "#e6faff"  "#F0FDFA"  #ECFDF5 #e6ffff
-//#efffff
+//#efffff "secondary-border": "#a855f7", #8B5CF6

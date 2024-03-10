@@ -311,7 +311,7 @@ export default function DashProfile() {
             /*  defaultValue={currentUser.username} */
             onChange={handleChange}
             value={formData.username}
-            color={formData.username?.length > 5 ? "success" : "failure"}
+            color={formData.username?.length > 5 ? "info" : "failure"}
             helperText={
               formData.username?.length > 5 ? "" : "minimum 6 characters"
             }
@@ -326,7 +326,7 @@ export default function DashProfile() {
             /* defaultValue={currentUser.email} */
             onChange={handleChange}
             value={formData.email}
-            color={validateEmail(formData?.email) ? "success" : "failure"}
+            color={validateEmail(formData?.email) ? "info" : "failure"}
             helperText={validateEmail(formData?.email) ? "" : "enter an email"}
           />
         </div>
@@ -343,7 +343,7 @@ export default function DashProfile() {
             placeholder="Your short description"
             maxLength="300"
             id="description"
-            color="success"
+            color="info"
             onChange={handleChange}
             className="h-[160px] sm:h-[80px]"
             value={formData.description}
@@ -362,7 +362,7 @@ export default function DashProfile() {
             onChange={handleChange}
             color={
               !(formData.password && formData.password.length < 6)
-                ? "success"
+                ? "info"
                 : "failure"
             }
             helperText={
@@ -403,7 +403,7 @@ export default function DashProfile() {
 
         {updateUserSuccess && (
           <Alert
-            color="success"
+            color="info"
             className={`mt-5 text-justify ${!visibleEr && "hidden"}`}
           >
             {updateUserSuccess}

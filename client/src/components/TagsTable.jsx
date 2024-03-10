@@ -57,7 +57,7 @@ export default function TagsTable(reloadSwitch) {
   }, [reloadSwitch]); */
 
   return (
-    <div className=" px-1  ">
+    <div className=" pl-1 pr-2 lg:pr-0  ">
       {/*     <button onClick={refetch}>Refetch Posts</button> */}
       {tags && tags.length > 0 ? (
         <>
@@ -67,7 +67,7 @@ export default function TagsTable(reloadSwitch) {
               hoverable
               className="mx-auto w-full  rounded-b-lg  shadow-md "
             >
-              <Table.Head className="font-light normal-case dark:bg-[#1f2937]">
+              <Table.Head className="font-light normal-case dark:bg-[#1f2937] dark:text-white">
                 <Table.HeadCell className=" dark:bg-dark-active-bg">
                   Tag
                 </Table.HeadCell>

@@ -28,7 +28,7 @@ export default function Home() {
         >
           Here you can search in the posts list
         </Link>
-        <h3 className="text-base text-stone-800 dark:text-purple-500 ">
+        <h3 className="text-base  dark:text-white ">
           Here you see the list of all posts:
         </h3>
         <PostList

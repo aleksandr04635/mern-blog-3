@@ -421,10 +421,19 @@ export default function PostEditor({ mode, postId }) {
             <p>Addition of already existing tags is preferable </p>
             <p>Start printing to narrow down the list of existing tags </p>
             <div className="flex flex-col items-start sm:flex-row ">
+              {/*   <input
+        type="text"
+        placeholder="Search..."
+                value={searchTerm}
+        onChange={(e) => change(e.target.value)}
+        className="border-main-border focus:border-main-border focus:ring-main-border
+       w-[300px] rounded-lg border py-1.5 dark:bg-dark-active-bg"
+      /> */}
               <input
                 value={tagString}
                 onChange={(e) => setTagString(e.target.value)}
-                className=" border-main-border mr-2 h-10  w-full rounded-lg border py-1 outline-none dark:bg-dark-active-bg sm:w-[350px]"
+                className=" border-main-border focus:border-main-border focus:ring-main-border  mr-2 h-10
+                 w-full rounded-lg border py-1 outline-none dark:bg-dark-active-bg sm:w-[350px]"
                 placeholder="Enter a post tag"
                 type="text"
               />
@@ -509,7 +518,7 @@ export default function PostEditor({ mode, postId }) {
                 setFormData({ ...formData, title: e.target.value })
               }
               value={formData.title || ""}
-              color={formData.title?.length > 5 ? "success" : "failure"}
+              color={formData.title?.length > 5 ? "info" : "failure"}
               helperText={
                 formData.title?.length > 5 ? "" : "minimum 6 characters"
               }
@@ -532,7 +541,7 @@ export default function PostEditor({ mode, postId }) {
               placeholder="Write an introduction"
               maxLength="300"
               id="intro"
-              color={formData.intro?.length > 5 ? "success" : "failure"}
+              color={formData.intro?.length > 5 ? "info" : "failure"}
               onChange={(e) =>
                 setFormData({ ...formData, intro: e.target.value })
               }

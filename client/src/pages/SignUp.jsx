@@ -103,17 +103,17 @@ export default function SignUp() {
 
   return (
     <div className="min-h-screen sm:mt-20">
-      <div className="flex p-3 max-w-lg mx-auto flex-col  md:items-center gap-5">
-        <h3 className="text-lg font-semibold text-center">
+      <div className="mx-auto flex max-w-lg flex-col gap-5  p-3 md:items-center">
+        <h3 className="text-center text-lg font-semibold">
           You can sign up with your email and password or with Google.
         </h3>
-        <div className="text-sm  text-center text-orange-600">
+        <div className="text-center  text-sm text-orange-600">
           If you register with a wrong email or change it to a wrong one in your
           profile you will not be able to reset your password via email
         </div>
         <div className="flex-1">
           <form
-            className="flex flex-col w-[300px] mx-auto gap-4"
+            className="mx-auto flex w-[300px] flex-col gap-4"
             onSubmit={handleSubmit}
           >
             <div>
@@ -124,7 +124,7 @@ export default function SignUp() {
                 id="username"
                 onChange={handleChange}
                 value={formData.username}
-                color={formData.username?.length > 5 ? "success" : "failure"}
+                color={formData.username?.length > 5 ? "info" : "failure"}
                 helperText={
                   formData.username?.length > 5 ? "" : "minimum 6 characters"
                 }
@@ -138,7 +138,7 @@ export default function SignUp() {
                 id="email"
                 onChange={handleChange}
                 value={formData.email}
-                color={validateEmail(formData?.email) ? "success" : "failure"}
+                color={validateEmail(formData?.email) ? "info" : "failure"}
                 helperText={
                   validateEmail(formData?.email) ? "" : "enter an email"
                 }
@@ -152,14 +152,14 @@ export default function SignUp() {
                 id="password"
                 value={formData.password}
                 onChange={handleChange}
-                color={formData.password?.length > 5 ? "success" : "failure"}
+                color={formData.password?.length > 5 ? "info" : "failure"}
                 helperText={
                   formData.password?.length > 5 ? "" : "minimum 6 characters"
                 }
               />
               <p
                 onClick={() => setVisible(!visible)}
-                className="cursor-pointer border-none w-12 h-10 absolute text-xl top-[35px] right-[-21px]"
+                className="absolute right-[-21px] top-[35px] h-10 w-12 cursor-pointer border-none text-xl"
               >
                 {visible ? <BsEyeSlash /> : <BsEye />}
               </p>

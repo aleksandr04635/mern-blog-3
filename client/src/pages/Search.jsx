@@ -92,16 +92,19 @@ export default function Search() {
 
   return (
     <div className="flex flex-col xl:flex-row">
-      {/* <Helmet>
-        <title>Searching for {sidebarData.searchTerm} </title>
-        <meta name="description" content="My Blog - Main page" />
-      </Helmet> */}
+      <Helmet>
+        <title>{`Searching for "${sidebarData.searchTerm}" `}</title>
+        <meta
+          name="description"
+          content={`Searching for ${sidebarData.searchTerm} `}
+        />
+      </Helmet>
       <div
         className="w-full border-gray-500 bg-white px-3 py-1  dark:bg-gray-800 
       xl:min-h-screen xl:w-[300px] xl:flex-none xl:border-r xl:py-3"
       >
         <form className="flex flex-col gap-1 xl:gap-8" onSubmit={handleSubmit}>
-          <div className="flex   items-center gap-2">
+          <div className="  flex items-center justify-center gap-2">
             <label className="whitespace-nowrap font-semibold">
               Search Term:
             </label>
@@ -119,10 +122,10 @@ export default function Search() {
               value={sidebarData.searchTerm}
               onChange={handleChange}
               className="border-main-border focus:border-main-border focus:ring-main-border
-       w-full rounded-lg border py-1.5 dark:bg-dark-active-bg"
+       w-full max-w-[500px] rounded-lg border py-1.5 dark:bg-dark-active-bg"
             />
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-center gap-2">
             <label className="font-semibold">Sort:</label>
             {/*  <Select
               onChange={handleChange}
@@ -139,8 +142,8 @@ export default function Search() {
               className="hover:bg-active-bg border-main-border   outline-main-border 
          hover:ring-main-border focus:border-main-border  focus:ring-main-border 
          flex appearance-none  rounded-lg 
-        border bg-transparent pb-1     pl-1
-          pt-1 text-center  outline-1 
+        border bg-transparent pb-1.5     pl-1
+          pt-1.5 text-center  outline-1 
           hover:outline dark:bg-slate-900  dark:hover:bg-dark-active-bg [&:not([size])]:pr-7"
             >
               {/* [&:not([size])]:pr-5  */}
@@ -152,7 +155,7 @@ export default function Search() {
             type="submit"
             outline
             gradientDuoTone="purpleToBlue"
-            className="max-w-[300px]"
+            className="mx-auto min-w-[200px] max-w-[300px]"
           >
             Apply Filters
           </Button>

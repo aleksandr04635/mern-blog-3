@@ -12,15 +12,16 @@ export default function AuthrorName({ post }) {
           ? `/dashboard?tab=posts&userId=${currentUser._id}&pageSize=${pageSize}`
           : `/search?userId=${post.userId._id}&pageSize=${pageSize}`
       }
-      className="text-slate-800 hover:text-blue-800 dark:text-purple-500 dark:hover:text-blue-500"
+      className="text-blue-600 hover:text-cyan-600 dark:text-blue-500 dark:hover:text-cyan-500"
     >
       <div className="items- group  flex max-w-full ">
         <div className=" relative h-10 w-10 self-center overflow-hidden rounded-full shadow-md">
           <img
             src={post.userId.profilePicture}
             alt="user"
-            className={`h-full w-full rounded-full border-2 border-gray-300 object-cover
-           group-hover:border-blue-800 dark:border-purple-500 dark:group-hover:border-blue-500`}
+            className={`h-full w-full rounded-full  border
+           border-blue-500  object-cover  group-hover:border-cyan-500 
+            dark:border-blue-500 dark:group-hover:border-cyan-500`}
           />
         </div>
         <h1 className="p-1  text-center  text-lg  ">

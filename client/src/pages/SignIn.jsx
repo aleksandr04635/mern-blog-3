@@ -93,7 +93,7 @@ export default function SignIn() {
                 id="email"
                 onChange={handleChange}
                 value={formData.email || ""}
-                color={validateEmail(formData?.email) ? "success" : "failure"}
+                color={validateEmail(formData?.email) ? "info" : "failure"}
                 helperText={
                   validateEmail(formData?.email) ? "" : "enter an email"
                 }
@@ -107,7 +107,7 @@ export default function SignIn() {
                 id="password"
                 value={formData.password || ""}
                 onChange={handleChange}
-                color={formData.password?.length > 5 ? "success" : "failure"}
+                color={formData.password?.length > 5 ? "info" : "failure"}
                 helperText={
                   formData.password?.length > 5 ? "" : "minimum 6 characters"
                 }

@@ -42,7 +42,7 @@ export default function ForgotPassword() {
     return !!String(email)
       .toLowerCase()
       .match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
       );
   };
 
@@ -104,13 +104,13 @@ export default function ForgotPassword() {
 
   return (
     <div className="min-h-screen sm:mt-20">
-      <div className="flex p-3 max-w-xl mx-auto flex-col  md:items-center gap-5">
-        <h3 className="text-lg font-semibold text-center">
+      <div className="mx-auto flex max-w-xl flex-col gap-5  p-3 md:items-center">
+        <h3 className="text-center text-lg font-semibold">
           Enter your email to reset your password.
         </h3>
         <div className="flex-1">
           <form
-            className="flex flex-col w-[300px] mx-auto gap-4"
+            className="mx-auto flex w-[300px] flex-col gap-4"
             onSubmit={handleSubmit}
           >
             <div>
@@ -121,7 +121,7 @@ export default function ForgotPassword() {
                 id="email"
                 onChange={handleChange}
                 value={formData.email || ""}
-                color={validateEmail(formData?.email) ? "success" : "failure"}
+                color={validateEmail(formData?.email) ? "info" : "failure"}
                 helperText={
                   validateEmail(formData?.email) ? "" : "enter an email"
                 }

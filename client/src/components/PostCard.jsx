@@ -48,8 +48,8 @@ export default function PostCard({ post, onDelete }) {
           rel="noopener noreferrer"
         >
           <h2
-            className="mx-auto w-fit px-2 text-center text-xl font-semibold text-stone-800 
-           hover:text-blue-800 dark:text-purple-500 dark:hover:text-blue-500 md:w-full 
+            className="mx-auto w-fit px-2 text-center text-xl font-semibold text-blue-600 
+           hover:text-cyan-600 dark:text-blue-500 dark:hover:text-cyan-500 md:w-full 
            md:text-justify "
           >
             {post.title}

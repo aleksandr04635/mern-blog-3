@@ -9,9 +9,9 @@ export default function Tooltip({
   //const tooltipRef = useRef(null);
   const groupRef = useRef(null);
 
-  /*   const [tooltipHeight, setTooltipHeight] = useState(0);
+  const [tooltipHeight, setTooltipHeight] = useState(0);
   const [groupHeight, setGroupHeight] = useState(0);
-  const [groupBot, setGroupBot] = useState(0); */
+  const [groupBot, setGroupBot] = useState(0);
 
   //console.log("groupRef.current.scrollTop: " + groupRef?.current?.scrollTop);
   //console.log("document.scrollTop: " + document.scrollTop);
@@ -22,7 +22,7 @@ export default function Tooltip({
 
   /*   useEffect(() => {
     if (groupRef?.current) {
-      const { bottom, height } = groupRef?.current.getBoundingClientRect();
+      const { bottom, height } = groupRef.current.getBoundingClientRect();
       setGroupHeight(height);
       setGroupBot(bottom);
       console.log("bottom, height  useEffect: ", bottom, height);
@@ -30,7 +30,8 @@ export default function Tooltip({
     }
   }, [window.scrollY]); */
 
-  /*   const [scrollYPosition, setScrollYPosition] = useState(0);
+  //REALLY USEFUL
+  const [scrollYPosition, setScrollYPosition] = useState(0);
   const handleScroll = () => {
     const newScrollYPosition = window.scrollY;
     setScrollYPosition(newScrollYPosition);
@@ -40,18 +41,18 @@ export default function Tooltip({
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []); */
+  }, []);
 
   // Now the vertical position is available with `scrollYPosition`
   // console.log("scrollYPosition", scrollYPosition);
-  // console.log("window.innerHeight", window.innerHeight);
   /*   console.log(
     "document.documentElement.clientHeight",
     document.documentElement.clientHeight
   ); */
+  //console.log("window.innerHeight: ", window.innerHeight);
 
   let calculatedPosition =
-    groupRef?.current?.getBoundingClientRect().bottom > window.innerHeight - 40
+    groupRef?.current?.getBoundingClientRect().bottom > window.innerHeight - 45
       ? "top"
       : position;
 
@@ -61,7 +62,7 @@ export default function Tooltip({
       positionStyleString = " top-[-33px] left-[-10px]";
       break;
     case "bottom":
-      positionStyleString = " top-8 left-[-10px]";
+      positionStyleString = " top-6 left-[-10px]";
       break;
     case "right":
       positionStyleString = "bottom-[1px] left-[90px]";
@@ -82,12 +83,28 @@ export default function Tooltip({
   const mes = message.split(" ").join("\u00A0");
   return (
     <div ref={groupRef} className="group relative flex">
+      {/*    <button
+        onClick={() => {
+          console.log("scrollYPosition: ", scrollYPosition);
+          console.log("window.innerHeight: ", window.innerHeight);
+          console.log(
+            "document.documentElement.clientHeight: ",
+            document.documentElement.clientHeight,
+          );
+          console.log(
+            "groupRef?.current?.getBoundingClientRect().bottom: ",
+            groupRef?.current?.getBoundingClientRect().bottom,
+          );
+        }}
+      >
+        show
+      </button> */}
       {children}
       {!!mes && (
         <span
           /* ref={tooltipRef} */
           className={
-            `absolute z-10 hidden rounded-md border bg-white px-2 py-1 text-sm 
+            `absolute z-10 hidden rounded-md border border-secondary-border bg-white px-2 py-1 text-sm 
        font-medium group-hover:block dark:bg-dark-active-bg  ` +
             colorStyleString +
             positionStyleString
