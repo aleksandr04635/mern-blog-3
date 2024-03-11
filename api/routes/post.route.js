@@ -199,6 +199,10 @@ const getposts = async (req, res, next) => {
       const { password, ...rest } = user._doc;
       resObj.user = rest;
     }
+    if (req.query.tag) {
+      const foundTag = await Tag.find({ slug: req.query.tag });
+      resObj.tag = foundTag[0];
+    }
     res.status(200).json(resObj);
   } catch (error) {
     next(error);

@@ -11,6 +11,7 @@ import ModalComponent from "./ModalComponent";
 import { useDeletePostMutation } from "../redux/apiSlice";
 import Loading from "./Loading";
 import ControlBar from "./ControlBar";
+import { Helmet } from "react-helmet-async";
 
 export default function PostList({ deleteSignal }) {
   const navigate = useNavigate();
@@ -36,8 +37,11 @@ export default function PostList({ deleteSignal }) {
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [tagInfo, setTagInfo] = useState("");
+  const [isTagPage, setIsTagPage] = useState(false);
   const [userInfo, setUserInfo] = useState({});
   const [isUsersPage, setIsUsersPage] = useState(false);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   //console.log("isUsersPage in PostList: ", isUsersPage);
   //console.log("userInfo in PostList: ", userInfo);
   /*   console.log("totalPosts in state: ", totalPosts);
@@ -68,9 +72,23 @@ export default function PostList({ deleteSignal }) {
         data,
       );
       //console.log("checking if page and pageSize exist in location.search ");
+      /*  console.log(
+        " location in fetchPostsByQuerryString in PostList.jsx: ",
+        location,
+      ); */
       const urlParams5 = new URLSearchParams(location.search);
+      const searchTermFromUrl = urlParams5.get("searchTerm");
+      const sortFromUrl = urlParams5.get("sort");
       let pageFromUrl = parseInt(urlParams5.get("page"));
       let pageSizeFromUrl = parseInt(urlParams5.get("pageSize"));
+
+      let t = "";
+      if (searchTermFromUrl) {
+        t += `Searching for "${searchTermFromUrl}". `;
+      }
+      if (location.pathname == "/") {
+        t += `Home page. `;
+      }
       //console.log("pageFromUrl: ", pageFromUrl);
       //console.log("pageSizeFromUrl: ", pageSizeFromUrl);
       /*    if (
@@ -91,7 +109,21 @@ export default function PostList({ deleteSignal }) {
       if (data.user) {
         setUserInfo(data.user);
         setIsUsersPage(true);
+        t = `Posts by ${data.user.username}. `;
       }
+      if (data.tag) {
+        setIsTagPage(true);
+        setTagInfo(data.tag);
+        t = `Posts with tag "${data.tag.name}". `;
+      }
+      if (data.page) {
+        t += `Page ${data.page} with page size ${pageSizeStore} `;
+      } else {
+        t += `Top page`;
+      }
+      setTitle(t);
+      //console.log(" t in fetchPostsByQuerryString in PostList.jsx: ", t);
+      setDescription(t);
       /* } else {
         console.log(
           "no page or pageSize exist in URL or are not equal to that in data. ",
@@ -260,6 +292,17 @@ export default function PostList({ deleteSignal }) {
             </div>
           </div>
         )}
+        {isTagPage && tagInfo?.name && (
+          <div className=" flex max-w-full flex-col ">
+            <div className=" flex max-w-full items-center ">
+              <p>Posts with tag &quot;</p>
+              <h1 className="my-1  p-1 text-center font-serif text-xl  ">
+                {tagInfo?.name}
+              </h1>
+              <p>&quot;</p>
+            </div>
+          </div>
+        )}
 
         <p className="text-base">Total number of posts found: {totalPosts}</p>
         {/*  <p>Page size: {pageSize}</p>
@@ -273,7 +316,7 @@ export default function PostList({ deleteSignal }) {
         </p>
       </div>
 
-      <div className=" flex flex-col gap-2">
+      <div className=" flex flex-col gap-1.5">
         <ControlBar page={page} totalPages={totalPages} />
         {!loading && posts.length === 0 && (
           <p className="text-xl text-gray-500">No posts found.</p>
@@ -286,18 +329,31 @@ export default function PostList({ deleteSignal }) {
             <p className="text-main-border pl-3 text-xl">Loading...</p>
           </div> */
         )}
-        {!loading &&
-          posts &&
-          posts.map((post) => (
-            <PostCard
-              onDelete={(postid) => {
-                setShowModal(true);
-                setPostToDelete(postid);
-              }}
-              key={post._id}
-              post={post}
-            />
-          ))}
+        {!loading && posts && (
+          <>
+            <Helmet defaultTitle="My Blog" titleTemplate="%s | My Blog">
+              <title>{title}</title>
+              <meta name="description" content={description + " | My Blog"} />
+              <meta property="og:title" content={title + " | My Blog"} />
+              <meta
+                property="og:description"
+                content={description + " | My Blog"}
+              />
+              <meta property="og:image" content="url-to-your-image" />
+              {/* <meta property="og:image" content="post.image" /> */}
+            </Helmet>
+            {posts.map((post) => (
+              <PostCard
+                onDelete={(postid) => {
+                  setShowModal(true);
+                  setPostToDelete(postid);
+                }}
+                key={post._id}
+                post={post}
+              />
+            ))}
+          </>
+        )}
         <ControlBar page={page} totalPages={totalPages} />
       </div>
       {errorMessage && (

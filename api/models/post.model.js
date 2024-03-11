@@ -65,7 +65,7 @@ postSchema.virtual("comments", {
 //https://mongoosejs.com/docs/populate.html#deep-populate
 
 const Post = mongoose.model("Post", postSchema);
-
+//const User = mongoose.models.user || mongoose.model("user", userSchema)
 export default Post;
 
 //tags: [{ type: Schema.Types.ObjectId, ref: "Tag" }],

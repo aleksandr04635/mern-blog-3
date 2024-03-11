@@ -56,6 +56,39 @@ export default function TagsTable(reloadSwitch) {
     fetchComments();
   }, [reloadSwitch]); */
 
+  /*   "dark-active-bg": "#1c284a",
+  "active-bg": "#f2faff",
+  "dark-main-bg": "#10172a",
+  "dark-additional-bg": "#1f2937",
+  "secondary-border": "#6366F1",
+  "main-border": "#078493", */
+
+  const ownTheme = {
+    root: {
+      base: "w-full text-left text-sm text-gray-500 dark:text-gray-400",
+      shadow:
+        "absolute bg-white dark:bg-black w-full h-full top-0 left-0 rounded-lg drop-shadow-md -z-10",
+      wrapper: "relative",
+    },
+    body: {
+      base: "group/body",
+      cell: {
+        base: "group-first/body:group-first/row:first:rounded-tl-lg group-first/body:group-first/row:last:rounded-tr-lg group-last/body:group-last/row:first:rounded-bl-lg group-last/body:group-last/row:last:rounded-br-lg px-6 py-4",
+      },
+    },
+    head: {
+      base: "group/head text-xs uppercase text-gray-950 dark:text-gray-400",
+      cell: {
+        base: "group-first/head:first:rounded-tl-lg group-first/head:last:rounded-tr-lg bg-white border-main-border dark:bg-dark-additional-bg px-6 py-2",
+      },
+    },
+    row: {
+      base: "group/row",
+      hovered: "hover:bg-active-bg dark:hover:bg-dark-active-bg",
+      striped:
+        "odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-700",
+    },
+  };
   return (
     <div className=" pl-1 pr-2 lg:pr-0  ">
       {/*     <button onClick={refetch}>Refetch Posts</button> */}
@@ -66,14 +99,11 @@ export default function TagsTable(reloadSwitch) {
             <Table
               hoverable
               className="mx-auto w-full  rounded-b-lg  shadow-md "
+              theme={ownTheme}
             >
               <Table.Head className="font-light normal-case dark:bg-[#1f2937] dark:text-white">
-                <Table.HeadCell className=" dark:bg-dark-active-bg">
-                  Tag
-                </Table.HeadCell>
-                <Table.HeadCell className=" dark:bg-dark-active-bg">
-                  Posts
-                </Table.HeadCell>
+                <Table.HeadCell>Tag</Table.HeadCell>
+                <Table.HeadCell>Posts</Table.HeadCell>
               </Table.Head>
               <Table.Body className="text-gray-800 dark:text-white">
                 {tags.slice(0, 10).map((tag, i) => (
@@ -81,10 +111,10 @@ export default function TagsTable(reloadSwitch) {
                     key={i}
                     className="bg-white py-1 dark:border-gray-700 dark:bg-gray-800"
                   >
-                    <Table.Cell className="max-w-[150px] overflow-hidden py-1 pl-2">
+                    <Table.Cell className="max-w-[150px] overflow-hidden py-1 pl-2 last:pb-2">
                       <TagLink tag={tag} />
                     </Table.Cell>
-                    <Table.Cell className="w-[60px] py-1 text-center">
+                    <Table.Cell className="w-[60px] py-1 text-center last:pb-2">
                       {tag.number_of_posts}
                     </Table.Cell>
                   </Table.Row>

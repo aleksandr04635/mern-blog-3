@@ -92,7 +92,7 @@ export default function Search() {
 
   return (
     <div className="flex flex-col xl:flex-row">
-      <Helmet>
+      <Helmet defaultTitle="My Blog" titleTemplate="%s | My Blog">
         <title>{`Searching for "${sidebarData.searchTerm}" `}</title>
         <meta
           name="description"

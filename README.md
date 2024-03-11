@@ -86,6 +86,14 @@
               being signed in - they change their position depending on whether
               the page scroll would make a tooltip invisible.
             </p>
+             <p>
+              Also, notice how the page title changes depending on whether it's
+              a page with a list of posts with a specific tag, that of
+              specific author or just a result of a search query. Together with
+              full correspondence of the shown post lists to the URL it allows
+              for bookmarking any specific page of any post list and its content
+              won't change in the future - try to bookmark any post list.
+            </p>
 </div>
 
 It's deployed to Vercel [here](https://oleksandrs-mern-blog.vercel.app/)

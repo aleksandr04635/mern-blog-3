@@ -23,21 +23,21 @@ export default function Likes({ type, comment, onLike = () => {} }) {
         type == "card"
           ? "You can upvote a post only after reading it"
           : !currentUser
-          ? "You can upvote only being signed in"
-          : ""
+            ? "You can vote only if you are signed in"
+            : ""
       }
       style="warning"
       position="bottom"
     >
       <div
         className={`
-    dark:border-gray-700 flex items-center 
-    gap-2 ${
+    flex items-center gap-2 
+    dark:border-gray-700 ${
       type == "post"
         ? "h-[50px] w-full p-2 text-lg"
         : type == "card"
-        ? "text-sm"
-        : "p-1 text-xs max-w-fit"
+          ? "text-sm"
+          : "max-w-fit p-1 text-xs"
     }`}
       >
         <button
@@ -47,7 +47,7 @@ export default function Likes({ type, comment, onLike = () => {} }) {
             onLike(
               comment._id,
               "l",
-              comment.likes.includes(currentUser._id) ? "-" : "+"
+              comment.likes.includes(currentUser._id) ? "-" : "+",
             )
           }
           className={`text-gray-400 hover:text-blue-500 ${
@@ -71,7 +71,7 @@ export default function Likes({ type, comment, onLike = () => {} }) {
             onLike(
               comment._id,
               "d",
-              comment.dislikes.includes(currentUser._id) ? "-" : "+"
+              comment.dislikes.includes(currentUser._id) ? "-" : "+",
             )
           }
           className={`text-gray-400 hover:text-blue-500 ${

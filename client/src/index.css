@@ -70,14 +70,18 @@ body {
 
 .post-content a,
 .comment-content a {
-  color: rgb(73, 149, 199);
+  color: #5591f8;
   text-decoration: none;
 }
-
 .post-content a:hover,
 .comment-content a:hover {
-  text-decoration: underline;
+  color: #66dcf3;
+  text-decoration: none;
 }
+/* .post-content a:hover,
+.comment-content a:hover {
+  text-decoration: underline;
+} */
 
 /* .dark .post-content a {
   color: red;

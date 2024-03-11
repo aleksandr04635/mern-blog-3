@@ -11,8 +11,8 @@ export default function Home() {
   return (
     <div className="flex flex-col justify-center gap-2 lg:flex-row lg:gap-3">
       <Helmet>
-        <title>My Blog - Main page</title>
-        <meta name="description" content="My Blog - Main page" />
+        <title>My Blog - Home page</title>
+        <meta name="description" content="My Blog - Home page" />
       </Helmet>
       <div className="flex-0 w-full overflow-hidden lg:w-3/12 lg:py-10 lg:pl-2 ">
         <TagsTable /* reloadSwitch={reloadSwitch} */ />

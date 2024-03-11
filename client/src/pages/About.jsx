@@ -45,13 +45,13 @@ export default function About() {
               The entire comments tree system worked in this way, by
               invalidation of queries in the cache by mutations initially, you
               can still find this code commented, but then I remade the comments
-              tree to manual cache changing by optimistic update - changing the
-              cache before the delivery of the query result in case of editing
-              and liking, or pessimistic update - by changing the result of
-              previous queries depending on the result of new ones of another
-              endpoint in case of creation and deletion of comments. It
-              minimised the time the user sees any loading to the minimum.
-              Possible errors are accounted for too - you can uncomment
+              tree into manual cache changing by optimistic update - changing
+              the cache before the delivery of the query result in cases of
+              editing and liking of comments, or pessimistic update - by
+              changing the result of previous queries depending on the result of
+              new ones to another endpoint in cases of creation and deletion of
+              comments. It minimised the time the user sees any loading to the
+              minimum. Possible errors are accounted for too - you can uncomment
               commented throwing of test errors in comment.route.js in the API
               folder and see the result, for example by clicking like of comment
               - like count would initially change and then the error would
@@ -101,6 +101,14 @@ export default function About() {
               while seeing only the post list or attempting to vote while not
               being signed in - they change their position depending on whether
               the page scroll would make a tooltip invisible.
+            </p>
+            <p>
+              Also, notice how the page title changes depending on whether it's
+              a page with a list of posts with a specific tag, that of specific
+              author or just a result of a search query. Together with full
+              correspondence of the shown post lists to the URL it allows for
+              bookmarking any specific page of any post list and its content
+              won't change in the future - try to bookmark any post list.
             </p>
             <Link
               className="link-stand"
