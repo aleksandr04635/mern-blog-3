@@ -19,7 +19,7 @@ export default function Dashboard() {
   }, [location.search]);
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
-      <div className="flex-none overflow-hidden border-gray-500 sm:min-h-screen md:w-64 md:border-r ">
+      <div className="border-layout-border flex-none overflow-hidden sm:min-h-screen md:w-64 md:border-r ">
         {/* Sidebar */}
         <DashSidebar />
       </div>

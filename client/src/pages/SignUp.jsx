@@ -43,7 +43,8 @@ export default function SignUp() {
   const handleChange = (e) => {
     setVisibleEr(false);
     //setErrorMessage(null);
-    setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
+    //setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
+    setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
   //old without instant sign-in

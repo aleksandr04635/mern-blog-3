@@ -523,7 +523,7 @@ export default function PostEditor({ mode, postId }) {
                 formData.title?.length > 5 ? "" : "minimum 6 characters"
               }
             />
-            <p className="p-1 text-xs text-gray-500">
+            <p className="text-additional-text dark:text-dark-additional-text p-1 text-xs">
               {150 - (formData.title?.length ?? 0)} characters remaining
             </p>
           </div>
@@ -551,7 +551,7 @@ export default function PostEditor({ mode, postId }) {
                 formData.intro?.length > 5 ? "" : "minimum 6 characters"
               }
             />
-            <p className="text-xs text-gray-500">
+            <p className="text-additional-text dark:text-dark-additional-text text-xs">
               {300 - (formData.intro?.length ?? 0)} characters remaining
             </p>
           </div>

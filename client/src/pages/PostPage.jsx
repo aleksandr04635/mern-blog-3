@@ -168,11 +168,11 @@ export default function PostPage() {
   }
   return (
     <main className="mx-auto min-h-screen   max-w-6xl px-1 sm:p-3">
-      <Helmet>
+      <Helmet defaultTitle="My Blog" titleTemplate="%s | My Blog">
         <title>{post.title}</title>
         <meta
           name="description"
-          content={post.title + " by " + post.userId.username}
+          content={post.title + " by " + post.userId.username + " | My Blog"}
         />
         <meta property="og:image" content="post.image" />
       </Helmet>

@@ -55,8 +55,42 @@ export default function PaginationBar({ currentPage, totalPages }) {
 
   //const maxPage = Math.min(totalPages, Math.max(currentPage + 4, 10));
   //const minPage = Math.max(1, Math.min(currentPage - 5, maxPage - 9));
-  const maxPage = Math.min(totalPages, Math.max(currentPage + 3, 6));
-  const minPage = Math.max(1, Math.min(currentPage - 3, maxPage - 5));
+  //const maxPage = Math.min(totalPages, Math.max(currentPage + 3, 6));
+  //const minPage = Math.max(1, Math.min(currentPage - 3, maxPage - 5));
+  const numberOfLinksOnTheSidesOfTheCurrentPageWhenItIsInTheMiddleGroup = 2;
+  const maximalLengthOfASideGrourOfLinks = 2;
+  const maxPageInCentralGroup = Math.min(
+    totalPages,
+    Math.max(
+      currentPage +
+        numberOfLinksOnTheSidesOfTheCurrentPageWhenItIsInTheMiddleGroup,
+      maximalLengthOfASideGrourOfLinks,
+    ),
+  );
+  const minPageInCentralGroup = Math.max(
+    1,
+    Math.min(
+      currentPage -
+        numberOfLinksOnTheSidesOfTheCurrentPageWhenItIsInTheMiddleGroup,
+      totalPages - maximalLengthOfASideGrourOfLinks + 1,
+      //maxPageInCentralGroup -
+      //  (numberOfLinksOnTheSidesOfTheCurrentPageWhenItIsInTheMiddleGroup + 1),
+      //maximalLengthOfASideGrourOfLinks,
+    ),
+  );
+  //correction for a case when only one empty spot exists between the central group and a side group
+  let minPage = minPageInCentralGroup;
+  let maxPage = maxPageInCentralGroup;
+  if (minPage == 3) {
+    minPage = 2;
+  }
+  if (maxPage == totalPages - 2) {
+    maxPage = totalPages - 1;
+  }
+  /*   console.log(" minPageInCentralGroup: ", minPageInCentralGroup);
+  console.log("maxPageInCentralGroup: ", maxPageInCentralGroup);
+  console.log(" minPage: ", minPage);
+  console.log("maxPage: ", maxPage); */
   const numberedPageItems = [];
   //for (let page = minPage; page <= maxPage; page++) {
   for (let page = maxPage; page >= minPage; page--) {

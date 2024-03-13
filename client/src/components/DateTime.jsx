@@ -2,7 +2,8 @@ import { formatDistanceToNow, formatISO9075 } from "date-fns";
 import moment from "moment";
 
 export default function DateTime({ crTime, upTime, variant }) {
-  const ta = formatISO9075(new Date(crTime)).split(" ").join("\u00A0");
+  const ta =
+    "created\u00A0" + formatISO9075(new Date(crTime)).split(" ").join("\u00A0");
   //const tb = moment(time).fromNow().split(" ").join("\u00A0");
   /*   const tb =
   "updated\u00A0" +
@@ -17,8 +18,8 @@ export default function DateTime({ crTime, upTime, variant }) {
     <span
       className={
         variant == "post"
-          ? "w-full sm:w-fit flex flox-row gap-5 justify-between"
-          : "flex flex-row gap-2 text-gray-500 text-xs"
+          ? "flox-row flex w-full justify-between gap-5 sm:w-fit"
+          : "text-additional-text dark:text-dark-additional-text flex flex-row gap-2 text-xs"
       }
     >
       <span>{ta}</span>
@@ -27,3 +28,5 @@ export default function DateTime({ crTime, upTime, variant }) {
   );
 }
 //justify-between
+//"additional-text": "#374151",
+//"dark-additional-text": "#E5E7EB",

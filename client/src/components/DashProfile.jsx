@@ -353,7 +353,10 @@ export default function DashProfile() {
           />
         </div>
         <div className="relative">
-          <Label htmlFor="password" value="Your password:" />
+          <Label
+            htmlFor="password"
+            value="Your password, if you want to change it:"
+          />
           <TextInput
             type={visible ? "text" : "password"}
             placeholder="Password"
@@ -443,7 +446,7 @@ export default function DashProfile() {
           type="button"
           outline
           gradientDuoTone="purpleToBlue"
-          className="mt-10 w-full"
+          className="mb-10 mt-10 w-full"
         >
           Create a post
         </Button>

@@ -31,8 +31,8 @@ export default function Likes({ type, comment, onLike = () => {} }) {
     >
       <div
         className={`
-    flex items-center gap-2 
-    dark:border-gray-700 ${
+     flex items-center 
+    gap-2 ${
       type == "post"
         ? "h-[50px] w-full p-2 text-lg"
         : type == "card"
@@ -50,7 +50,7 @@ export default function Likes({ type, comment, onLike = () => {} }) {
               comment.likes.includes(currentUser._id) ? "-" : "+",
             )
           }
-          className={`text-gray-400 hover:text-blue-500 ${
+          className={`text-additional-text dark:text-dark-additional-text hover:text-blue-500 ${
             currentUser &&
             comment.likes.includes(currentUser._id) &&
             "!text-blue-500"
@@ -58,7 +58,7 @@ export default function Likes({ type, comment, onLike = () => {} }) {
         >
           <FaThumbsUp className="text-sm" />
         </button>
-        <p className="text-gray-400">
+        <p className="text-additional-text dark:text-dark-additional-text">
           {comment.numberOfLikes > 0 &&
             comment.numberOfLikes +
               " " +
@@ -74,7 +74,7 @@ export default function Likes({ type, comment, onLike = () => {} }) {
               comment.dislikes.includes(currentUser._id) ? "-" : "+",
             )
           }
-          className={`text-gray-400 hover:text-blue-500 ${
+          className={`text-additional-text dark:text-dark-additional-text hover:text-blue-500 ${
             currentUser &&
             comment.dislikes.includes(currentUser._id) &&
             "!text-blue-500"
@@ -82,7 +82,7 @@ export default function Likes({ type, comment, onLike = () => {} }) {
         >
           <FaThumbsDown className="text-sm" />
         </button>
-        <p className="text-gray-400">
+        <p className="text-additional-text dark:text-dark-additional-text">
           {comment.numberOfDislikes > 0 &&
             comment.numberOfDislikes +
               " " +

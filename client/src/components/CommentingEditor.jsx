@@ -137,7 +137,7 @@ export default function CommentingEditor({
   return (
     <div className="w-full p-3">
       {currentUser ? (
-        <div className="my-5 flex items-center gap-1 text-sm text-gray-500">
+        <div className="text-additional-text dark:text-dark-additional-text my-5 flex items-center gap-1 text-sm">
           <p>You are signed in as: </p>
           <img
             className="h-5 w-5 rounded-full object-cover"
@@ -179,7 +179,7 @@ export default function CommentingEditor({
             value={comment}
           /> */}
           <div className="mt-5 flex items-center justify-between">
-            <p className="text-xs text-gray-500">
+            <p className="text-additional-text dark:text-dark-additional-text text-xs">
               {600 - comment.length ?? 0} characters remaining
             </p>
             <div className="flex justify-between gap-2">

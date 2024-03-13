@@ -92,10 +92,10 @@ export default function Header() {
   };
 
   return (
-    <Navbar className="border-b border-gray-500 pb-1 pl-1 pr-2 pt-1 dark:border-gray-500 sm:pb-2.5 sm:pt-2.5">
+    <Navbar className="border-layout-border dark:border-layout-border border-b pb-1 pl-1 pr-2 pt-1 sm:pb-2.5 sm:pt-2.5">
       <div className="flex w-full flex-col">
         <div className="flex w-full items-center justify-between ">
-          {/* <Navbar className="m-auto max-w-6xl max-w-[1200px]  border border-gray-400  rounded"></Navbar> */}
+          {/* <Navbar className="m-auto max-w-6xl max-w-[1200px]  border border-layout-border  rounded"></Navbar> */}
           {/*  <Link className="" to={`/`}>
             <Button
               outline
@@ -135,7 +135,7 @@ export default function Header() {
               </div>
             </button> */}
             <button
-              className=" flex  w-fit items-center justify-center rounded-[7px] bg-gradient-to-tr
+              className=" flex  w-fit items-center justify-center rounded-[7px] bg-gradient-to-bl
              from-cyan-400   via-blue-500 to-purple-600 p-[2px] font-semibold
               dark:hover:bg-dark-active-bg     "
             >
@@ -163,7 +163,7 @@ export default function Header() {
             handleSubmit={handleSubmit}
             searchTerm={searchTerm}
           />
-          <button
+          {/*     <button
             className="   h-[40px] w-[40px] rounded-full   
             bg-gradient-to-tr from-cyan-400 via-blue-500 to-purple-600 text-center
               dark:hover:bg-dark-active-bg  sm:inline    "
@@ -174,6 +174,24 @@ export default function Header() {
              bg-white from-cyan-400 via-blue-500 to-purple-600
              text-slate-900 hover:bg-gradient-to-tr hover:text-white 
              dark:bg-[#1f2937] dark:text-white "
+            >
+              {theme === "light" ? (
+                <FaMoon className="mx-auto " />
+              ) : (
+                <FaSun className="mx-auto" />
+              )}
+            </div>
+          </button> */}
+          <button
+            className="   flex h-[40px] w-[40px]   items-center   justify-center rounded-full
+            bg-gradient-to-bl from-cyan-400 via-blue-500 to-purple-600 p-[2px]
+              text-center  dark:hover:bg-dark-active-bg  sm:inline  "
+            onClick={() => dispatch(toggleTheme())}
+          >
+            <div
+              className="dark:bg-dark-additional-bg mx-auto flex h-full w-full items-center justify-center
+             rounded-full bg-white text-slate-900 hover:bg-transparent hover:text-white
+             dark:text-white dark:hover:bg-transparent "
             >
               {theme === "light" ? (
                 <FaMoon className="mx-auto " />

@@ -326,6 +326,8 @@ const likePost = async (req, res, next) => {
   //console.log("type, action from likePost: ", type, action);
   try {
     const post = await Post.findById(req.params.postId);
+    const updatedAtOld = post.updatedAt;
+    //console.log("updatedAtOld from likePost: ", updatedAtOld);
     if (!post) {
       return next(errorHandler(404, "Post not found"));
     }
@@ -384,7 +386,10 @@ const likePost = async (req, res, next) => {
         post.dislikes.splice(userIndexInDislikes, 1);
       }
     }
-    await post.save();
+    post.updatedAt = updatedAtOld;
+    //console.log("post.updatedAt from likePost: ", post.updatedAt);
+    await post.save({ timestamps: false });
+    //console.log("post.updatedAt from likePost2: ", post.updatedAt);
     res.status(200).json(post);
   } catch (error) {
     next(error);

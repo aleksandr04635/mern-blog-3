@@ -65,7 +65,7 @@ export default function PostCard({ post, onDelete }) {
           {/*  Controls */}
           {currentUser &&
             (post.userId._id == currentUser._id || currentUser.isAdmin) && (
-              <div className="flex w-[100px] items-center justify-between gap-2 px-5 text-gray-500">
+              <div className="text-additional-text dark:text-dark-additional-text flex w-[100px] items-center justify-between gap-2 px-5">
                 <Tooltip message="Edit">
                   <div
                     onClick={() => {

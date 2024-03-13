@@ -319,7 +319,9 @@ export default function PostList({ deleteSignal }) {
       <div className=" flex flex-col gap-1.5">
         <ControlBar page={page} totalPages={totalPages} />
         {!loading && posts.length === 0 && (
-          <p className="text-xl text-gray-500">No posts found.</p>
+          <p className="text-additional-text dark:text-dark-additional-text text-xl">
+            No posts found.
+          </p>
         )}
         {/* <div className="flex justify-center items-center min-h-screen"> */}
         {loading && (

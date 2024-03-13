@@ -8,8 +8,8 @@ const createComment = async (req, res, next) => {
   connectDB();
   try {
     //return next(errorHandler(403, "Test error createComment"));
-    console.log("req.body to newComment : ", req.body);
-    console.log("req.user.id from create:", req.user.id);
+    //console.log("req.body to newComment : ", req.body);
+    //console.log("req.user.id from create:", req.user.id);
     if (!req.user.id) {
       return next(
         errorHandler(403, "You are not allowed to edit this comment")
@@ -70,7 +70,7 @@ const createComment = async (req, res, next) => {
 
 const getPostComments = async (req, res, next) => {
   connectDB();
-  console.log("req.params in getPostComments : ", req.params);
+  //console.log("req.params in getPostComments : ", req.params);
   try {
     const comments = await Comment.find({ post: req.params.postId })
       .populate("userId", ["username", "_id", "profilePicture"])
@@ -120,13 +120,14 @@ const getCommentComments = async (req, res, next) => {
 
 const likeComment = async (req, res, next) => {
   connectDB();
-  console.log("req.body in likeComment: ", req.body);
+  //console.log("req.body in likeComment: ", req.body);
   const type = req.body.type;
   const action = req.body.action;
   //console.log("type, action : ", type, action);
   try {
     //return next(errorHandler(403, "Test error likeComment"));
     const comment = await Comment.findById(req.params.commentId);
+    const updatedAtOld = comment.updatedAt;
     if (!comment) {
       return next(errorHandler(404, "Comment not found"));
     }
@@ -213,7 +214,8 @@ const likeComment = async (req, res, next) => {
       comment.numberOfDislikes -= 1;
       comment.dislikes.splice(userIndexInDislikes, 1);
     }
-    await comment.save();
+    comment.updatedAt = updatedAtOld;
+    await comment.save({ timestamps: false });
     res.status(200).json(comment);
   } catch (error) {
     next(error);
@@ -223,7 +225,7 @@ const likeComment = async (req, res, next) => {
 const editComment = async (req, res, next) => {
   console.log("req.body to editComment : ", req.body);
   console.log("req.params.commentId to editComment : ", req.params.commentId);
-  //console.log("req.user.id from create:", req.user.id);
+  //console.log("req.user.id from editComment:", req.user.id);
   connectDB();
   try {
     //return next(errorHandler(403, "Test error editComment"));

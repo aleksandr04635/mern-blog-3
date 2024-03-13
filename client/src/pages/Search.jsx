@@ -100,7 +100,7 @@ export default function Search() {
         />
       </Helmet>
       <div
-        className="w-full border-gray-500 bg-white px-3 py-1  dark:bg-gray-800 
+        className="border-layout-border w-full bg-white px-3 py-1  dark:bg-gray-800 
       xl:min-h-screen xl:w-[300px] xl:flex-none xl:border-r xl:py-3"
       >
         <form className="flex flex-col gap-1 xl:gap-8" onSubmit={handleSubmit}>

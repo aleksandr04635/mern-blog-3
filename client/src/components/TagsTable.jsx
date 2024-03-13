@@ -65,7 +65,7 @@ export default function TagsTable(reloadSwitch) {
 
   const ownTheme = {
     root: {
-      base: "w-full text-left text-sm text-gray-500 dark:text-gray-400",
+      base: "w-full text-left text-sm text-additional-text dark:text-dark-additional-text",
       shadow:
         "absolute bg-white dark:bg-black w-full h-full top-0 left-0 rounded-lg drop-shadow-md -z-10",
       wrapper: "relative",
@@ -73,17 +73,17 @@ export default function TagsTable(reloadSwitch) {
     body: {
       base: "group/body",
       cell: {
-        base: "group-first/body:group-first/row:first:rounded-tl-lg group-first/body:group-first/row:last:rounded-tr-lg group-last/body:group-last/row:first:rounded-bl-lg group-last/body:group-last/row:last:rounded-br-lg px-6 py-4",
+        base: " group-first/body:group-first/row:first:rounded-tl-lg group-first/body:group-first/row:last:rounded-tr-lg group-last/body:group-last/row:first:rounded-bl-lg group-last/body:group-last/row:last:rounded-br-lg px-6 py-4",
       },
     },
     head: {
-      base: "group/head text-xs uppercase text-gray-950 dark:text-gray-400",
+      base: "group/head text-xs uppercase text-additional-text dark:text-dark-additional-text",
       cell: {
-        base: "group-first/head:first:rounded-tl-lg group-first/head:last:rounded-tr-lg bg-white border-main-border dark:bg-dark-additional-bg px-6 py-2",
+        base: "group-first/head:first:rounded-tl-lg group-first/head:last:rounded-tr-lg bg-white border-main-border dark:bg-dark-additional-bg dark:text-white px-6 py-2",
       },
     },
     row: {
-      base: "group/row",
+      base: "group/row dark:bg-dark-additional-bg",
       hovered: "hover:bg-active-bg dark:hover:bg-dark-active-bg",
       striped:
         "odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-700",
@@ -95,22 +95,19 @@ export default function TagsTable(reloadSwitch) {
       {tags && tags.length > 0 ? (
         <>
           <p className="py-1 ">The most popular tags:</p>
-          <div className="border-main-border overflow-hidden rounded-lg border">
+          <div className="overflow-hidden rounded-lg border border-main-border">
             <Table
               hoverable
               className="mx-auto w-full  rounded-b-lg  shadow-md "
               theme={ownTheme}
             >
-              <Table.Head className="font-light normal-case dark:bg-[#1f2937] dark:text-white">
+              <Table.Head className="font-light normal-case ">
                 <Table.HeadCell>Tag</Table.HeadCell>
                 <Table.HeadCell>Posts</Table.HeadCell>
               </Table.Head>
-              <Table.Body className="text-gray-800 dark:text-white">
+              <Table.Body className="">
                 {tags.slice(0, 10).map((tag, i) => (
-                  <Table.Row
-                    key={i}
-                    className="bg-white py-1 dark:border-gray-700 dark:bg-gray-800"
-                  >
+                  <Table.Row key={i} className="bg-white py-1 ">
                     <Table.Cell className="max-w-[150px] overflow-hidden py-1 pl-2 last:pb-2">
                       <TagLink tag={tag} />
                     </Table.Cell>

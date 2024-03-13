@@ -261,7 +261,7 @@ export default function Comment({
                 <button
                   type="button"
                   onClick={() => setTocomment(!tocomment)}
-                  className="text-gray-400 hover:text-blue-500"
+                  className="text-additional-text dark:text-dark-additional-text hover:text-blue-500"
                 >
                   {tocomment ? "Cancel" : "Comment"}
                 </button>
@@ -274,7 +274,7 @@ export default function Comment({
                   <button
                     type="button"
                     onClick={() => setIsEditing(!isEditing)}
-                    className="text-gray-400 hover:text-blue-500"
+                    className="text-additional-text dark:text-dark-additional-text hover:text-blue-500"
                   >
                     {isEditing ? "Cancel" : "Edit"}
                   </button>
@@ -283,7 +283,7 @@ export default function Comment({
                     onClick={() => setShowModal(true)}
                     //onClick={() => Delete(comment._id)}
                     //onClick={() => onDelete(comment._id)}
-                    className="text-gray-400 hover:text-red-500"
+                    className="text-additional-text dark:text-dark-additional-text hover:text-red-500"
                   >
                     Delete
                   </button>
