@@ -1,4 +1,4 @@
-import { Alert, Button, TextInput, Textarea, Spinner } from "flowbite-react";
+import { Alert, Button } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -137,7 +137,7 @@ export default function CommentingEditor({
   return (
     <div className="w-full p-3">
       {currentUser ? (
-        <div className="text-additional-text dark:text-dark-additional-text my-5 flex items-center gap-1 text-sm">
+        <div className="my-5 flex items-center gap-1 text-sm text-additional-text dark:text-dark-additional-text">
           <p>You are signed in as: </p>
           <img
             className="h-5 w-5 rounded-full object-cover"
@@ -152,7 +152,7 @@ export default function CommentingEditor({
           </Link>
         </div>
       ) : (
-        <div className="text-main-border my-5 flex gap-1 text-sm">
+        <div className="my-5 flex gap-1 text-sm text-main-border">
           You must be signed in to comment.
           <Link className="text-blue-500 hover:underline" to={"/sign-in"}>
             Sign In
@@ -162,7 +162,7 @@ export default function CommentingEditor({
       {currentUser && (
         <form
           onSubmit={handleSubmit}
-          className=" border-main-border rounded-md border p-3"
+          className=" rounded-md border border-main-border p-3"
         >
           <TinyMCEEditor
             value2={comment}
@@ -179,7 +179,7 @@ export default function CommentingEditor({
             value={comment}
           /> */}
           <div className="mt-5 flex items-center justify-between">
-            <p className="text-additional-text dark:text-dark-additional-text text-xs">
+            <p className="text-xs text-additional-text dark:text-dark-additional-text">
               {600 - comment.length ?? 0} characters remaining
             </p>
             <div className="flex justify-between gap-2">

@@ -33,6 +33,11 @@ import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { Link } from "react-router-dom";
 import ModalComponent from "./ModalComponent";
 import Loading from "./Loading";
+import {
+  customTextInputTheme,
+  customTextareaTheme,
+} from "../../customFlowbiteThemes";
+import MyButton from "./MyButton";
 
 export default function DashProfile() {
   const { currentUser, error, loading } = useSelector((state) => state.user);
@@ -315,6 +320,7 @@ export default function DashProfile() {
             helperText={
               formData.username?.length > 5 ? "" : "minimum 6 characters"
             }
+            theme={customTextInputTheme}
           />
         </div>
         <div>
@@ -328,6 +334,7 @@ export default function DashProfile() {
             value={formData.email}
             color={validateEmail(formData?.email) ? "info" : "failure"}
             helperText={validateEmail(formData?.email) ? "" : "enter an email"}
+            theme={customTextInputTheme}
           />
         </div>
         <div>
@@ -347,6 +354,7 @@ export default function DashProfile() {
             onChange={handleChange}
             className="h-[160px] sm:h-[80px]"
             value={formData.description}
+            theme={customTextareaTheme}
             /*               helperText={
                 formData.intro?.length > 5 ? "" : "minimum 5 characters"
               } */
@@ -373,6 +381,7 @@ export default function DashProfile() {
                 ? ""
                 : "minimum 6 characters"
             }
+            theme={customTextInputTheme}
           />
           <p
             onClick={() => setVisible(!visible)}
@@ -381,7 +390,32 @@ export default function DashProfile() {
             {visible ? <BsEyeSlash /> : <BsEye />}
           </p>
         </div>
-        <Button
+        <MyButton
+          type="submit"
+          disabled={
+            loading ||
+            imageFileUploading ||
+            formData.username?.length < 6 ||
+            !validateEmail(formData.email) ||
+            (formData.password && formData.password.length < 6)
+          }
+          className=" w-full "
+        >
+          {loading ? (
+            <>
+              <Spinner size="sm" />
+              <span className="pl-3">Loading...</span>
+            </>
+          ) : (
+            /*  <>
+             <Loading className="py-0" />
+              <Spinner size="sm" />
+              <span className="pl-3">Loading...</span>
+            </> */
+            "Update"
+          )}
+        </MyButton>
+        {/*        <Button
           outline
           gradientDuoTone="purpleToBlue"
           type="submit"
@@ -394,15 +428,14 @@ export default function DashProfile() {
           }
         >
           {loading ? (
-            <Loading />
-          ) : (
-            /*  <>
+            <>
               <Spinner size="sm" />
               <span className="pl-3">Loading...</span>
-            </> */
+            </>
+          ) : (
             "Update"
           )}
-        </Button>
+        </Button> */}
 
         {updateUserSuccess && (
           <Alert
@@ -421,7 +454,7 @@ export default function DashProfile() {
           </Alert>
         )}
       </form>
-      <div className="mt-4 flex justify-around gap-4">
+      {/*       <div className="mt-4 flex justify-around gap-4">
         <Button
           type="button"
           outline
@@ -440,8 +473,26 @@ export default function DashProfile() {
         >
           Sign Out
         </Button>
+      </div> */}
+      <div className="mt-4 flex justify-around gap-4">
+        <MyButton
+          type="button"
+          onClick={() => setShowModal(true)}
+          style="danger"
+          className=" w-full"
+        >
+          Delete Account
+        </MyButton>
+        <MyButton
+          type="button"
+          onClick={handleSignout}
+          style="attention"
+          className="w-full"
+        >
+          Sign Out
+        </MyButton>
       </div>
-      <Link to={"/create-post"} className="">
+      {/*      <Link to={"/create-post"} className="">
         <Button
           type="button"
           outline
@@ -450,8 +501,12 @@ export default function DashProfile() {
         >
           Create a post
         </Button>
+      </Link> */}
+      <Link to={"/create-post"} className="">
+        <MyButton type="button" className="mb-10 mt-10 w-full">
+          Create a post
+        </MyButton>
       </Link>
-
       {/*       {error && (
         <Alert
           color="failure"

@@ -10,6 +10,7 @@ import {
 import { BsEyeSlash } from "react-icons/bs";
 import { BsEye } from "react-icons/bs";
 import OAuth from "../components/OAuth";
+import { customTextInputTheme } from "../../customFlowbiteThemes";
 
 export default function SignIn() {
   const {
@@ -97,6 +98,7 @@ export default function SignIn() {
                 helperText={
                   validateEmail(formData?.email) ? "" : "enter an email"
                 }
+                theme={customTextInputTheme}
               />
             </div>
             <div className="relative">
@@ -111,6 +113,7 @@ export default function SignIn() {
                 helperText={
                   formData.password?.length > 5 ? "" : "minimum 6 characters"
                 }
+                theme={customTextInputTheme}
               />
               <p
                 onClick={() => setVisible(!visible)}

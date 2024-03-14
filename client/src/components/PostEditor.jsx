@@ -33,6 +33,10 @@ import {
 
 import TinyMCEEditor from "../components/TinyMCEEditor";
 import Loading from "./Loading";
+import {
+  customTextInputTheme,
+  customTextareaTheme,
+} from "../../customFlowbiteThemes";
 
 export default function PostEditor({ mode, postId }) {
   const navigate = useNavigate();
@@ -321,7 +325,7 @@ export default function PostEditor({ mode, postId }) {
               <div className="text-lg">{formData?.importance || 1}</div>
               <div className="flex flex-col   text-sm">
                 <button
-                  className=" hover:bg-active-bg border-main-border outline-main-border relative h-[16px] w-[19px]  items-center overflow-hidden rounded-t-lg border text-center text-lg outline-1 hover:outline dark:hover:bg-dark-active-bg"
+                  className=" relative h-[16px] w-[19px] items-center overflow-hidden rounded-t-lg  border border-main-border text-center text-lg outline-1 outline-main-border hover:bg-active-bg hover:outline dark:hover:bg-dark-active-bg"
                   type="button"
                   onClick={() => {
                     return setFormData({
@@ -338,7 +342,7 @@ export default function PostEditor({ mode, postId }) {
                   </p>
                 </button>
                 <button
-                  className="hover:bg-active-bg border-main-border outline-main-border relative h-[16px] w-[19px] items-center  overflow-hidden rounded-b-lg border text-center text-2xl outline-1 hover:outline dark:hover:bg-dark-active-bg"
+                  className="relative h-[16px] w-[19px] items-center overflow-hidden rounded-b-lg border  border-main-border text-center text-2xl outline-1 outline-main-border hover:bg-active-bg hover:outline dark:hover:bg-dark-active-bg"
                   type="button"
                   onClick={() => {
                     if (!!formData.importance & (formData.importance > 1)) {
@@ -368,7 +372,7 @@ export default function PostEditor({ mode, postId }) {
           {/* image */}
           <div>
             <h3 className="p-1 text-lg">Front image (optional):</h3>
-            <div className="border-main-border flex items-center justify-between gap-4 rounded-lg border p-3">
+            <div className="flex items-center justify-between gap-4 rounded-lg border border-main-border p-3">
               <FileInput
                 type="file"
                 accept="image/*"
@@ -432,8 +436,8 @@ export default function PostEditor({ mode, postId }) {
               <input
                 value={tagString}
                 onChange={(e) => setTagString(e.target.value)}
-                className=" border-main-border focus:border-main-border focus:ring-main-border  mr-2 h-10
-                 w-full rounded-lg border py-1 outline-none dark:bg-dark-active-bg sm:w-[350px]"
+                className=" mr-2 h-10 w-full  rounded-lg border
+                 border-main-border py-1 outline-none focus:border-main-border focus:ring-main-border dark:bg-dark-active-bg sm:w-[350px]"
                 placeholder="Enter a post tag"
                 type="text"
               />
@@ -453,10 +457,10 @@ export default function PostEditor({ mode, postId }) {
                 <div
                   onClick={() => setTags(tags.filter((e, n) => n != i))}
                   key={i}
-                  className="bg-active-bg mr-4 flex w-full cursor-pointer items-center justify-start space-x-2 rounded-lg 
+                  className="mr-4 flex w-full cursor-pointer items-center justify-start space-x-2 rounded-lg bg-active-bg 
                   px-2 py-1 dark:bg-dark-active-bg dark:text-white sm:w-[350px]"
                 >
-                  <p className="bg-main-border rounded-full p-1  text-sm text-white">
+                  <p className="rounded-full bg-main-border p-1  text-sm text-white">
                     <TiMinus />
                   </p>
                   <p>{t.name}</p>
@@ -477,13 +481,13 @@ export default function PostEditor({ mode, postId }) {
                     }}
                     className={`${
                       allowedToAddFromDB(t) ? "cursor-pointer" : ""
-                    } bg-active-bg mr-4 flex w-full items-start 
-                    justify-start space-x-2 rounded-lg px-2 py-1 dark:bg-dark-active-bg dark:text-white sm:w-[350px]`}
+                    } mr-4 flex w-full items-start justify-start 
+                    space-x-2 rounded-lg bg-active-bg px-2 py-1 dark:bg-dark-active-bg dark:text-white sm:w-[350px]`}
                   >
                     <div className=" flex w-full items-start space-x-2 ">
                       <p
                         /*  onClick={() => deleteTag(i)} */
-                        className="bg-main-border cursor-pointer rounded-full p-1 text-sm text-white"
+                        className="cursor-pointer rounded-full bg-main-border p-1 text-sm text-white"
                       >
                         <FaPlus />
                       </p>
@@ -522,8 +526,9 @@ export default function PostEditor({ mode, postId }) {
               helperText={
                 formData.title?.length > 5 ? "" : "minimum 6 characters"
               }
+              theme={customTextInputTheme}
             />
-            <p className="text-additional-text dark:text-dark-additional-text p-1 text-xs">
+            <p className="p-1 text-xs text-additional-text dark:text-dark-additional-text">
               {150 - (formData.title?.length ?? 0)} characters remaining
             </p>
           </div>
@@ -550,8 +555,9 @@ export default function PostEditor({ mode, postId }) {
               helperText={
                 formData.intro?.length > 5 ? "" : "minimum 6 characters"
               }
+              theme={customTextareaTheme}
             />
-            <p className="text-additional-text dark:text-dark-additional-text text-xs">
+            <p className="text-xs text-additional-text dark:text-dark-additional-text">
               {300 - (formData.intro?.length ?? 0)} characters remaining
             </p>
           </div>

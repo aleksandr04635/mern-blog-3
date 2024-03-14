@@ -1,13 +1,13 @@
 import { FaMoon, FaSun } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleTheme } from "../redux/theme/themeSlice";
-import { signoutSuccess } from "../redux/user/userSlice";
 import { useEffect, useState } from "react";
 
 export default function ThemeSwitcher() {
   const dispatch = useDispatch();
   const { theme } = useSelector((state) => state.theme);
   //const [sw, setSw] = useState(true);
+
   useEffect(() => {
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
 

@@ -9,6 +9,7 @@ import {
   signInSuccess,
   signInFailure,
 } from "../redux/user/userSlice";
+import { customTextInputTheme } from "../../customFlowbiteThemes";
 
 export default function SignUp() {
   const {
@@ -129,6 +130,7 @@ export default function SignUp() {
                 helperText={
                   formData.username?.length > 5 ? "" : "minimum 6 characters"
                 }
+                theme={customTextInputTheme}
               />
             </div>
             <div>
@@ -143,6 +145,7 @@ export default function SignUp() {
                 helperText={
                   validateEmail(formData?.email) ? "" : "enter an email"
                 }
+                theme={customTextInputTheme}
               />
             </div>
             <div className="relative">
@@ -157,6 +160,7 @@ export default function SignUp() {
                 helperText={
                   formData.password?.length > 5 ? "" : "minimum 6 characters"
                 }
+                theme={customTextInputTheme}
               />
               <p
                 onClick={() => setVisible(!visible)}

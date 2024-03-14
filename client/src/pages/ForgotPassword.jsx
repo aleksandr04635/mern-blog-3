@@ -8,6 +8,7 @@ import {
   signInFailure,
 } from "../redux/user/userSlice";
 import OAuth from "../components/OAuth";
+import { customTextInputTheme } from "../../customFlowbiteThemes";
 
 export default function ForgotPassword() {
   const [formData, setFormData] = useState({});
@@ -125,6 +126,7 @@ export default function ForgotPassword() {
                 helperText={
                   validateEmail(formData?.email) ? "" : "enter an email"
                 }
+                theme={customTextInputTheme}
               />
             </div>
             <Button

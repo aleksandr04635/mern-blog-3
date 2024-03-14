@@ -1,12 +1,13 @@
-import { Avatar, Button, Dropdown, Navbar, TextInput } from "flowbite-react";
+import { Avatar, Button, Dropdown, Navbar } from "flowbite-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AiOutlineSearch } from "react-icons/ai";
 import { useSelector, useDispatch } from "react-redux";
 import { signoutSuccess } from "../redux/user/userSlice";
 import { useEffect, useState } from "react";
 import ThemeSwitcher from "./ThemeSwitcher";
+import MyButton from "./MyButton";
 
-function SearchForm({ type }) {
+function SearchFormForHeader({ type }) {
   const { pageSize } = useSelector((state) => state.pageSize);
   const navigate = useNavigate();
   const location = useLocation();
@@ -94,8 +95,8 @@ export default function Header() {
     <Navbar className="border-b border-layout-border pb-1 pl-1 pr-2 pt-1 dark:border-layout-border sm:pb-2.5 sm:pt-2.5">
       <div className="flex w-full flex-col">
         <div className="flex w-full items-center justify-between ">
-          <Link className="" to={`/?pageSize=${pageSize}`}>
-            {/*   <button
+          {/*  <Link className="" to={`/?pageSize=${pageSize}`}> */}
+          {/*   <button
               className=" flex h-[40px] w-[100px] items-center justify-center rounded-[7px]    
             bg-gradient-to-tr from-cyan-400 via-blue-500 to-purple-600 font-semibold
               dark:hover:bg-dark-active-bg     "
@@ -108,7 +109,7 @@ export default function Header() {
                 My Blog
               </div>
             </button> */}
-            <button
+          {/*      <button
               className=" flex  w-fit items-center justify-center rounded-[7px] bg-gradient-to-bl
              from-cyan-400   via-blue-500 to-purple-600 p-[2px] font-semibold
               dark:hover:bg-dark-active-bg     "
@@ -121,8 +122,10 @@ export default function Header() {
                 My Blog
               </div>
             </button>
+          </Link> */}
+          <Link className="" to={`/?pageSize=${pageSize}`}>
+            <MyButton className=" font-semibold">My Blog</MyButton>
           </Link>
-
           <Link
             className=" link-stand text-base "
             to={`/about`}
@@ -131,7 +134,7 @@ export default function Header() {
           >
             About this project
           </Link>
-          <SearchForm type="wide" />
+          <SearchFormForHeader type="wide" />
           {/*    <button
             className="   flex h-[40px] w-[40px]   items-center   justify-center rounded-full
             bg-gradient-to-bl from-cyan-400 via-blue-500 to-purple-600 p-[2px]
@@ -184,14 +187,17 @@ export default function Header() {
               <Dropdown.Item onClick={handleSignout}>Sign out</Dropdown.Item>
             </Dropdown>
           ) : (
-            <Link to="/sign-in">
+            <Link className="" to="/sign-in">
+              <MyButton>Sign In</MyButton>
+            </Link>
+            /*   <Link to="/sign-in">
               <Button gradientDuoTone="purpleToBlue" outline>
                 Sign In
               </Button>
-            </Link>
+            </Link> */
           )}
         </div>
-        <SearchForm type="narrow" />
+        <SearchFormForHeader type="narrow" />
       </div>
     </Navbar>
   );

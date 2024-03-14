@@ -10,6 +10,7 @@ import {
 import { BsEyeSlash } from "react-icons/bs";
 import { BsEye } from "react-icons/bs";
 import OAuth from "../components/OAuth";
+import { customTextInputTheme } from "../../customFlowbiteThemes";
 
 export default function ResetPassword() {
   const { id, token } = useParams();
@@ -78,13 +79,13 @@ export default function ResetPassword() {
 
   return (
     <div className="min-h-screen sm:mt-20">
-      <div className="flex p-3 max-w-xl mx-auto flex-col  md:items-center gap-5">
-        <h3 className="text-lg font-semibold text-center">
+      <div className="mx-auto flex max-w-xl flex-col gap-5  p-3 md:items-center">
+        <h3 className="text-center text-lg font-semibold">
           Enter your new password.
         </h3>
         <div className="flex-1">
           <form
-            className="flex flex-col w-[300px] mx-auto gap-4"
+            className="mx-auto flex w-[300px] flex-col gap-4"
             onSubmit={handleSubmit}
           >
             <div className="relative">
@@ -99,10 +100,11 @@ export default function ResetPassword() {
                 helperText={
                   formData.password?.length > 5 ? "" : "minimum 6 characters"
                 }
+                theme={customTextInputTheme}
               />
               <p
                 onClick={() => setVisible(!visible)}
-                className="cursor-pointer border-none w-12 h-10 absolute text-xl top-[35px] right-[-21px]"
+                className="absolute right-[-21px] top-[35px] h-10 w-12 cursor-pointer border-none text-xl"
               >
                 {visible ? <BsEyeSlash /> : <BsEye />}
               </p>
@@ -127,10 +129,11 @@ export default function ResetPassword() {
                     ? ""
                     : "Confirmation of the password is wrong"
                 }
+                theme={customTextInputTheme}
               />
               <p
                 onClick={() => setVisible(!visible)}
-                className="cursor-pointer border-none w-12 h-10 absolute text-xl top-[35px] right-[-21px]"
+                className="absolute right-[-21px] top-[35px] h-10 w-12 cursor-pointer border-none text-xl"
               >
                 {visible ? <BsEyeSlash /> : <BsEye />}
               </p>
@@ -179,13 +182,13 @@ export default function ResetPassword() {
           )}
           {success && (
             <>
-              <Alert className={`mt-5 text-center mx-auto `} color="success">
+              <Alert className={`mx-auto mt-5 text-center `} color="success">
                 {/* it can be failure or success */}
                 The password had been resetted succesfully. You can sign in now
               </Alert>
               <Button
                 onClick={() => navigate("/sign-in")}
-                className={`mt-5 text-center mx-auto `}
+                className={`mx-auto mt-5 text-center `}
                 gradientDuoTone="purpleToBlue"
                 outline
               >
