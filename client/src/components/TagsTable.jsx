@@ -79,11 +79,11 @@ export default function TagsTable(reloadSwitch) {
     head: {
       base: "group/head text-xs uppercase text-additional-text dark:text-dark-additional-text",
       cell: {
-        base: "group-first/head:first:rounded-tl-lg group-first/head:last:rounded-tr-lg bg-white border-main-border dark:bg-dark-additional-bg dark:text-white px-6 py-2",
+        base: "group-first/head:first:rounded-tl-lg group-first/head:last:rounded-tr-lg bg-white border-main-border dark:bg-dark-additional-bg/40 dark:text-white px-6 py-2",
       },
     },
     row: {
-      base: "group/row dark:bg-dark-additional-bg",
+      base: "group/row dark:bg-dark-additional-bg/40",
       hovered: "hover:bg-active-bg dark:hover:bg-dark-active-bg",
       striped:
         "odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-700",

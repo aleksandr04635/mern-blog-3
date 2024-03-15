@@ -18,8 +18,8 @@ export default function DateTime({ crTime, upTime, variant }) {
     <span
       className={
         variant == "post"
-          ? "flox-row flex w-full justify-between gap-5 sm:w-fit"
-          : "flex flex-row gap-2 text-xs text-additional-text dark:text-dark-additional-text"
+          ? "flex w-full flex-col justify-between gap-1 sm:w-fit sm:flex-row sm:gap-5 md:flex-col md:gap-1 xl:flex-row xl:gap-5"
+          : "flex flex-col gap-1 text-xs text-additional-text dark:text-dark-additional-text sm:flex-row sm:gap-2 "
       }
     >
       <span>{time}</span>

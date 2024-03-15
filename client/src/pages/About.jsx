@@ -110,6 +110,15 @@ export default function About() {
               bookmarking any specific page of any post list and its content
               won't change in the future - try to bookmark any post list.
             </p>
+            <p>
+              Look how the color theme changing is made - default one is the
+              one, preferable in your browser, but you can change it on the site
+              and in your browser independently and the theme will change.
+            </p>
+            <p>
+              Notice how after signing in a user is redirected to the page, they
+              went to signing in page from.
+            </p>
             <Link
               className="link-stand"
               to={`https://github.com/aleksandr04635/mern-blog-3`}

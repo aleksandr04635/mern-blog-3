@@ -100,7 +100,7 @@ export default function Search() {
         />
       </Helmet>
       <div
-        className="border-layout-border w-full bg-white px-3 py-1  dark:bg-gray-800 
+        className="w-full border-layout-border bg-white px-3 py-1  dark:bg-dark-additional-bg/40 
       xl:min-h-screen xl:w-[300px] xl:flex-none xl:border-r xl:py-3"
       >
         <form className="flex flex-col gap-1 xl:gap-8" onSubmit={handleSubmit}>
@@ -121,8 +121,8 @@ export default function Search() {
               id="searchTerm"
               value={sidebarData.searchTerm}
               onChange={handleChange}
-              className="border-main-border focus:border-main-border focus:ring-main-border
-       w-full max-w-[500px] rounded-lg border py-1.5 dark:bg-dark-active-bg"
+              className="w-full max-w-[500px] rounded-lg
+       border border-main-border py-1.5 focus:border-main-border focus:ring-main-border dark:bg-dark-active-bg"
             />
           </div>
           <div className="flex items-center justify-center gap-2">
@@ -139,12 +139,12 @@ export default function Search() {
               onChange={handleChange}
               value={sidebarData.sort || "desc"}
               id="sort"
-              className="hover:bg-active-bg border-main-border   outline-main-border 
-         hover:ring-main-border focus:border-main-border  focus:ring-main-border 
-         flex appearance-none  rounded-lg 
-        border bg-transparent pb-1.5     pl-1
-          pt-1.5 text-center  outline-1 
-          hover:outline dark:bg-slate-900  dark:hover:bg-dark-active-bg [&:not([size])]:pr-7"
+              className="flex appearance-none   rounded-lg 
+         border border-main-border  bg-transparent 
+         pb-1.5 pl-1  pt-1.5 
+        text-center outline-1 outline-main-border     hover:bg-active-bg
+          hover:outline hover:ring-main-border  focus:border-main-border 
+          focus:ring-main-border dark:bg-slate-900  dark:hover:bg-dark-active-bg [&:not([size])]:pr-7"
             >
               {/* [&:not([size])]:pr-5  */}
               <option value="desc">Latest on top</option>

@@ -1,6 +1,6 @@
 import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   signInStart,
@@ -20,18 +20,28 @@ export default function SignIn() {
   } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [formData, setFormData] = useState({});
   const [visible, setVisible] = useState(false);
   const [visibleEr, setVisibleEr] = useState(true);
+  const [encodedCallbackUrl, setEncodedCallbackUrl] = useState("");
   //console.log("visibleEr: ", visibleEr);
   //console.log("formData: ", formData);
   //console.log("formData.password: ", formData.password);
   //console.log("formData.password.length: ", formData.password?.length);
+  const urlParams = new URLSearchParams(location.search);
+  const callbackUrl = urlParams.get("callbackUrl");
 
   useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const callbackUrl = urlParams.get("callbackUrl");
+    //let encodedCallbackUrl = encodeURIComponent(callbackUrl);
+    setEncodedCallbackUrl(encodeURIComponent(callbackUrl));
+    console.log("callbackUrl from SignIn: ", callbackUrl);
     if (currentUser) {
-      navigate("/");
+      //navigate("/");
+      navigate(`${callbackUrl ?? "/"}`);
     }
   }, [navigate, currentUser]);
 
@@ -68,7 +78,8 @@ export default function SignIn() {
       }
       if (res.ok) {
         dispatch(signInSuccess(data));
-        navigate("/");
+        //navigate("/");
+        navigate(`${callbackUrl ?? "/"}`);
       }
     } catch (error) {
       dispatch(signInFailure(error.message));
@@ -144,7 +155,11 @@ export default function SignIn() {
             <OAuth />
             <div className="flex gap-2 text-sm ">
               <span>Dont Have an account?</span>
-              <Link to="/sign-up" className="text-blue-500">
+              <Link
+                /* to={`/sign-up?${encodedCallbackUrl}`} */
+                to={`/sign-up?callbackUrl=${encodedCallbackUrl}`}
+                className="text-blue-500"
+              >
                 Sign Up
               </Link>
             </div>

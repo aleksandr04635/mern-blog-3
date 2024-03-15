@@ -227,8 +227,10 @@ export default function DashProfile() {
     <div className="mx-auto w-full max-w-lg px-3">
       <h1 className="my-2 text-center text-xl font-semibold">Profile</h1>
       <h3 className=" my-1 text-center  text-base">
-        Here you can change your avatar image or data. Don't enter the data you
-        don't want to change
+        Here you can change your avatar image or data.
+      </h3>
+      <h3 className=" my-1 text-center  text-base">
+        Don't enter the data you don't want to change
       </h3>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input
@@ -267,7 +269,7 @@ export default function DashProfile() {
           <img
             src={imageFileUrl || currentUser.profilePicture}
             alt="user"
-            className={`h-full w-full rounded-full border-2 border-[lightgray] object-cover ${
+            className={`h-full w-full rounded-full border-0 border-[lightgray] object-cover ${
               imageFileUploadProgress &&
               imageFileUploadProgress < 100 &&
               "opacity-60"

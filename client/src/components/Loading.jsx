@@ -3,8 +3,10 @@ import { Spinner } from "flowbite-react";
 export default function Loading({ className }) {
   return (
     <div className={`flex items-center justify-center py-20 ${className}`}>
-      <Spinner className="fill-main-border" size="xl" />
-      <p className="pl-3 text-xl text-main-border">Loading...</p>
+      <Spinner className="fill-main-border dark:fill-cyan-400" size="xl" />
+      <p className="pl-3 text-xl text-main-border dark:text-cyan-400">
+        Loading...
+      </p>
     </div>
   );
 }

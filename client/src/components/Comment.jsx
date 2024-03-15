@@ -238,8 +238,8 @@ export default function Comment({
               />
             ) : (
               <div
-                className="comment-content mx-auto w-full rounded-lg bg-slate-50 p-1 px-2 
-                   text-justify text-base dark:bg-slate-800"
+                className="comment-content mx-auto ml-1 w-full rounded-lg bg-slate-50 p-1 
+                   px-2 text-justify text-base dark:bg-slate-800/40"
                 dangerouslySetInnerHTML={{
                   __html: comment && comment.content,
                 }}
@@ -261,7 +261,7 @@ export default function Comment({
                 <button
                   type="button"
                   onClick={() => setTocomment(!tocomment)}
-                  className="text-additional-text dark:text-dark-additional-text hover:text-blue-500"
+                  className="text-additional-text hover:text-blue-500 dark:text-dark-additional-text"
                 >
                   {tocomment ? "Cancel" : "Comment"}
                 </button>
@@ -274,7 +274,7 @@ export default function Comment({
                   <button
                     type="button"
                     onClick={() => setIsEditing(!isEditing)}
-                    className="text-additional-text dark:text-dark-additional-text hover:text-blue-500"
+                    className="text-additional-text hover:text-blue-500 dark:text-dark-additional-text"
                   >
                     {isEditing ? "Cancel" : "Edit"}
                   </button>
@@ -283,7 +283,7 @@ export default function Comment({
                     onClick={() => setShowModal(true)}
                     //onClick={() => Delete(comment._id)}
                     //onClick={() => onDelete(comment._id)}
-                    className="text-additional-text dark:text-dark-additional-text hover:text-red-500"
+                    className="text-additional-text hover:text-red-500 dark:text-dark-additional-text"
                   >
                     Delete
                   </button>

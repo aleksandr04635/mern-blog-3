@@ -96,7 +96,7 @@ export default function ResetPassword() {
                 id="password"
                 value={formData.password || ""}
                 onChange={handleChange}
-                color={formData.password?.length > 5 ? "success" : "failure"}
+                color={formData.password?.length > 5 ? "info" : "failure"}
                 helperText={
                   formData.password?.length > 5 ? "" : "minimum 6 characters"
                 }
@@ -120,7 +120,7 @@ export default function ResetPassword() {
                 color={
                   formData.conpassword?.length > 5 &&
                   formData.conpassword == formData.password
-                    ? "success"
+                    ? "info"
                     : "failure"
                 }
                 helperText={

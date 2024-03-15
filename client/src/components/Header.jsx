@@ -11,7 +11,7 @@ function SearchFormForHeader({ type }) {
   const { pageSize } = useSelector((state) => state.pageSize);
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(" location from SearchForm: ", location);
+  //console.log(" location from SearchForm: ", location);
   const [searchTerm, setSearchTerm] = useState("");
   console.log(" searchTerm from SearchForm: ", searchTerm);
 
@@ -40,11 +40,11 @@ function SearchFormForHeader({ type }) {
     <form
       onSubmit={handleSubmit}
       className={
-        "w-full sm:w-[300px] " +
-        (type == "wide"
-          ? "relative hidden sm:inline"
+        "w-full overflow-hidden  md:w-[300px] " +
+        (type == "wide-scr"
+          ? "relative hidden  md:inline "
           : location.pathname !== "/search"
-            ? "relative  mx-auto mt-1 sm:hidden"
+            ? "relative mx-auto mt-1   md:hidden"
             : "hidden")
       }
     >
@@ -54,8 +54,9 @@ function SearchFormForHeader({ type }) {
         /*  rightIcon={AiOutlineSearch} */
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className="w-full rounded-lg border
-       border-main-border py-1.5 focus:border-main-border focus:ring-main-border dark:bg-dark-active-bg sm:w-[300px]"
+        className="w-full  rounded-lg border
+       border-main-border py-1.5 focus:border-main-border focus:ring-main-border dark:bg-dark-active-bg 
+        md:w-[300px]"
       />
       <p
         onClick={handleSubmit}
@@ -70,8 +71,23 @@ function SearchFormForHeader({ type }) {
 export default function Header() {
   //const path = useLocation().pathname;
   const dispatch = useDispatch();
+  const location = useLocation();
+  //console.log(" location from Header: ", location);
   const { pageSize } = useSelector((state) => state.pageSize);
   const { currentUser } = useSelector((state) => state.user);
+  const [encodedCallbackUrl, setEncodedCallbackUrl] = useState("");
+  //console.log(" encodedCallbackUrl from Header2: ", encodedCallbackUrl);
+
+  useEffect(() => {
+    let callbackUrl = location.pathname;
+    if (location.search) {
+      callbackUrl += location.search;
+    }
+    console.log(" callbackUrl from Header: ", callbackUrl);
+    //const encodedCallbackUrl = encodeURIComponent(callbackUrl);
+    setEncodedCallbackUrl(encodeURIComponent(callbackUrl));
+    //console.log(" encodedCallbackUrl from Header1: ", encodedCallbackUrl);
+  }, [location]);
 
   const handleSignout = async () => {
     try {
@@ -92,9 +108,14 @@ export default function Header() {
   //focus:ring-0
   //change={(v) => setSearchTerm(v)}
   return (
-    <Navbar className="border-b border-layout-border pb-1 pl-1 pr-2 pt-1 dark:border-layout-border sm:pb-2.5 sm:pt-2.5">
+    <nav
+      className="bg-light-additional-bg/40
+      border-b border-layout-border pb-1 pl-1 pr-2 pt-1 dark:border-layout-border
+       dark:bg-dark-additional-bg/40
+     md:px-5 md:pb-2.5 md:pt-2.5"
+    >
       <div className="flex w-full flex-col">
-        <div className="flex w-full items-center justify-between ">
+        <div className="flex w-full items-center justify-between space-x-1 ">
           {/*  <Link className="" to={`/?pageSize=${pageSize}`}> */}
           {/*   <button
               className=" flex h-[40px] w-[100px] items-center justify-center rounded-[7px]    
@@ -134,7 +155,7 @@ export default function Header() {
           >
             About this project
           </Link>
-          <SearchFormForHeader type="wide" />
+          <SearchFormForHeader type="wide-scr" />
           {/*    <button
             className="   flex h-[40px] w-[40px]   items-center   justify-center rounded-full
             bg-gradient-to-bl from-cyan-400 via-blue-500 to-purple-600 p-[2px]
@@ -187,7 +208,10 @@ export default function Header() {
               <Dropdown.Item onClick={handleSignout}>Sign out</Dropdown.Item>
             </Dropdown>
           ) : (
-            <Link className="" to="/sign-in">
+            <Link
+              className=""
+              to={`/sign-in?callbackUrl=${encodedCallbackUrl}`}
+            >
               <MyButton>Sign In</MyButton>
             </Link>
             /*   <Link to="/sign-in">
@@ -197,8 +221,8 @@ export default function Header() {
             </Link> */
           )}
         </div>
-        <SearchFormForHeader type="narrow" />
+        <SearchFormForHeader type="narrow-scr" />
       </div>
-    </Navbar>
+    </nav>
   );
 }

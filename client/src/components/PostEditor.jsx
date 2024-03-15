@@ -143,6 +143,7 @@ export default function PostEditor({ mode, postId }) {
       .split(" ")
       .join("-")
       .toLowerCase();
+    //encodeURIComponent(Url);
   }
 
   function prohibitedToCreateTagFromString() {

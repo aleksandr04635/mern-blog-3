@@ -9,7 +9,7 @@ export default function Home() {
   //const [reloadSwitch, setReloadSwitch] = useState(false); //command to reload tags list
 
   return (
-    <div className="flex flex-col justify-center gap-2 lg:flex-row lg:gap-3">
+    <div className="flex flex-col justify-center gap-2  lg:flex-row lg:gap-3">
       <Helmet>
         <title>My Blog - Home page</title>
         <meta name="description" content="My Blog - Home page" />
@@ -19,15 +19,19 @@ export default function Home() {
       </div>
       <div className=" flex-0 flex max-w-6xl flex-col gap-3 px-2 py-3 lg:w-9/12  ">
         <h1 className="text-xl font-semibold ">Welcome to my Blog</h1>
-        <Link to={"/about"} className=" link-stand text-lg ">
-          Here is the full description of this app and all its features
-        </Link>
-        <Link
-          to={`/search?pageSize=${pageSize}`}
-          className="link-stand text-lg"
-        >
-          Here you can search in the posts list
-        </Link>
+        <span>
+          <Link to={"/about"} className=" link-stand text-lg ">
+            Here is the full description of this app and all its features
+          </Link>
+        </span>
+        <span>
+          <Link
+            to={`/search?pageSize=${pageSize}`}
+            className="link-stand text-lg"
+          >
+            Here you can search in the posts list
+          </Link>
+        </span>
         <h3 className="text-base  dark:text-white ">
           Here you see the list of all posts:
         </h3>

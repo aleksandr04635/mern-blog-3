@@ -13,20 +13,20 @@ export default function PostCard({ post, onDelete }) {
   const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
 
-  /*   GOOD         
+  /*   GOOD        
             <img
               src={post.image}
               alt="post cover"
               className="w-full sm:min-h-full sm:h-[260px] sm:w-[360px] object-cover"
             />
-          */
-  return (
-    <div
-      className="border-main-border outline-main-border flex w-full flex-col rounded-lg border
-     outline-1  hover:outline md:flex-row  md:items-stretch  "
-    >
-      {post.image && (
-        <div className="shrink-0 grow-0 overflow-hidden rounded-tl-lg rounded-tr-lg  md:rounded-bl-lg md:rounded-tr-none">
+            
+             <img
+              src={post.image}
+              alt="post cover"
+              className="w-full  object-cover md:h-[230px] md:max-h-full md:min-h-full md:w-[300px]"
+            />
+
+                 <div className="shrink-0 grow-0 rounded-tl-lg rounded-tr-lg  md:rounded-bl-lg md:rounded-tr-none">
           <Link
             to={`/post/${post.slug}`}
             target="_blank"
@@ -35,37 +35,68 @@ export default function PostCard({ post, onDelete }) {
             <img
               src={post.image}
               alt="post cover"
-              className="w-full  object-cover md:h-[230px] md:max-h-full md:min-h-full md:w-[300px]"
+              className="w-full  object-cover  md:max-h-full md:min-h-full md:w-[300px]"
+            />
+          </Link>
+        </div>
+         overflow-hidden
+grow
+md:items-stretch
+md:h-full
+          */
+  return (
+    <div
+      className="flex w-full flex-col  rounded-lg border border-main-border outline-1
+     outline-main-border  hover:outline md:flex-row    "
+    >
+      {post.image && (
+        <div className="shrink-0 grow-0  overflow-hidden rounded-tl-lg rounded-tr-lg md:w-[300px]  md:rounded-bl-lg md:rounded-tr-none">
+          <Link
+            to={`/post/${post.slug}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              src={post.image}
+              alt="post cover"
+              className="w-full object-cover md:h-full   "
             />
           </Link>
         </div>
       )}
-      <div className="flex grow flex-col justify-around md:py-1 md:pl-2 ">
+      <div className="flex w-full flex-col  md:py-1 md:pl-2 ">
         <InfoString post={post} />
-        <Link
-          to={`/post/${post.slug}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2
-            className="mx-auto w-fit px-2 text-center text-xl font-semibold text-blue-600 
-           hover:text-cyan-600 dark:text-blue-500 dark:hover:text-cyan-500 md:w-full 
+        <div className="px-2 ">
+          <span>
+            <Link
+              to={`/post/${post.slug}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <h2
+                className="mx-auto inline w-fit px-2 text-center text-xl font-semibold text-blue-700 
+           hover:text-cyan-700 dark:text-cyan-400 dark:hover:text-blue-500 md:w-full 
            md:text-justify "
-          >
-            {post.title}
-          </h2>
-        </Link>
-        <div className="mx-auto w-fit px-2 md:w-full ">
+              >
+                {/*  dark:text-blue-500 dark:hover:text-cyan-500 */}
+                {post.title}
+              </h2>
+            </Link>
+          </span>
+        </div>
+        <div className=" w-fit px-2 md:w-fit ">
           <AuthrorName post={post} />
         </div>
-        {post.intro && <div className="px-2 text-justify ">{post.intro}</div>}
+        {post.intro && (
+          <div className="h-fit w-fit px-2 text-justify ">{post.intro}</div>
+        )}
         <TagLinksList post={post} />
         <div className=" flex w-full items-center justify-between px-2">
           <Likes type={"card"} comment={post} />
           {/*  Controls */}
           {currentUser &&
             (post.userId._id == currentUser._id || currentUser.isAdmin) && (
-              <div className="text-additional-text dark:text-dark-additional-text flex w-[100px] items-center justify-between gap-2 px-5">
+              <div className="flex w-[100px] items-center justify-between gap-2 px-5 text-additional-text dark:text-dark-additional-text">
                 <Tooltip message="Edit">
                   <div
                     onClick={() => {

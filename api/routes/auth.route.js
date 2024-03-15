@@ -101,8 +101,9 @@ const ForgotPassword = async (req, res, next) => {
   connectDB();
   const { email } = req.body;
   console.log("req.body from ForgotPassword: ", req.body);
+  //return next(errorHandler(400, "Test error ForgotPassword"));
   if (!email) {
-    next(errorHandler(400, "Email is required"));
+    return next(errorHandler(400, "Email is required"));
   }
   try {
     const validUser = await User.findOne({ email });
@@ -150,7 +151,7 @@ const ForgotPassword = async (req, res, next) => {
     const emailFile = readFileSync("./emails/reset-email.html", {
       encoding: "utf8",
     });
-    console.log("emailFile: ", emailFile);
+    //console.log("emailFile: ", emailFile);
     const emailTemplate = Handlebars.compile(emailFile);
 
     let mailOptions = {
@@ -178,9 +179,9 @@ const ForgotPassword = async (req, res, next) => {
           return next(errorHandler(404, "error"));
         } else {
           // res          .status(200)          .send({ message: "Success from transporter.sendMail" });
-          console.log(info);
+          console.log("info from transporter.sendMail", info);
           resolve(info);
-          res
+          return res
             .status(200)
             .send({ message: "Success from transporter.sendMail" });
         }
@@ -207,7 +208,9 @@ const ForgotPassword = async (req, res, next) => {
         httpOnly: true,
       })
       .json(rest); */
-    res.status(200).json({ message: "Success from outside of transporter" });
+
+    //console.log("Success from outside of transporter");
+    //res.status(200).json({ message: "Success from outside of transporter" });
   } catch (error) {
     next(error);
   }
@@ -253,6 +256,11 @@ const ResetPassword = async (req, res, next) => {
     next(error);
   }
 };
+
+//to verify an email send there a link  like this
+//http://localhost:5173/sign-in?token=<token>&email=<email>
+//amd then in usEffect add that email to formdata and on Submit add the token to the req.body
+//another way is  http://localhost:5173/api/auth/verify-email/:token
 
 const google = async (req, res, next) => {
   connectDB();

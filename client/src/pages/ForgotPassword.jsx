@@ -89,16 +89,16 @@ export default function ForgotPassword() {
       const data = await res.json();
       console.log("data received in ForgotPassword.jsx: ", data);
       if (data.success === false) {
-        setLoading(false); //my
+        //setLoading(false); //my
         return setErrorMessage(data.message);
       }
-      setLoading(false);
       if (res.ok) {
         setSuccess(true);
         //navigate("/sign-in");
       }
     } catch (error) {
       setErrorMessage(error.message);
+    } finally {
       setLoading(false);
     }
   };

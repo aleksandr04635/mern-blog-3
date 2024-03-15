@@ -1,6 +1,6 @@
 import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import OAuth from "../components/OAuth";
 import { BsEyeSlash, BsEye } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,16 +19,25 @@ export default function SignUp() {
   } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const location = useLocation();
   const [formData, setFormData] = useState({});
   //const [errorMessage, setErrorMessage] = useState(null);
   //const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
   const [visibleEr, setVisibleEr] = useState(true);
+  const [encodedCallbackUrl, setEncodedCallbackUrl] = useState("");
+  const urlParams = new URLSearchParams(location.search);
+  const callbackUrl = urlParams.get("callbackUrl");
 
   useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const callbackUrl = urlParams.get("callbackUrl");
+    //let encodedCallbackUrl = encodeURIComponent(callbackUrl);
+    setEncodedCallbackUrl(encodeURIComponent(callbackUrl));
+    console.log("callbackUrl from SignUp: ", callbackUrl);
     if (currentUser) {
-      navigate("/");
+      //navigate("/");
+      navigate(`${callbackUrl ?? "/"}`);
     }
   }, [navigate, currentUser]);
 
@@ -49,6 +58,8 @@ export default function SignUp() {
   };
 
   //old without instant sign-in
+  //ADD HERE EMAIL VARIFICATION SENDING with sending encodedCallbackUrl to server
+  // and adding it there to the link, sent to email
   /*   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.username || !formData.email || !formData.password) {
@@ -96,7 +107,8 @@ export default function SignUp() {
       }
       if (res.ok) {
         dispatch(signInSuccess(data));
-        navigate("/");
+        //navigate("/");
+        navigate(`${callbackUrl ?? "/"}`);
       }
     } catch (error) {
       dispatch(signInFailure(error.message));
@@ -192,7 +204,10 @@ export default function SignUp() {
             <OAuth />
             <div className="flex gap-2 text-sm ">
               <span>Already have an account?</span>
-              <Link to="/sign-in" className="text-blue-500">
+              <Link
+                /* to="/sign-in" */ to={`/sign-in?callbackUrl=${encodedCallbackUrl}`}
+                className="text-blue-500"
+              >
                 Sign In
               </Link>
             </div>
