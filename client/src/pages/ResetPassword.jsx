@@ -11,6 +11,8 @@ import { BsEyeSlash } from "react-icons/bs";
 import { BsEye } from "react-icons/bs";
 import OAuth from "../components/OAuth";
 import { customTextInputTheme } from "../../customFlowbiteThemes";
+import MyButton from "../components/MyButton";
+import Loading from "../components/Loading";
 
 export default function ResetPassword() {
   const { id, token } = useParams();
@@ -138,7 +140,7 @@ export default function ResetPassword() {
                 {visible ? <BsEyeSlash /> : <BsEye />}
               </p>
             </div>
-            <Button
+            {/*    <Button
               outline
               gradientDuoTone="purpleToBlue"
               type="submit"
@@ -155,7 +157,25 @@ export default function ResetPassword() {
               ) : (
                 "Reset the password"
               )}
-            </Button>
+            </Button> */}
+            <MyButton
+              type="submit"
+              disabled={
+                formData.password?.length < 6 ||
+                formData.conpassword !== formData.password
+              }
+              className=" w-full "
+            >
+              {loading ? (
+                /*  <>
+                  <Spinner size="sm" />
+                  <span className="pl-3">Loading...</span>
+                </> */
+                <Loading type="button" />
+              ) : (
+                "Reset the password"
+              )}
+            </MyButton>
             <OAuth />
             {/*             <div className="flex gap-2 text-sm ">
               <span>Dont Have an account?</span>

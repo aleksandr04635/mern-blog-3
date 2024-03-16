@@ -11,6 +11,9 @@ import { BsEyeSlash } from "react-icons/bs";
 import { BsEye } from "react-icons/bs";
 import OAuth from "../components/OAuth";
 import { customTextInputTheme } from "../../customFlowbiteThemes";
+import MyButton from "../components/MyButton";
+import validateEmail from "../utils/validateEmail";
+import Loading from "../components/Loading";
 
 export default function SignIn() {
   const {
@@ -22,12 +25,14 @@ export default function SignIn() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [visible, setVisible] = useState(false);
   const [visibleEr, setVisibleEr] = useState(true);
   const [encodedCallbackUrl, setEncodedCallbackUrl] = useState("");
+  const [token, setToken] = useState("");
   //console.log("visibleEr: ", visibleEr);
-  //console.log("formData: ", formData);
+  console.log("formData in SignIn : ", formData);
+  console.log("token in SignIn : ", token);
   //console.log("formData.password: ", formData.password);
   //console.log("formData.password.length: ", formData.password?.length);
   const urlParams = new URLSearchParams(location.search);
@@ -36,9 +41,17 @@ export default function SignIn() {
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const callbackUrl = urlParams.get("callbackUrl");
+    const emailFromUrl = urlParams.get("email");
+    if (emailFromUrl) {
+      setFormData({ ...formData, email: emailFromUrl });
+    }
+    const tokenFromUrl = urlParams.get("token");
+    if (tokenFromUrl) {
+      setToken(tokenFromUrl);
+    }
     //let encodedCallbackUrl = encodeURIComponent(callbackUrl);
     setEncodedCallbackUrl(encodeURIComponent(callbackUrl));
-    console.log("callbackUrl from SignIn: ", callbackUrl);
+    //console.log("callbackUrl from SignIn: ", callbackUrl);
     if (currentUser) {
       //navigate("/");
       navigate(`${callbackUrl ?? "/"}`);
@@ -51,20 +64,16 @@ export default function SignIn() {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
-  const validateEmail = (email) => {
-    return !!String(email)
-      .toLowerCase()
-      .match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-      );
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setVisibleEr(true);
     if (!formData.email || !formData.password) {
       return dispatch(signInFailure("Please fill all the fields"));
     }
+    if (token) {
+      formData.token = token;
+    }
+    console.log("formData from handleSubmit in SignIn : ", formData);
     try {
       dispatch(signInStart());
       const res = await fetch("/api/auth/signin", {
@@ -87,14 +96,14 @@ export default function SignIn() {
   };
 
   return (
-    <div className="min-h-screen sm:mt-20">
-      <div className="mx-auto flex max-w-lg flex-col gap-5  p-3 md:items-center">
+    <div className="min-h-screen sm:mt-10">
+      <div className="mx-auto flex max-w-lg flex-col gap-4  p-3 md:items-center">
         <h3 className="text-center text-lg font-semibold">
           You can sign in with your email and password or with Google.
         </h3>
         <div className="flex-1">
           <form
-            className="mx-auto flex w-[300px] flex-col gap-4"
+            className="mx-auto flex w-[300px] flex-col gap-3"
             onSubmit={handleSubmit}
           >
             <div>
@@ -133,7 +142,7 @@ export default function SignIn() {
                 {visible ? <BsEyeSlash /> : <BsEye />}
               </p>
             </div>
-            <Button
+            {/*     <Button
               outline
               gradientDuoTone="purpleToBlue"
               type="submit"
@@ -151,21 +160,40 @@ export default function SignIn() {
               ) : (
                 "Sign In"
               )}
-            </Button>
+            </Button> */}
+            <MyButton
+              type="submit"
+              disabled={
+                loading ||
+                !validateEmail(formData.email) ||
+                formData.password?.length < 6
+              }
+              className=" w-full "
+            >
+              {loading ? (
+                /*  <>
+                  <Spinner size="sm" />
+                  <span className="pl-3">Loading...</span>
+                </> */
+                <Loading type="button" />
+              ) : (
+                "Sign In"
+              )}
+            </MyButton>
             <OAuth />
-            <div className="flex gap-2 text-sm ">
+            <div className="flex items-center gap-2 text-sm">
               <span>Dont Have an account?</span>
               <Link
                 /* to={`/sign-up?${encodedCallbackUrl}`} */
                 to={`/sign-up?callbackUrl=${encodedCallbackUrl}`}
-                className="text-blue-500"
+                className="link-stand"
               >
                 Sign Up
               </Link>
             </div>
-            <div className="flex gap-2 text-sm ">
+            <div className="flex items-center gap-2 text-sm">
               <span>Forgot&nbsp;the&nbsp;password?</span>
-              <Link to="/forgot-password" className="text-blue-500">
+              <Link to="/forgot-password" className="link-stand">
                 Reset&nbsp;the&nbsp;password
               </Link>
             </div>

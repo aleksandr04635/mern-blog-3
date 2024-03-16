@@ -1,14 +1,26 @@
 import { Spinner } from "flowbite-react";
 
-export default function Loading({ className }) {
-  return (
-    <div className={`flex items-center justify-center py-20 ${className}`}>
-      <Spinner className="fill-main-border dark:fill-cyan-400" size="xl" />
-      <p className="pl-3 text-xl text-main-border dark:text-cyan-400">
-        Loading...
-      </p>
-    </div>
-  );
+export default function Loading({ className, type = "page" }) {
+  if (type == "page") {
+    return (
+      <div className={`flex items-center justify-center py-20 ${className}`}>
+        <Spinner className="fill-main-border dark:fill-cyan-400" size="xl" />
+        <p className="pl-3 text-xl text-main-border dark:text-cyan-400">
+          Loading...
+        </p>
+      </div>
+    );
+  }
+  if (type == "button") {
+    return (
+      <div className={` ${className}`}>
+        <Spinner className="fill-main-border dark:fill-cyan-400" size="sm" />
+        <span className="pl-3 text-main-border dark:text-cyan-400 ">
+          Loading...
+        </span>
+      </div>
+    );
+  }
 }
 
 {

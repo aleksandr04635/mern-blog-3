@@ -47,7 +47,7 @@ md:h-full
   return (
     <div
       className="flex w-full flex-col  rounded-lg border border-main-border outline-1
-     outline-main-border  hover:outline md:flex-row    "
+     outline-main-border  hover:outline dark:hover:bg-dark-active-bg/40  md:flex-row  "
     >
       {post.image && (
         <div className="shrink-0 grow-0  overflow-hidden rounded-tl-lg rounded-tr-lg md:w-[300px]  md:rounded-bl-lg md:rounded-tr-none">

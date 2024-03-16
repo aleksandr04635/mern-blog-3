@@ -7,22 +7,27 @@ export default function MyButton({
   let colorStyleString;
   switch (style) {
     case "danger":
-      colorStyleString = " from-amber-400 via-orange-500 to-red-600";
+      colorStyleString =
+        " from-amber-400 via-orange-500 to-red-600  disabled:from-amber-400/40 disabled:via-orange-500/40 disabled:to-red-600/40 ";
       break;
     case "attention":
-      colorStyleString = " from-lime-300 via-amber-400 to-orange-500";
+      colorStyleString =
+        " from-lime-300 via-amber-400 to-orange-500 disabled:from-lime-300/40 disabled:via-amber-400/40 disabled:to-orange-500/40 ";
       break;
     default:
-      colorStyleString = "from-cyan-400   via-blue-500 to-purple-600";
+      colorStyleString =
+        " from-cyan-400 via-blue-500 to-purple-600 disabled:from-cyan-400/40 disabled:via-blue-500/40 disabled:to-purple-600/40 ";
   }
 
   return (
     <button
       {...props}
       className={`${colorStyleString} flex
-        w-fit items-center justify-center rounded-[7px] bg-gradient-to-bl
-    p-[2px]
-    disabled:cursor-not-allowed dark:hover:bg-dark-active-bg 
+        w-fit items-center justify-center rounded-[7px] bg-gradient-to-bl  p-[2px] 
+       disabled:cursor-not-allowed
+    dark:hover:bg-dark-active-bg  
+     [&_div]:disabled:text-gray-400
+    [&_div]:dark:disabled:text-gray-400 
     [&_div]:[&:not(:disabled)]:hover:bg-transparent 
     [&_div]:[&:not(:disabled)]:hover:text-white
     [&_div]:[&:not(:disabled)]:dark:hover:bg-transparent 

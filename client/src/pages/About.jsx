@@ -85,7 +85,8 @@ export default function About() {
               or through an email password resetting mechanism, and use it just
               as a combination of email and password, or as originally, through
               a Google account. Also, appreciate how I made a password reset
-              functionality with sending an email made from a template.
+              functionality and email verification with sending an email made
+              from a template.
             </p>
             <p>
               For the creation of posts and comments, I use TinyMCE rich text
@@ -117,7 +118,10 @@ export default function About() {
             </p>
             <p>
               Notice how after signing in a user is redirected to the page, they
-              went to signing in page from.
+              went to the signing-in page from. Note that it even works during
+              signing up through a link, sent to your email - a page, from which
+              you initiate authentication procedure is delivered to you upon its
+              completion via the link, sent to your email.
             </p>
             <Link
               className="link-stand"

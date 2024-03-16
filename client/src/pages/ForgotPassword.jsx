@@ -9,6 +9,8 @@ import {
 } from "../redux/user/userSlice";
 import OAuth from "../components/OAuth";
 import { customTextInputTheme } from "../../customFlowbiteThemes";
+import MyButton from "../components/MyButton";
+import Loading from "../components/Loading";
 
 export default function ForgotPassword() {
   const [formData, setFormData] = useState({});
@@ -129,7 +131,7 @@ export default function ForgotPassword() {
                 theme={customTextInputTheme}
               />
             </div>
-            <Button
+            {/*       <Button
               outline
               gradientDuoTone="purpleToBlue"
               type="submit"
@@ -143,17 +145,32 @@ export default function ForgotPassword() {
               ) : (
                 "Send me a link to reset the password"
               )}
-            </Button>
+            </Button> */}
+            <MyButton
+              type="submit"
+              disabled={loading || !validateEmail(formData.email)}
+              className=" w-full "
+            >
+              {loading ? (
+                /*   <>
+                  <Spinner size="sm" />
+                  <span className="pl-3">Loading...</span>
+                </> */
+                <Loading type="button" />
+              ) : (
+                "Send me a link to reset the password"
+              )}
+            </MyButton>
             <OAuth />
-            <div className="flex gap-2 text-sm ">
+            <div className="flex items-center gap-2 text-sm">
               <span>Dont Have an account?</span>
-              <Link to="/sign-up" className="text-blue-500">
+              <Link to="/sign-up" className="link-stand">
                 Sign Up
               </Link>
             </div>
-            <div className="flex gap-2 text-sm ">
+            <div className="flex items-center gap-2 text-sm">
               <span>Already have an account?</span>
-              <Link to="/sign-in" className="text-blue-500">
+              <Link to="/sign-in" className="link-stand">
                 Sign In
               </Link>
             </div>

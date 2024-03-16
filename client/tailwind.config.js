@@ -9,7 +9,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        "dark-active-bg": "#1c284a",
+        "dark-active-bg": "#151e37",
         "active-bg": "#f2faff",
         "dark-main-bg": "#10172a",
         "dark-additional-bg": "#1f2937",
@@ -20,6 +20,9 @@ export default {
         "additional-text": "#374151",
         "dark-additional-text": "#E5E7EB",
       },
+      /*   backgroundImage: {
+        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+      }, */
     },
   },
   plugins: [require("flowbite/plugin"), require("tailwind-scrollbar")],
@@ -27,3 +30,4 @@ export default {
 // "#151e37", "#e6ffff" #e6fdff   "#e6faff"  "#F0FDFA"  #ECFDF5 #e6ffff
 //#efffff "secondary-border": "#a855f7", #8B5CF6  #cce4fd
 //"layout-border": "#6B7280",
+//"dark-active-bg": "#1c284a",

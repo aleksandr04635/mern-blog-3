@@ -26,7 +26,7 @@ export default function PaginationBar({ currentPage, totalPages }) {
     }
     if (n != currentPage) {
       cn +=
-        " dark:bg-slate-900 dark:hover:bg-dark-active-bg hover:bg-active-bg ";
+        " dark:bg-dark-additional-bg/60 dark:hover:bg-dark-active-bg hover:bg-active-bg ";
     }
     if (n == totalPages) {
       cn += " rounded-l-lg ";

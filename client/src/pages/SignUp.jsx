@@ -9,46 +9,58 @@ import {
   signInSuccess,
   signInFailure,
 } from "../redux/user/userSlice";
-import { customTextInputTheme } from "../../customFlowbiteThemes";
+import {
+  customAlertTheme,
+  customTextInputTheme,
+} from "../../customFlowbiteThemes";
+import MyButton from "../components/MyButton";
+import validateEmail from "../utils/validateEmail";
+import Loading from "../components/Loading";
 
 export default function SignUp() {
-  const {
-    loading,
-    error: errorMessage,
-    currentUser,
-  } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const [formData, setFormData] = useState({});
-  //const [errorMessage, setErrorMessage] = useState(null);
-  //const [loading, setLoading] = useState(false);
+
+  //for without email sending version
+  /*   const {
+    loading,
+    error: errorMessage,
+    currentUser,
+  } = useSelector((state) => state.user); */
+
+  //for email sending version
+  const { currentUser } = useSelector((state) => state.user);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
   const [visible, setVisible] = useState(false);
   const [visibleEr, setVisibleEr] = useState(true);
+  const [signUpSuccess, setSignUpSuccess] = useState(null);
   const [encodedCallbackUrl, setEncodedCallbackUrl] = useState("");
   const urlParams = new URLSearchParams(location.search);
+  console.log("errorMessage from SignUp: ", errorMessage);
+  console.log("visibleEr from SignUp: ", visibleEr);
   const callbackUrl = urlParams.get("callbackUrl");
+  //console.log("signUpSuccess from SignUp: ", signUpSuccess);
+  //console.log("validateEmail(formData.email): ", validateEmail(formData.email));
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const callbackUrl = urlParams.get("callbackUrl");
     //let encodedCallbackUrl = encodeURIComponent(callbackUrl);
     setEncodedCallbackUrl(encodeURIComponent(callbackUrl));
-    console.log("callbackUrl from SignUp: ", callbackUrl);
+    //console.log("callbackUrl from SignUp: ", callbackUrl);
     if (currentUser) {
       //navigate("/");
       navigate(`${callbackUrl ?? "/"}`);
     }
   }, [navigate, currentUser]);
-
-  const validateEmail = (email) => {
-    return !!String(email)
-      .toLowerCase()
-      .match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-      );
-  };
-  //console.log("validateEmail(formData.email): ", validateEmail(formData.email));
 
   const handleChange = (e) => {
     setVisibleEr(false);
@@ -57,14 +69,19 @@ export default function SignUp() {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
-  //old without instant sign-in
+  //for with email sending version
   //ADD HERE EMAIL VARIFICATION SENDING with sending encodedCallbackUrl to server
   // and adding it there to the link, sent to email
-  /*   const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setVisibleEr(true);
     if (!formData.username || !formData.email || !formData.password) {
       return setErrorMessage("Please fill out all fields.");
     }
+    if (encodedCallbackUrl && encodedCallbackUrl !== "null") {
+      formData.encodedCallbackUrl = encodedCallbackUrl;
+    }
+    console.log("formData from SignUp: ", formData);
     try {
       setLoading(true);
       setErrorMessage(null);
@@ -75,25 +92,28 @@ export default function SignUp() {
       });
       const data = await res.json();
       if (data.success === false) {
-        setLoading(false); //my
-        return setErrorMessage(data.message);
+        setErrorMessage(data.message);
       }
-      setLoading(false);
       if (res.ok) {
-        navigate("/sign-in");
+        setSignUpSuccess(
+          "You have signed up successfully. Now go to your email and click the email verification link. You can close this window",
+        );
+        // navigate("/sign-in");
       }
     } catch (error) {
       setErrorMessage(error.message);
+    } finally {
       setLoading(false);
     }
-  }; */
-  //new with instant sign-in
-  const handleSubmit = async (e) => {
+  };
+
+  //for without email sending version
+  /* const handleSubmit = async (e) => {
     e.preventDefault();
     setVisibleEr(true);
-    /*     if (!formData.email || !formData.password) {
+    if (!formData.email || !formData.password) {
       return dispatch(signInFailure("Please fill all the fields"));
-    } */
+    }
     try {
       dispatch(signInStart());
       const res = await fetch("/api/auth/signup", {
@@ -113,21 +133,21 @@ export default function SignUp() {
     } catch (error) {
       dispatch(signInFailure(error.message));
     }
-  };
+  }; */
 
   return (
-    <div className="min-h-screen sm:mt-20">
-      <div className="mx-auto flex max-w-lg flex-col gap-5  p-3 md:items-center">
+    <div className="min-h-screen sm:mt-10">
+      <div className="mx-auto flex max-w-lg flex-col gap-4  p-3 md:items-center">
         <h3 className="text-center text-lg font-semibold">
           You can sign up with your email and password or with Google.
         </h3>
-        <div className="text-center  text-sm text-orange-600">
+        {/*  <div className="text-center  text-sm text-orange-600">
           If you register with a wrong email or change it to a wrong one in your
           profile you will not be able to reset your password via email
-        </div>
+        </div> */}
         <div className="flex-1">
           <form
-            className="mx-auto flex w-[300px] flex-col gap-4"
+            className="mx-auto flex w-[300px] flex-col gap-3"
             onSubmit={handleSubmit}
           >
             <div>
@@ -181,7 +201,7 @@ export default function SignUp() {
                 {visible ? <BsEyeSlash /> : <BsEye />}
               </p>
             </div>
-            <Button
+            {/*      <Button
               outline
               gradientDuoTone="purpleToBlue"
               type="submit"
@@ -200,31 +220,61 @@ export default function SignUp() {
               ) : (
                 "Sign Up"
               )}
-            </Button>
+            </Button> */}
+            <MyButton
+              type="submit"
+              disabled={
+                loading ||
+                formData.username?.length < 6 ||
+                !validateEmail(formData.email) ||
+                formData.password?.length < 6
+              }
+              className=" w-full "
+            >
+              {loading ? (
+                /*  <>
+                  <Spinner size="sm" />
+                  <span className="pl-3">Loading...</span>
+                </> */
+                <Loading type="button" />
+              ) : (
+                "Sign Up"
+              )}
+            </MyButton>
             <OAuth />
-            <div className="flex gap-2 text-sm ">
+            <div className="flex items-center gap-2 text-sm ">
               <span>Already have an account?</span>
               <Link
                 /* to="/sign-in" */ to={`/sign-in?callbackUrl=${encodedCallbackUrl}`}
-                className="text-blue-500"
+                className="link-stand"
               >
                 Sign In
               </Link>
             </div>
-            <div className="flex gap-2 text-sm ">
+            <div className="flex items-center gap-2 text-sm">
               <span>Forgot&nbsp;the&nbsp;password?</span>
-              <Link to="/forgot-password" className="text-blue-500">
+              <Link to="/forgot-password" className="link-stand">
                 Reset&nbsp;the&nbsp;password
               </Link>
             </div>
           </form>
           {errorMessage && (
             <Alert
-              className={`mt-5 text-justify ${!visibleEr && "hidden"}`}
+              className={`mx-auto mt-5 w-[300px] text-justify ${!visibleEr && "hidden"}`}
               color="failure"
             >
               {/* it can be failure or success */}
               {errorMessage}
+            </Alert>
+          )}
+          {signUpSuccess && (
+            /*  ${!visibleEr && "hidden"} */
+            <Alert
+              color="info"
+              className={`mx-auto mt-5 w-[300px] text-justify `}
+              theme={customAlertTheme}
+            >
+              {signUpSuccess}
             </Alert>
           )}
         </div>

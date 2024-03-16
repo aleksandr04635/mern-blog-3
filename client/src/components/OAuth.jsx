@@ -5,6 +5,7 @@ import { app } from "../firebase";
 import { useDispatch } from "react-redux";
 import { signInSuccess } from "../redux/user/userSlice";
 import { useNavigate } from "react-router-dom";
+import MyButton from "./MyButton";
 
 export default function OAuth() {
   const auth = getAuth(app);
@@ -35,7 +36,7 @@ export default function OAuth() {
     }
   };
   return (
-    <Button
+    /*     <Button
       type="button"
       gradientDuoTone="purpleToBlue"
       outline
@@ -43,6 +44,10 @@ export default function OAuth() {
     >
       <AiFillGoogleCircle className="w-6 h-6 mr-2" />
       Continue with Google
-    </Button>
+    </Button> */
+    <MyButton type="button" onClick={handleGoogleClick} className=" w-full ">
+      <AiFillGoogleCircle className="mr-2 h-6 w-6" />
+      Continue with Google
+    </MyButton>
   );
 }

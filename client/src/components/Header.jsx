@@ -13,7 +13,7 @@ function SearchFormForHeader({ type }) {
   const location = useLocation();
   //console.log(" location from SearchForm: ", location);
   const [searchTerm, setSearchTerm] = useState("");
-  console.log(" searchTerm from SearchForm: ", searchTerm);
+  //console.log(" searchTerm from SearchForm: ", searchTerm);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
@@ -68,26 +68,41 @@ function SearchFormForHeader({ type }) {
   );
 }
 
-export default function Header() {
-  //const path = useLocation().pathname;
-  const dispatch = useDispatch();
+function SingInButton() {
   const location = useLocation();
-  //console.log(" location from Header: ", location);
-  const { pageSize } = useSelector((state) => state.pageSize);
-  const { currentUser } = useSelector((state) => state.user);
+  //console.log(" location from SingInButton: ", location);
   const [encodedCallbackUrl, setEncodedCallbackUrl] = useState("");
   //console.log(" encodedCallbackUrl from Header2: ", encodedCallbackUrl);
 
   useEffect(() => {
-    let callbackUrl = location.pathname;
-    if (location.search) {
-      callbackUrl += location.search;
+    const urlParams = new URLSearchParams(location.search);
+    const callbackUrlFromUrl = urlParams.get("callbackUrl");
+    if (callbackUrlFromUrl) {
+      console.log(" callbackUrlFromUrl from Header: ", callbackUrlFromUrl);
+      setEncodedCallbackUrl(encodeURIComponent(callbackUrlFromUrl));
+    } else {
+      let callbackUrl = location.pathname;
+      if (location.search) {
+        callbackUrl += location.search;
+      }
+      console.log(" callbackUrl from Header: ", callbackUrl);
+      //const encodedCallbackUrl = encodeURIComponent(callbackUrl);
+      setEncodedCallbackUrl(encodeURIComponent(callbackUrl));
     }
-    console.log(" callbackUrl from Header: ", callbackUrl);
-    //const encodedCallbackUrl = encodeURIComponent(callbackUrl);
-    setEncodedCallbackUrl(encodeURIComponent(callbackUrl));
     //console.log(" encodedCallbackUrl from Header1: ", encodedCallbackUrl);
   }, [location]);
+
+  return (
+    <Link className="" to={`/sign-in?callbackUrl=${encodedCallbackUrl}`}>
+      <MyButton>Sign In</MyButton>
+    </Link>
+  );
+}
+
+export default function Header() {
+  const dispatch = useDispatch();
+  const { pageSize } = useSelector((state) => state.pageSize);
+  const { currentUser } = useSelector((state) => state.user);
 
   const handleSignout = async () => {
     try {
@@ -116,34 +131,6 @@ export default function Header() {
     >
       <div className="flex w-full flex-col">
         <div className="flex w-full items-center justify-between space-x-1 ">
-          {/*  <Link className="" to={`/?pageSize=${pageSize}`}> */}
-          {/*   <button
-              className=" flex h-[40px] w-[100px] items-center justify-center rounded-[7px]    
-            bg-gradient-to-tr from-cyan-400 via-blue-500 to-purple-600 font-semibold
-              dark:hover:bg-dark-active-bg     "
-            >
-              <div
-                className="dark:bg-dark-additional-bg mx-auto flex h-[36px] w-[96px] items-center justify-center 
-             rounded-[5px] bg-white text-sm text-slate-900 hover:bg-transparent 
-             hover:text-white dark:text-white dark:hover:bg-transparent"
-              >
-                My Blog
-              </div>
-            </button> */}
-          {/*      <button
-              className=" flex  w-fit items-center justify-center rounded-[7px] bg-gradient-to-bl
-             from-cyan-400   via-blue-500 to-purple-600 p-[2px] font-semibold
-              dark:hover:bg-dark-active-bg     "
-            >
-              <div
-                className="flex w-fit items-center justify-center  rounded-[5px]  bg-white px-5 
-             py-2 text-sm text-slate-900 hover:bg-transparent hover:text-white 
-             dark:bg-dark-additional-bg dark:text-white dark:hover:bg-transparent"
-              >
-                My Blog
-              </div>
-            </button>
-          </Link> */}
           <Link className="" to={`/?pageSize=${pageSize}`}>
             <MyButton className=" font-semibold">My Blog</MyButton>
           </Link>
@@ -156,24 +143,6 @@ export default function Header() {
             About this project
           </Link>
           <SearchFormForHeader type="wide-scr" />
-          {/*    <button
-            className="   flex h-[40px] w-[40px]   items-center   justify-center rounded-full
-            bg-gradient-to-bl from-cyan-400 via-blue-500 to-purple-600 p-[2px]
-              text-center  dark:hover:bg-dark-active-bg  sm:inline  "
-            onClick={() => dispatch(toggleTheme())}
-          >
-            <div
-              className="mx-auto flex h-full w-full items-center justify-center rounded-full
-             bg-white text-slate-900 hover:bg-transparent hover:text-white dark:bg-dark-additional-bg
-             dark:text-white dark:hover:bg-transparent "
-            >
-              {theme === "light" ? (
-                <FaMoon className="mx-auto " />
-              ) : (
-                <FaSun className="mx-auto" />
-              )}
-            </div>
-          </button> */}
           <ThemeSwitcher />
           {currentUser ? (
             <Dropdown
@@ -208,17 +177,7 @@ export default function Header() {
               <Dropdown.Item onClick={handleSignout}>Sign out</Dropdown.Item>
             </Dropdown>
           ) : (
-            <Link
-              className=""
-              to={`/sign-in?callbackUrl=${encodedCallbackUrl}`}
-            >
-              <MyButton>Sign In</MyButton>
-            </Link>
-            /*   <Link to="/sign-in">
-              <Button gradientDuoTone="purpleToBlue" outline>
-                Sign In
-              </Button>
-            </Link> */
+            <SingInButton />
           )}
         </div>
         <SearchFormForHeader type="narrow-scr" />

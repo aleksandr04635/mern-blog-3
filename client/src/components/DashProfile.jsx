@@ -38,6 +38,7 @@ import {
   customTextareaTheme,
 } from "../../customFlowbiteThemes";
 import MyButton from "./MyButton";
+import validateEmail from "../utils/validateEmail";
 
 export default function DashProfile() {
   const { currentUser, error, loading } = useSelector((state) => state.user);
@@ -87,14 +88,6 @@ export default function DashProfile() {
       uploadImage();
     }
   }, [imageFile]);
-
-  const validateEmail = (email) => {
-    return !!String(email)
-      .toLowerCase()
-      .match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-      );
-  };
 
   const uploadImage = async () => {
     // service firebase.storage {
@@ -404,10 +397,11 @@ export default function DashProfile() {
           className=" w-full "
         >
           {loading ? (
-            <>
+            /*   <>
               <Spinner size="sm" />
               <span className="pl-3">Loading...</span>
-            </>
+            </> */
+            <Loading type="button" />
           ) : (
             /*  <>
              <Loading className="py-0" />
