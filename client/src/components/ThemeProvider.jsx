@@ -8,7 +8,7 @@ export default function ThemeProvider({ children }) {
         className=" min-h-screen  w-full 
          bg-white 
          bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] 
-               text-gray-950 
+                   text-gray-950
                   dark:from-[#065179]      dark:to-[#0e1425]
                      dark:text-white "
       >
@@ -32,3 +32,5 @@ export default function ThemeProvider({ children }) {
 
 //   bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))]
 //  from-purple-800           to-blue-900    dark:from-[#054161]
+
+//from-sky-200    to-blue-600

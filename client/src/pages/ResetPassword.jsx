@@ -17,39 +17,49 @@ import Loading from "../components/Loading";
 export default function ResetPassword() {
   const { id, token } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const {
     loading: load2,
     error: errorMessage2,
     currentUser,
   } = useSelector((state) => state.user);
 
+  /*   const {
+    loading,
+    error: errorMessage,
+    currentUser,
+  } = useSelector((state) => state.user); */
+
+  const [visibleEr, setVisibleEr] = useState(true);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [formData, setFormData] = useState({});
   const [visible, setVisible] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  //const dispatch = useDispatch();
-
-  console.log("id : ", id);
-  console.log("token : ", token);
+  //console.log("id : ", id);
+  //console.log("token : ", token);
   //console.log("visibleEr: ", visibleEr);
+  //console.log("errorMessage: ", errorMessage);
   //console.log("formData: ", formData);
   //console.log("formData.password: ", formData.password);
   //console.log("formData.password.length: ", formData.password?.length);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
-  };
-
   useEffect(() => {
-    if (currentUser || !token) {
+    if (currentUser) {
       // navigate("/");
       navigate("/dashboard?tab=profile");
     }
+    if (!token) {
+      setErrorMessage("You have no token");
+    }
   }, [navigate, currentUser, token]);
 
-  const handleSubmit = async (e) => {
+  //OLD
+  /* const handleChangeOLD = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
+  };
+  const handleSubmitOLD = async (e) => {
     e.preventDefault();
     formData.token = token;
     if (!formData.conpassword || !formData.password) {
@@ -76,6 +86,44 @@ export default function ResetPassword() {
     } catch (error) {
       setErrorMessage(error.message);
       setLoading(false);
+    }
+  }; */
+
+  //NEW
+  const handleChange = (e) => {
+    setVisibleEr(false);
+    // setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setVisibleEr(true);
+    /*   if (!formData.email || !formData.password) {
+      return dispatch(signInFailure("Please fill all the fields"));
+    } */
+    if (token) {
+      formData.token = token;
+    }
+    console.log("formData from handleSubmit in ResetPassword.jsx: ", formData);
+    try {
+      dispatch(signInStart());
+      const res = await fetch("/api/auth/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      console.log("received data from ResetPassword.jsx: ", data);
+      if (data.success === false) {
+        dispatch(signInFailure(data.message));
+      }
+      if (res.ok) {
+        dispatch(signInSuccess(data));
+        navigate("/");
+        //navigate(`${callbackUrl ?? "/"}`);
+      }
+    } catch (error) {
+      dispatch(signInFailure(error.message));
     }
   };
 
@@ -192,18 +240,18 @@ export default function ResetPassword() {
           </form>
           {errorMessage && (
             <Alert
-              /* hidden={!visibleEr} */
-              className={`mt-5 text-justify `}
+              className={`mx-auto mt-5 w-[300px] text-justify ${!visibleEr && "hidden"}`}
               color="failure"
             >
-              {/* it can be failure or success */}
               {errorMessage}
             </Alert>
           )}
           {success && (
             <>
-              <Alert className={`mx-auto mt-5 text-center `} color="success">
-                {/* it can be failure or success */}
+              <Alert
+                className={`mx-auto mt-5 w-[300px] text-justify `}
+                color="success"
+              >
                 The password had been resetted succesfully. You can sign in now
               </Alert>
               <Button
@@ -214,8 +262,6 @@ export default function ResetPassword() {
               >
                 Sign In
               </Button>
-              {/*              <Link className={`mt-5  `} to="/sign-in">
-                              </Link> */}
             </>
           )}
         </div>

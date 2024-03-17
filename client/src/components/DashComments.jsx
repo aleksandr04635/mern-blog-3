@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { FaCheck, FaTimes } from "react-icons/fa";
 import ModalComponent from "./ModalComponent";
+import { customTableTheme } from "../../customFlowbiteThemes";
 
 export default function DashComments() {
   const { currentUser } = useSelector((state) => state.user);
@@ -35,7 +36,7 @@ export default function DashComments() {
     const startIndex = comments.length;
     try {
       const res = await fetch(
-        `/api/comment/getcomments?startIndex=${startIndex}`
+        `/api/comment/getcomments?startIndex=${startIndex}`,
       );
       const data = await res.json();
       if (res.ok) {
@@ -56,12 +57,12 @@ export default function DashComments() {
         `/api/comment/deleteComment/${commentIdToDelete}`,
         {
           method: "DELETE",
-        }
+        },
       );
       const data = await res.json();
       if (res.ok) {
         setComments((prev) =>
-          prev.filter((comment) => comment._id !== commentIdToDelete)
+          prev.filter((comment) => comment._id !== commentIdToDelete),
         );
         setShowModal(false);
       } else {
@@ -73,10 +74,10 @@ export default function DashComments() {
   };
 
   return (
-    <div className="table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
+    <div className="table-auto overflow-x-scroll p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500 md:mx-auto">
       {currentUser.isAdmin && comments.length > 0 ? (
         <>
-          <Table hoverable className="shadow-md">
+          <Table hoverable className="shadow-md" theme={customTableTheme}>
             <Table.Head>
               <Table.HeadCell>Date updated</Table.HeadCell>
               <Table.HeadCell>Comment content</Table.HeadCell>
@@ -87,7 +88,7 @@ export default function DashComments() {
             </Table.Head>
             {comments.map((comment) => (
               <Table.Body className="divide-y" key={comment._id}>
-                <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                <Table.Row className="bg-white dark:border-gray-700">
                   <Table.Cell>
                     {new Date(comment.updatedAt).toLocaleDateString()}
                   </Table.Cell>
@@ -101,7 +102,7 @@ export default function DashComments() {
                         setShowModal(true);
                         setCommentIdToDelete(comment._id);
                       }}
-                      className="font-medium text-red-500 hover:underline cursor-pointer"
+                      className="cursor-pointer font-medium text-red-500 hover:underline"
                     >
                       Delete
                     </span>
@@ -113,7 +114,7 @@ export default function DashComments() {
           {showMore && (
             <button
               onClick={handleShowMore}
-              className="w-full text-teal-500 self-center text-sm py-7"
+              className="w-full self-center py-7 text-sm text-teal-500"
             >
               Show more
             </button>

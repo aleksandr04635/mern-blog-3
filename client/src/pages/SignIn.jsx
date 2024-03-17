@@ -73,6 +73,9 @@ export default function SignIn() {
     if (token) {
       formData.token = token;
     }
+    if (encodedCallbackUrl && encodedCallbackUrl != "null") {
+      formData.encodedCallbackUrl = encodedCallbackUrl;
+    }
     console.log("formData from handleSubmit in SignIn : ", formData);
     try {
       dispatch(signInStart());
@@ -201,7 +204,7 @@ export default function SignIn() {
           {errorMessage && (
             <Alert
               /* hidden={!visibleEr} */
-              className={`mt-5 text-justify ${!visibleEr && "hidden"}`}
+              className={`mx-auto mt-5 w-[300px] text-justify ${!visibleEr && "hidden"}`}
               color="failure"
             >
               {/* it can be failure or success */}

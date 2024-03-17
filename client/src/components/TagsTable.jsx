@@ -3,6 +3,7 @@ import TagLink from "./TagLink";
 
 //import { changePageSize } from "../redux/pageSize/pageSizeSlice";
 import { useGetTagsQuery } from "../redux/apiSlice";
+import { customTableTheme } from "../../customFlowbiteThemes";
 
 export default function TagsTable(reloadSwitch) {
   // const [tags, setTags] = useState([]);
@@ -40,7 +41,7 @@ export default function TagsTable(reloadSwitch) {
   }
 
   /*   useEffect(() => {
-    const fetchComments = async () => {
+    const fetchTags = async () => {
       try {
         const res = await fetch(`/api/tag/get-all-tags`);
         const data = await res.json();
@@ -53,42 +54,9 @@ export default function TagsTable(reloadSwitch) {
       }
     };
 
-    fetchComments();
+    fetchTags();
   }, [reloadSwitch]); */
 
-  /*   "dark-active-bg": "#1c284a",
-  "active-bg": "#f2faff",
-  "dark-main-bg": "#10172a",
-  "dark-additional-bg": "#1f2937",
-  "secondary-border": "#6366F1",
-  "main-border": "#078493", */
-
-  const ownTheme = {
-    root: {
-      base: "w-full text-left text-sm text-additional-text dark:text-dark-additional-text",
-      shadow:
-        "absolute bg-white dark:bg-black w-full h-full top-0 left-0 rounded-lg drop-shadow-md -z-10",
-      wrapper: "relative",
-    },
-    body: {
-      base: "group/body",
-      cell: {
-        base: " group-first/body:group-first/row:first:rounded-tl-lg group-first/body:group-first/row:last:rounded-tr-lg group-last/body:group-last/row:first:rounded-bl-lg group-last/body:group-last/row:last:rounded-br-lg px-6 py-4",
-      },
-    },
-    head: {
-      base: "group/head text-xs uppercase text-additional-text dark:text-dark-additional-text",
-      cell: {
-        base: "group-first/head:first:rounded-tl-lg group-first/head:last:rounded-tr-lg bg-white border-main-border dark:bg-dark-additional-bg/40 dark:text-white px-6 py-2",
-      },
-    },
-    row: {
-      base: "group/row dark:bg-dark-additional-bg/40",
-      hovered: "hover:bg-active-bg dark:hover:bg-dark-active-bg",
-      striped:
-        "odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-700",
-    },
-  };
   return (
     <div className=" pl-1 pr-2 lg:pr-0  ">
       {/*     <button onClick={refetch}>Refetch Posts</button> */}
@@ -99,7 +67,7 @@ export default function TagsTable(reloadSwitch) {
             <Table
               hoverable
               className="mx-auto w-full  rounded-b-lg  shadow-md "
-              theme={ownTheme}
+              theme={customTableTheme}
             >
               <Table.Head className="font-light normal-case ">
                 <Table.HeadCell>Tag</Table.HeadCell>
@@ -107,7 +75,7 @@ export default function TagsTable(reloadSwitch) {
               </Table.Head>
               <Table.Body className="">
                 {tags.slice(0, 10).map((tag, i) => (
-                  <Table.Row key={i} className="bg-white py-1 ">
+                  <Table.Row key={i} className=" py-1 ">
                     <Table.Cell className="max-w-[150px] overflow-hidden py-1 pl-2 last:pb-2">
                       <TagLink tag={tag} />
                     </Table.Cell>

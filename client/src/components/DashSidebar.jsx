@@ -20,7 +20,7 @@ export default function DashSidebar() {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
   const [tab, setTab] = useState("");
-  console.log("currentUser:", currentUser);
+  console.log("currentUser from DashSidebar: ", currentUser);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
@@ -29,6 +29,7 @@ export default function DashSidebar() {
       setTab(tabFromUrl);
     }
   }, [location.search]);
+
   const handleSignout = async () => {
     try {
       const res = await fetch("/api/user/signout", {
@@ -60,6 +61,7 @@ export default function DashSidebar() {
               label={currentUser.isAdmin ? "Admin" : "User"}
               labelColor="green"
               as="div"
+              /*  as='div' IS HERE BECAUSE  othervise it translates into <a> inside of another <a> from <Link> */
             >
               Profile
             </Sidebar.Item>
@@ -69,32 +71,35 @@ export default function DashSidebar() {
               Create a post
             </Sidebar.Item>
           </Link>
-          {currentUser && currentUser.isAdmin && (
-            <Link to="/dashboard?tab=dash">
-              <Sidebar.Item
-                active={tab === "dash" || !tab}
-                icon={HiChartPie}
-                as="div"
-              >
-                {/*  as='div' IS HERE BECAUSE  othervise it translates into <a> inside of another <a> from <Link> */}
-                Dashboard
-              </Sidebar.Item>
-            </Link>
-          )}
-          {/* {currentUser.isAdmin && ( */}
-          {/* <Link to="/dashboard?tab=posts"> */}
-          <Link to={`/dashboard?tab=posts&userId=${currentUser._id}`}>
+          <Link to={`/dashboard?tab=myposts&userId=${currentUser._id}`}>
             <Sidebar.Item
-              active={tab === "posts"}
+              active={tab === "myposts"}
               icon={HiDocumentText}
               as="div"
             >
-              Posts
+              My posts
             </Sidebar.Item>
           </Link>
-
-          {currentUser.isAdmin && (
+          {currentUser && currentUser.isAdmin && (
             <>
+              <Link to="/dashboard?tab=dash">
+                <Sidebar.Item
+                  active={tab === "dash" || !tab}
+                  icon={HiChartPie}
+                  as="div"
+                >
+                  Dashboard
+                </Sidebar.Item>
+              </Link>
+              <Link to={`/dashboard?tab=posts`}>
+                <Sidebar.Item
+                  active={tab === "posts"}
+                  icon={HiDocumentText}
+                  as="div"
+                >
+                  Posts
+                </Sidebar.Item>
+              </Link>
               <Link to="/dashboard?tab=users">
                 <Sidebar.Item
                   active={tab === "users"}

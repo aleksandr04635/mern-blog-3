@@ -6,6 +6,7 @@ import DashPosts from "../components/DashPosts";
 import DashUsers from "../components/DashUsers";
 import DashComments from "../components/DashComments";
 import DashboardComp from "../components/DashboardComp";
+import DashMyPosts from "../components/DashMyPosts";
 
 export default function Dashboard() {
   const location = useLocation();
@@ -19,12 +20,14 @@ export default function Dashboard() {
   }, [location.search]);
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
-      <div className="border-layout-border flex-none overflow-hidden sm:min-h-screen md:w-64 md:border-r ">
+      <div className="flex-none overflow-hidden border-layout-border sm:min-h-screen md:w-64 md:border-r ">
         {/* Sidebar */}
         <DashSidebar />
       </div>
       {/* profile... */}
       {tab === "profile" && <DashProfile />}
+      {/* myposts... */}
+      {tab === "myposts" && <DashMyPosts />}
       {/* posts... */}
       {tab === "posts" && <DashPosts />}
       {/* users */}

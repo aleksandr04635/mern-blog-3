@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-export default function AuthrorName({ post }) {
+export default function AuthorName({ post }) {
   const { pageSize } = useSelector((state) => state.pageSize);
   const { currentUser } = useSelector((state) => state.user);
   // max-w-full

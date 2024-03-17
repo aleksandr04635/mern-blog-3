@@ -6,7 +6,7 @@ import { MdDelete } from "react-icons/md";
 import Tooltip from "./Tooltip";
 import TagLinksList from "./TagLinksList";
 import InfoString from "./InfoString";
-import AuthrorName from "./AuthrorName";
+import AuthorName from "./AuthorName";
 import Likes from "./Likes";
 
 export default function PostCard({ post, onDelete }) {
@@ -46,8 +46,8 @@ md:h-full
           */
   return (
     <div
-      className="flex w-full flex-col  rounded-lg border border-main-border outline-1
-     outline-main-border  hover:outline dark:hover:bg-dark-active-bg/40  md:flex-row  "
+      className="flex w-full flex-col  rounded-lg border border-main-border bg-white/90
+     outline-1  outline-main-border hover:outline dark:bg-inherit dark:hover:bg-dark-active-bg/40  md:flex-row  "
     >
       {post.image && (
         <div className="shrink-0 grow-0  overflow-hidden rounded-tl-lg rounded-tr-lg md:w-[300px]  md:rounded-bl-lg md:rounded-tr-none">
@@ -85,7 +85,7 @@ md:h-full
           </span>
         </div>
         <div className=" w-fit px-2 md:w-fit ">
-          <AuthrorName post={post} />
+          <AuthorName post={post} />
         </div>
         {post.intro && (
           <div className="h-fit w-fit px-2 text-justify ">{post.intro}</div>

@@ -81,7 +81,7 @@ export default function SignUp() {
     if (encodedCallbackUrl && encodedCallbackUrl !== "null") {
       formData.encodedCallbackUrl = encodedCallbackUrl;
     }
-    console.log("formData from SignUp: ", formData);
+    console.log("formData in SignUp: ", formData);
     try {
       setLoading(true);
       setErrorMessage(null);
@@ -91,6 +91,7 @@ export default function SignUp() {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
+      console.log("received data in SignUp: ", data);
       if (data.success === false) {
         setErrorMessage(data.message);
       }

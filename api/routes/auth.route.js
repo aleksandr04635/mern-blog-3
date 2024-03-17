@@ -61,6 +61,90 @@ const signupOLD = async (req, res, next) => {
   }
 };
 
+export async function sendVerificationEmail(userId, req) {
+  const email = req.body?.email.trim();
+  const token = jwt.sign({ id: userId, email }, process.env.JWT_SECRET, {
+    expiresIn: "1d",
+  });
+  //console.log("token:", token);
+  //let fullUrl = req.protocol + "://" + req.get("host") + req.originalUrl;
+  //console.log("fullUrl:", fullUrl);
+  const loc = req.protocol + "://" + req.get("host");
+  const link = `${loc}/sign-in?email=${email}${!!req.body.encodedCallbackUrl ? "&callbackUrl=" + req.body.encodedCallbackUrl : ""}&token=${token}`;
+  console.log("sent link from signup: ", link);
+  const transporter = nodemailer.createTransport({
+    service: "gmail", //old
+    port: 465, //new
+    host: "smtp.gmail.com", //new
+    secure: true, //new
+    auth: {
+      user: process.env.EMAIL_SERVER_USER,
+      pass: process.env.EMAIL_SERVER_PASSWORD,
+    },
+  });
+  //console.log("transporter: ", transporter);
+  // verify connection configuration
+  try {
+    await new Promise((resolve, reject) => {
+      transporter.verify(function (error, success) {
+        console.log("verify connection configuration");
+        if (error) {
+          console.log("error:", error);
+          reject(error);
+        } else {
+          console.log("Server is ready to take our messages");
+          resolve(success);
+        }
+      });
+    });
+
+    const emailFile = readFileSync("./emails/confirm-email.html", {
+      encoding: "utf8",
+    });
+    //console.log("emailFile: ", emailFile);
+    const emailTemplate = Handlebars.compile(emailFile);
+
+    let mailOptions = {
+      from: `My blog ${process.env.EMAIL_FROM}`,
+      to: email,
+      subject: "Confirm email",
+      text: link,
+      html: emailTemplate({
+        base_url: loc,
+        signin_url: link,
+        email: email,
+      }),
+    };
+    // html: `Click on the link to reset the password ${link}`, //new
+    //console.log("mailOptions: ", mailOptions);
+
+    const prom = await new Promise((resolve, reject) => {
+      // send mail
+      transporter.sendMail(mailOptions, (err, info) => {
+        console.log("Email sent: " + info.response);
+        if (err) {
+          console.error(err);
+          reject(err);
+          //return "error";
+        } else {
+          // res          .status(200)          .send({ message: "Success from transporter.sendMail" });
+          //console.log("info from transporter.sendMail", info);
+          resolve(info);
+          //return "success";
+        }
+      });
+    });
+    console.log(" result of verification email sending: ", prom);
+    if (prom.accepted && prom.accepted?.length > 0) {
+      return "success";
+    } else {
+      return "error";
+    }
+  } catch (error) {
+    return "error";
+  }
+}
+
 const signup = async (req, res, next) => {
   connectDB();
   const { username, email, password, encodedCallbackUrl = "" } = req.body;
@@ -77,6 +161,15 @@ const signup = async (req, res, next) => {
   }
   const checkUser = await User.findOne({ email });
   if (checkUser) {
+    //MY-DELETE
+    /*  let result = await sendVerificationEmail(checkUser._id.toString(), req);
+    console.log("result from signup: ", result);
+    if (result == "success") {
+      console.log("received success");
+      return res
+        .status(200)
+        .send({ message: "sent email to an existing user" });
+    } */
     return next(
       errorHandler(
         403,
@@ -94,11 +187,34 @@ const signup = async (req, res, next) => {
       username: username.trim(),
       email: email.trim(),
       password: hashedPassword,
+      //isEmailVerified: true,
       isEmailVerified: false,
     });
     await newUser.save();
     //console.log("newUser:", newUser);
 
+    let result = await sendVerificationEmail(newUser._id.toString(), req);
+    console.log("result from sendVerificationEmail: ", result);
+    if (result == "error") {
+      console.log("received error");
+      return next(errorHandler(403, "error sending verification email"));
+    } else if (result == "success") {
+      console.log("received success");
+      return res
+        .status(200)
+        .send({ message: "Success from sendVerificationEmail" });
+      /*    return next(
+        errorHandler(
+          400,
+          "Email is not verified. Verification token was send to your email again. Go there"
+        )
+      ); */
+    } else {
+      console.log("some error");
+      return next(errorHandler(403, "some error sending verification email"));
+    }
+    console.log("something was done after!");
+    /* 
     const token = jwt.sign({ id: newUser._id, email }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
@@ -171,7 +287,7 @@ const signup = async (req, res, next) => {
             .send({ message: "Success from transporter.sendMail" });
         }
       });
-    });
+    }); */
 
     //new
     /*     const token = jwt.sign(
@@ -250,26 +366,47 @@ const signin = async (req, res, next) => {
       validUser.isEmailVerified === false
     ) {
       if (!req.body.token) {
-        return next(errorHandler(400, "Email is not verified"));
+        let result = await sendVerificationEmail(validUser._id.toString(), req);
+        console.log("result from sendVerificationEmail: ", result);
+        if (result == "error") {
+          console.log("received error");
+          return next(errorHandler(403, "error sending verification email"));
+        } else if (result == "success") {
+          console.log("received success");
+          return next(
+            errorHandler(
+              400,
+              "Email is not verified. Verification token was send to your email again. Go there and click the verification link"
+            )
+          );
+        } else {
+          console.log("some error");
+          return next(errorHandler(403, "error sending verification email"));
+        }
       }
       //console.log("before jwt.verify from signin: ");
       jwt.verify(
         req.body.token,
         process.env.JWT_SECRET,
         async (err, decoded) => {
-          //console.log("run jwt.verify from signin: ");
+          console.log("run jwt.verify from signin: ");
           if (err) {
             return next(errorHandler(401, "Invalid Token"));
             // res.status(401).send({ message: "Invalid Token" });
           } else {
-            /*  console.log("decoded from signin: ", decoded);
-            console.log(
+            console.log("decoded from signin: ", decoded);
+            /* console.log(
               "validUser._id.toString() from signin: ",
               validUser._id.toString()
             ); */
             if (decoded.id !== validUser._id.toString()) {
               return next(errorHandler(401, "Invalid Token"));
             }
+            if (decoded.email !== validUser.email.toString()) {
+              console.log("changed email from token to: ", decoded.email);
+              validUser.email = decoded.email; //it's already done during email sending from update func
+            }
+            console.log("changed validation status to true ");
             validUser.isEmailVerified = true;
             await validUser.save();
             //console.log("validUser after save in sign in: ", validUser);
@@ -456,9 +593,24 @@ const ResetPassword = async (req, res, next) => {
           if (req.body.password) {
             user.password = bcryptjs.hashSync(req.body.password, 10);
             await user.save();
+
+            //new addition
+            const token = jwt.sign(
+              { id: user._id, isAdmin: user.isAdmin },
+              process.env.JWT_SECRET
+            );
+            const { password: pass, ...rest } = user._doc;
             return res
               .status(200)
-              .json({ message: "Password reseted successfully" });
+              .cookie("access_token", token, {
+                httpOnly: true,
+              })
+              .json(rest);
+
+            /* old- works
+            return res
+              .status(200)
+              .json({ message: "Password reseted successfully" }); */
           }
         } else {
           return next(errorHandler(404, "User not found"));

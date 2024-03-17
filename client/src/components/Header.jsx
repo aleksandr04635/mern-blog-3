@@ -124,8 +124,8 @@ export default function Header() {
   //change={(v) => setSearchTerm(v)}
   return (
     <nav
-      className="bg-light-additional-bg/40
-      border-b border-layout-border pb-1 pl-1 pr-2 pt-1 dark:border-layout-border
+      className="border-b
+      border-layout-border bg-white/90 pb-1 pl-1 pr-2 pt-1 dark:border-layout-border
        dark:bg-dark-additional-bg/40
      md:px-5 md:pb-2.5 md:pt-2.5"
     >

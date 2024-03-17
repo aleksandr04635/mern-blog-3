@@ -179,7 +179,7 @@ export default function ForgotPassword() {
             <Alert
               /* hidden={!visibleEr} */
               /* className={`mt-5 text-justify ${!visibleEr && "hidden"}`} */
-              className={`mt-5 text-justify `}
+              className={`mx-auto mt-5 w-[300px] text-justify`}
               color="failure"
             >
               {/* it can be failure or success */}
@@ -187,7 +187,10 @@ export default function ForgotPassword() {
             </Alert>
           )}
           {success && (
-            <Alert className={`mt-5 text-center `} color="success">
+            <Alert
+              className={`mx-auto mt-5 w-[300px] text-justify`}
+              color="success"
+            >
               {/* it can be failure or success */}
               The email with a reset link had been sent to your email. Go there
               and click it

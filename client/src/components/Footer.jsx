@@ -18,8 +18,8 @@ export default function FooterCom() {
   return (
     <Footer
       container
-      className="bg-light-additional-bg/40 m-auto mx-0 h-16  rounded-none 
-      border-t border-layout-border dark:bg-dark-additional-bg/40"
+      className="m-auto mx-0 h-16 rounded-none  border-t 
+      border-layout-border bg-white/90 dark:bg-dark-additional-bg/40"
     >
       <div className="mx-auto w-full max-w-7xl">
         <div className="flex w-full items-center justify-between">

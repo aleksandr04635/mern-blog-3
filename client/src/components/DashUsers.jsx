@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 
 import { FaCheck, FaTimes } from "react-icons/fa";
 import ModalComponent from "./ModalComponent";
+import { customTableTheme } from "../../customFlowbiteThemes";
 
 export default function DashUsers() {
   const { currentUser } = useSelector((state) => state.user);
@@ -11,16 +12,17 @@ export default function DashUsers() {
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [userIdToDelete, setUserIdToDelete] = useState("");
+  console.log("users  in DashUsers: ", users);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const res = await fetch(`/api/user/getusers`);
         const data = await res.json();
-        //console.log("fetched users data: ", data);
+        console.log("fetched data from fetchUsers in DashUsers: ", data);
         if (res.ok) {
           setUsers(data.users);
-          if (data.users.length < 4) {
+          if (data.users.length < 8) {
             setShowMore(false);
           }
         }
@@ -38,9 +40,10 @@ export default function DashUsers() {
     try {
       const res = await fetch(`/api/user/getusers?startIndex=${startIndex}`);
       const data = await res.json();
+      console.log("fetched data from handleShowMore in DashUsers: ", data);
       if (res.ok) {
         setUsers((prev) => [...prev, ...data.users]);
-        if (data.users.length < 4) {
+        if (data.users.length < 8) {
           setShowMore(false);
         }
       }
@@ -67,21 +70,28 @@ export default function DashUsers() {
   };
 
   return (
-    <div className="table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
+    <div
+      className="table-auto 
+    overflow-x-scroll p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300
+     dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500 md:mx-auto"
+    >
       {currentUser.isAdmin && users.length > 0 ? (
         <>
-          <Table hoverable className="shadow-md">
+          <Table hoverable className="shadow-md" theme={customTableTheme}>
             <Table.Head>
               <Table.HeadCell>Date created</Table.HeadCell>
               <Table.HeadCell>User image</Table.HeadCell>
               <Table.HeadCell>Username</Table.HeadCell>
               <Table.HeadCell>Email</Table.HeadCell>
+              <Table.HeadCell>isEmailVerified</Table.HeadCell>
               <Table.HeadCell>Admin</Table.HeadCell>
+              <Table.HeadCell>Posts</Table.HeadCell>
+              <Table.HeadCell>Comments</Table.HeadCell>
               <Table.HeadCell>Delete</Table.HeadCell>
             </Table.Head>
             {users.map((user) => (
               <Table.Body className="divide-y" key={user._id}>
-                <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                <Table.Row className="bg-white dark:border-gray-700 ">
                   <Table.Cell>
                     {new Date(user.createdAt).toLocaleDateString()}
                   </Table.Cell>
@@ -89,11 +99,12 @@ export default function DashUsers() {
                     <img
                       src={user.profilePicture}
                       alt={user.username}
-                      className="w-10 h-10 object-cover bg-gray-500 rounded-full"
+                      className="h-10 w-10 rounded-full bg-gray-500 object-cover"
                     />
                   </Table.Cell>
                   <Table.Cell>{user.username}</Table.Cell>
                   <Table.Cell>{user.email}</Table.Cell>
+                  <Table.Cell>{user.isEmailVerified.toString()}</Table.Cell>
                   <Table.Cell>
                     {user.isAdmin ? (
                       <FaCheck className="text-green-500" />
@@ -101,13 +112,15 @@ export default function DashUsers() {
                       <FaTimes className="text-red-500" />
                     )}
                   </Table.Cell>
+                  <Table.Cell>{user.posts}</Table.Cell>
+                  <Table.Cell>{user.comments}</Table.Cell>
                   <Table.Cell>
                     <span
                       onClick={() => {
                         setShowModal(true);
                         setUserIdToDelete(user._id);
                       }}
-                      className="font-medium text-red-500 hover:underline cursor-pointer"
+                      className="cursor-pointer font-medium text-red-500 hover:underline"
                     >
                       Delete
                     </span>
@@ -119,7 +132,7 @@ export default function DashUsers() {
           {showMore && (
             <button
               onClick={handleShowMore}
-              className="w-full text-teal-500 self-center text-sm py-7"
+              className="w-full self-center py-7 text-sm text-teal-500"
             >
               Show more
             </button>

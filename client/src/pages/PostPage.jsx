@@ -7,7 +7,7 @@ import TagLinksList from "../components/TagLinksList";
 import CommentSection from "../components/CommentSection";
 import CommentingEditor from "../components/CommentingEditor";
 import InfoString from "../components/InfoString";
-import AuthrorName from "../components/AuthrorName";
+import AuthorName from "../components/AuthorName";
 import ModalComponent from "../components/ModalComponent";
 import { useDeletePostMutation } from "../redux/apiSlice";
 import Likes from "../components/Likes";
@@ -187,7 +187,7 @@ export default function PostPage() {
           )}
           <InfoString className="" post={post} />
           <div className="mx-auto pt-2">
-            {post && post.userId.username && <AuthrorName post={post} />}
+            {post && post.userId.username && <AuthorName post={post} />}
           </div>
 
           <h1 className="p-1  text-center font-serif text-3xl  lg:text-2xl">
@@ -201,7 +201,7 @@ export default function PostPage() {
             dangerouslySetInnerHTML={{ __html: post && post.content }}
           ></div>
           <TagLinksList post={post} />
-          <div className="border-main-border flex w-full  flex-col items-center justify-between border-l-0 sm:flex-row">
+          <div className="flex w-full flex-col  items-center justify-between border-l-0 border-main-border sm:flex-row">
             <div className="flex w-full flex-row items-center justify-between">
               <Likes type={"post"} comment={post} onLike={onLike} />
               <Button
