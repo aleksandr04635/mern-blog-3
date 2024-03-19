@@ -145,25 +145,6 @@ export default function SignIn() {
                 {visible ? <BsEyeSlash /> : <BsEye />}
               </p>
             </div>
-            {/*     <Button
-              outline
-              gradientDuoTone="purpleToBlue"
-              type="submit"
-              disabled={
-                loading ||
-                !validateEmail(formData.email) ||
-                formData.password?.length < 6
-              }
-            >
-              {loading ? (
-                <>
-                  <Spinner size="sm" />
-                  <span className="pl-3">Loading...</span>
-                </>
-              ) : (
-                "Sign In"
-              )}
-            </Button> */}
             <MyButton
               type="submit"
               disabled={
@@ -173,15 +154,7 @@ export default function SignIn() {
               }
               className=" w-full "
             >
-              {loading ? (
-                /*  <>
-                  <Spinner size="sm" />
-                  <span className="pl-3">Loading...</span>
-                </> */
-                <Loading type="button" />
-              ) : (
-                "Sign In"
-              )}
+              {loading ? <Loading type="button" /> : "Sign In"}
             </MyButton>
             <OAuth />
             <div className="flex items-center gap-2 text-sm">
@@ -203,11 +176,9 @@ export default function SignIn() {
           </form>
           {errorMessage && (
             <Alert
-              /* hidden={!visibleEr} */
               className={`mx-auto mt-5 w-[300px] text-justify ${!visibleEr && "hidden"}`}
               color="failure"
             >
-              {/* it can be failure or success */}
               {errorMessage}
             </Alert>
           )}

@@ -1,7 +1,7 @@
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 
-export default function About() {
+export default function Test() {
   return (
     <div className="flex min-h-screen ">
       <Helmet>
@@ -12,6 +12,13 @@ export default function About() {
         />
       </Helmet>
       <div className="mx-auto max-w-2xl p-3 text-justify ">
+        <p
+          className=" mx-auto h-fit w-fit bg-gradient-to-bl from-cyan-400 via-blue-500 to-purple-700 bg-clip-text 
+          font-serif text-[500px] font-extrabold
+        leading-[430px] text-transparent "
+        >
+          O
+        </p>
         <div>
           <h1 className="font my-5 text-center text-2xl font-semibold">
             About My Blog

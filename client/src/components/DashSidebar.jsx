@@ -20,7 +20,7 @@ export default function DashSidebar() {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
   const [tab, setTab] = useState("");
-  console.log("currentUser from DashSidebar: ", currentUser);
+  //console.log("currentUser from DashSidebar: ", currentUser);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);

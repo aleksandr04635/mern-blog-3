@@ -75,7 +75,6 @@ const updateUser = async (req, res, next) => {
       );
       changeEmail = true;
       sendVerificationEmail(oldUser._id.toString(), req);
-      //("You changed your email and it is not now verified. Verification token was send to your email. Go there and click the verification link");
     }
     //console.log("req.body from updateUser2: ", req.body);
     //return next(errorHandler(404, "Stopgap"));
@@ -84,12 +83,13 @@ const updateUser = async (req, res, next) => {
       {
         $set: {
           username: req.body.username,
-          email: req.body.email,
-          //email: oldUser.email,
+          //email: req.body.email,//for old sign-in version
+          email: oldUser.email, //for new sign-in version
           description: req.body.description,
           profilePicture: req.body.profilePicture,
           password: password2,
-          isEmailVerified: changeEmail ? false : true,
+          //isEmailVerified: changeEmail ? false : true,//for old sign-in version
+          isEmailVerified: true, //for new sign-in version
         },
       },
       { new: true }
@@ -100,12 +100,20 @@ const updateUser = async (req, res, next) => {
     if (changeEmail == false) {
       return res.status(200).json(rest);
     } else {
+      //for new sign-in version - old email remains util changed from token on sign-in
+      return next(
+        errorHandler(
+          403,
+          "You gave the command to change your email. Link for this was send to your new email. Go there and click the verification link. Until that old email is valid. All the other data were changed successfully."
+        )
+      );
+      /* //for old sign-in version
       return next(
         errorHandler(
           403,
           "You changed your email and it is now not verified. You better now check if it's really yours one now and if it's not change it to yours before logging out. Verification token was send to your new email. Go there and click the verification link"
         )
-      );
+      ); */
     }
   } catch (error) {
     next(error);

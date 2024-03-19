@@ -90,6 +90,7 @@ export default function Search() {
     navigate(`/search?${searchQuery2}`);
   };
 
+  //xl:min-h-screen
   return (
     <div className="flex flex-col xl:flex-row">
       <Helmet defaultTitle="My Blog" titleTemplate="%s | My Blog">
@@ -101,7 +102,7 @@ export default function Search() {
       </Helmet>
       <div
         className="w-full border-layout-border bg-white px-3 py-1  dark:bg-dark-additional-bg/40 
-      xl:min-h-screen xl:w-[300px] xl:flex-none xl:border-r xl:py-3"
+       xl:w-[300px] xl:flex-none xl:border-r xl:py-3"
       >
         <form className="flex flex-col gap-1 xl:gap-8" onSubmit={handleSubmit}>
           <div className="  flex items-center justify-center gap-2">

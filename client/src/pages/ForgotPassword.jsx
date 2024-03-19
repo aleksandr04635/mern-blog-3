@@ -11,6 +11,7 @@ import OAuth from "../components/OAuth";
 import { customTextInputTheme } from "../../customFlowbiteThemes";
 import MyButton from "../components/MyButton";
 import Loading from "../components/Loading";
+import validateEmail from "../utils/validateEmail";
 
 export default function ForgotPassword() {
   const [formData, setFormData] = useState({});
@@ -41,14 +42,6 @@ export default function ForgotPassword() {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
   };
 
-  const validateEmail = (email) => {
-    return !!String(email)
-      .toLowerCase()
-      .match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-      );
-  };
-
   /*   const handleSubmit = async (e) => {
     e.preventDefault();
     setVisibleEr(true);
@@ -77,6 +70,7 @@ export default function ForgotPassword() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setVisibleEr(true);
     if (!formData.email) {
       return setErrorMessage("Please fill out all fields.");
     }
@@ -91,7 +85,6 @@ export default function ForgotPassword() {
       const data = await res.json();
       console.log("data received in ForgotPassword.jsx: ", data);
       if (data.success === false) {
-        //setLoading(false); //my
         return setErrorMessage(data.message);
       }
       if (res.ok) {
@@ -131,31 +124,12 @@ export default function ForgotPassword() {
                 theme={customTextInputTheme}
               />
             </div>
-            {/*       <Button
-              outline
-              gradientDuoTone="purpleToBlue"
-              type="submit"
-              disabled={loading || !validateEmail(formData.email)}
-            >
-              {loading ? (
-                <>
-                  <Spinner size="sm" />
-                  <span className="pl-3">Loading...</span>
-                </>
-              ) : (
-                "Send me a link to reset the password"
-              )}
-            </Button> */}
             <MyButton
               type="submit"
               disabled={loading || !validateEmail(formData.email)}
               className=" w-full "
             >
               {loading ? (
-                /*   <>
-                  <Spinner size="sm" />
-                  <span className="pl-3">Loading...</span>
-                </> */
                 <Loading type="button" />
               ) : (
                 "Send me a link to reset the password"
@@ -177,12 +151,9 @@ export default function ForgotPassword() {
           </form>
           {errorMessage && (
             <Alert
-              /* hidden={!visibleEr} */
-              /* className={`mt-5 text-justify ${!visibleEr && "hidden"}`} */
-              className={`mx-auto mt-5 w-[300px] text-justify`}
+              className={`mx-auto mt-5 w-[300px] text-justify ${!visibleEr && "hidden"}`}
               color="failure"
             >
-              {/* it can be failure or success */}
               {errorMessage}
             </Alert>
           )}
