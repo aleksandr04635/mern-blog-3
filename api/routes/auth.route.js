@@ -100,11 +100,29 @@ export async function sendVerificationEmail(userId, req) {
       });
     });
 
-    const emailsDir = path.resolve(process.cwd(), "emails");
+    /*  const emailsDir = path.resolve(process.cwd(), "emails");
     console.log("emailsDir: ", emailsDir);
     const emailFile = readFileSync(path.join(emailsDir, "confirm-email.html"), {
       encoding: "utf8",
-    });
+    }); */
+    //THIS VERSION WORKS IN PRODUCTION
+    /*  const emailFile = readFileSync(
+      process.cwd() + "/api/emails/confirm-email.html",
+      {
+        encoding: "utf8",
+      }
+    ); */
+    console.log("process.cwd(): ", process.cwd());
+    let last = process.cwd().split("\\").pop();
+    console.log("last: ", last);
+    const emailFile =
+      last == "api"
+        ? readFileSync("./emails/confirm-email.html", {
+            encoding: "utf8",
+          })
+        : readFileSync(process.cwd() + "/api/emails/confirm-email.html", {
+            encoding: "utf8",
+          });
     /*  const emailFile = readFileSync("./emails/confirm-email.html", {
       encoding: "utf8",
     }); */
@@ -408,18 +426,25 @@ const ForgotPassword = async (req, res, next) => {
     });
 
     //const file = await fs.readFile(process.cwd() + '/app/data.json', 'utf8');
-
     /* const emailsDir = path.resolve(process.cwd(), "emails");
     console.log("emailsDir: ", emailsDir);
     const emailFile = readFileSync(path.join(emailsDir, "reset-email.html"), {
       encoding: "utf8",
     }); */
-    const emailFile = readFileSync(
-      process.cwd() + "/api/emails/reset-email.html",
-      {
-        encoding: "utf8",
-      }
-    );
+    //app.use(express.static(path.join(__dirname, "/client/dist")));
+
+    //THIS VERSION WORKS IN PRODUCTION
+    console.log("process.cwd(): ", process.cwd());
+    let last = process.cwd().split("\\").pop();
+    console.log("last: ", last);
+    const emailFile =
+      last == "api"
+        ? readFileSync("./emails/reset-email.html", {
+            encoding: "utf8",
+          })
+        : readFileSync(process.cwd() + "/api/emails/reset-email.html", {
+            encoding: "utf8",
+          });
     /* const emailFile = readFileSync("./emails/reset-email.html", {
       encoding: "utf8",
     }); */
