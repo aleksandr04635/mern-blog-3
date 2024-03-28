@@ -7,6 +7,7 @@ import nodemailer from "nodemailer";
 import Handlebars from "handlebars";
 import { readFileSync } from "fs";
 import async from "async";
+import path from "path";
 
 const signupOLD = async (req, res, next) => {
   connectDB();
@@ -99,9 +100,14 @@ export async function sendVerificationEmail(userId, req) {
       });
     });
 
-    const emailFile = readFileSync("./emails/confirm-email.html", {
+    const emailsDir = path.resolve(process.cwd(), "emails");
+    console.log("emailsDir: ", emailsDir);
+    const emailFile = readFileSync(path.join(emailsDir, "confirm-email.html"), {
       encoding: "utf8",
     });
+    /*  const emailFile = readFileSync("./emails/confirm-email.html", {
+      encoding: "utf8",
+    }); */
     //console.log("emailFile: ", emailFile);
     const emailTemplate = Handlebars.compile(emailFile);
 
@@ -401,9 +407,14 @@ const ForgotPassword = async (req, res, next) => {
       });
     });
 
-    const emailFile = readFileSync("./emails/reset-email.html", {
+    const emailsDir = path.resolve(process.cwd(), "emails");
+    console.log("emailsDir: ", emailsDir);
+    const emailFile = readFileSync(path.join(emailsDir, "reset-email.html"), {
       encoding: "utf8",
     });
+    /* const emailFile = readFileSync("./emails/reset-email.html", {
+      encoding: "utf8",
+    }); */
     //console.log("emailFile: ", emailFile);
     const emailTemplate = Handlebars.compile(emailFile);
 
