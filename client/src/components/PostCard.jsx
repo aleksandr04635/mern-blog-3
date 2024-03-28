@@ -66,7 +66,7 @@ md:h-full
       )}
       <div className="flex w-full flex-col  md:py-1 md:pl-2 ">
         <InfoString post={post} />
-        <div className="px-2 ">
+        <div className="px-2 pb-2 pt-1">
           <span>
             <Link
               to={`/post/${post.slug}`}
@@ -74,8 +74,8 @@ md:h-full
               rel="noopener noreferrer"
             >
               <h2
-                className="mx-auto inline w-fit px-2 text-center text-xl font-semibold text-blue-700 
-           hover:text-cyan-700 dark:text-cyan-400 dark:hover:text-blue-500 md:w-full 
+                className="mx-auto inline w-fit px-2 text-center text-xl font-semibold text-blue-700 hover:text-cyan-700 
+           dark:text-cyan-400 dark:hover:text-blue-500  md:w-full 
            md:text-justify "
               >
                 {/*  dark:text-blue-500 dark:hover:text-cyan-500 */}

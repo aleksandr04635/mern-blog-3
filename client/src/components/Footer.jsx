@@ -15,10 +15,11 @@ export default function FooterCom() {
   //console.log(" window.location.origin: ", window.location.origin);
   //dark:bg-transparent
 
+  //absolute bottom-0
   return (
     <Footer
       container
-      className="m-auto mx-0 h-16 rounded-none  border-t 
+      className="m-auto mx-0 h-16  grow-0 rounded-none border-t
       border-layout-border bg-white/90 dark:bg-dark-additional-bg/40"
     >
       <div className="mx-auto w-full max-w-7xl">

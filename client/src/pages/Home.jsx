@@ -20,14 +20,14 @@ export default function Home() {
       <div className=" flex-0 flex max-w-6xl flex-col gap-3 px-2 py-3 lg:w-9/12  ">
         <h1 className="text-xl font-semibold ">Welcome to my Blog</h1>
         <span>
-          <Link to={"/about"} className=" link-stand text-lg ">
+          <Link to={"/about"} className=" link-stand text-xl ">
             Here is the full description of this app and all its features
           </Link>
         </span>
         <span>
           <Link
             to={`/search?pageSize=${pageSize}`}
-            className="link-stand text-lg"
+            className="link-stand text-xl"
           >
             Here you can search in the posts list
           </Link>

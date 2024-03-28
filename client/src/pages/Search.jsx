@@ -91,8 +91,12 @@ export default function Search() {
   };
 
   //xl:min-h-screen
+  //absolute bottom-0 left-0 right-0 top-0
+  //<div className="h-full bg-red-500 ">
+  // xl:h-full
+  //xl:min-h-[calc(100vh_-_125px)]
   return (
-    <div className="flex flex-col xl:flex-row">
+    <div className="flex flex-col  xl:h-full xl:flex-row ">
       <Helmet defaultTitle="My Blog" titleTemplate="%s | My Blog">
         <title>{`Searching for "${sidebarData.searchTerm}" `}</title>
         <meta
@@ -101,8 +105,9 @@ export default function Search() {
         />
       </Helmet>
       <div
-        className="w-full border-layout-border bg-white px-3 py-1  dark:bg-dark-additional-bg/40 
-       xl:w-[300px] xl:flex-none xl:border-r xl:py-3"
+        className="w-full border-layout-border bg-white px-3 py-1 dark:bg-dark-additional-bg/40   
+       xl:min-h-[calc(100vh_-_125px)]
+        xl:w-[300px] xl:flex-none xl:border-r xl:py-3"
       >
         <form className="flex flex-col gap-1 xl:gap-8" onSubmit={handleSubmit}>
           <div className="  flex items-center justify-center gap-2">
@@ -162,7 +167,7 @@ export default function Search() {
           </Button>
         </form>
       </div>
-      <div className="p-3">
+      <div className="p-3 xl:h-full">
         <PostList />
       </div>
     </div>

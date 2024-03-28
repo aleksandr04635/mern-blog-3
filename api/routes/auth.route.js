@@ -106,7 +106,7 @@ export async function sendVerificationEmail(userId, req) {
     const emailTemplate = Handlebars.compile(emailFile);
 
     let mailOptions = {
-      from: `My blog ${process.env.EMAIL_FROM}`,
+      from: `My blog <${process.env.EMAIL_FROM}>`,
       to: email,
       subject: "Confirm email",
       text: link,
@@ -408,7 +408,7 @@ const ForgotPassword = async (req, res, next) => {
     const emailTemplate = Handlebars.compile(emailFile);
 
     let mailOptions = {
-      from: `My blog ${process.env.EMAIL_FROM}`,
+      from: `My blog <${process.env.EMAIL_FROM}>`,
       to: email,
       subject: "Reset Password Link",
       text: link,

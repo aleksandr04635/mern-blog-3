@@ -5,7 +5,7 @@ export default function ThemeProvider({ children }) {
   return (
     <div className={theme}>
       <div
-        className=" min-h-screen  w-full 
+        className="  flex  min-h-screen w-full flex-col justify-stretch
          bg-white 
          bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] 
                       text-gray-950
@@ -17,7 +17,7 @@ export default function ThemeProvider({ children }) {
     </div>
   );
 }
-
+//relative
 // bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-sky-400 to-blue-800 text-gray-950
 //dark:bg-dark-main-bg
 

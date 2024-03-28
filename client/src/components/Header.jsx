@@ -36,11 +36,12 @@ function SearchFormForHeader({ type }) {
     }
   };
 
+  //overflow-hidden
   return (
     <form
       onSubmit={handleSubmit}
       className={
-        "w-full overflow-hidden  md:w-[300px] " +
+        "w-full   md:w-[300px] " +
         (type == "wide-scr"
           ? "relative hidden  md:inline "
           : location.pathname !== "/search"
@@ -55,7 +56,7 @@ function SearchFormForHeader({ type }) {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className="w-full  rounded-lg border
-       border-main-border py-1.5 focus:border-main-border focus:ring-main-border dark:bg-dark-active-bg 
+       border-main-border py-1.5 focus:border-main-border focus:ring-1 focus:ring-main-border dark:bg-dark-active-bg 
         md:w-[300px]"
       />
       <p
@@ -124,7 +125,7 @@ export default function Header() {
   //change={(v) => setSearchTerm(v)}
   return (
     <nav
-      className="border-b
+      className="grow-0 border-b
       border-layout-border bg-white/95 pb-1 pl-1 pr-2 pt-1 dark:border-layout-border
        dark:bg-dark-additional-bg/40
      md:px-5 md:pb-2.5 md:pt-2.5"

@@ -20,8 +20,8 @@ export default function AuthorName({ post }) {
           <img
             src={post.userId.profilePicture}
             alt="user"
-            className={`h-full w-full rounded-full  border
-           border-blue-600  object-cover  group-hover:border-cyan-600 
+            className={`h-full w-full rounded-full  border-[0px] border-blue-600
+           object-cover  group-hover:border-[2px]  group-hover:border-cyan-600 
             dark:border-cyan-400 dark:group-hover:border-blue-500`}
           />
         </div>
@@ -34,3 +34,23 @@ export default function AuthorName({ post }) {
 }
 //      key={tag._id}
 //font-serif
+
+{
+  /* <img
+src={post.userId.profilePicture}
+alt="user"
+className={`h-full w-full rounded-full  border
+border-blue-600  object-cover  group-hover:border-cyan-600 
+dark:border-cyan-400 dark:group-hover:border-blue-500`}
+/> */
+}
+
+{
+  /* <img
+src={post.userId.profilePicture}
+alt="user"
+className={`h-full w-full rounded-full  border-[0px] border-blue-600
+object-cover  group-hover:border-[2px]  group-hover:border-cyan-600 
+dark:border-cyan-400 dark:group-hover:border-blue-500`}
+/> */
+}

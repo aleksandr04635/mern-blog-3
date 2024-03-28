@@ -4,13 +4,17 @@ import { GoogleAuthProvider, signInWithPopup, getAuth } from "firebase/auth";
 import { app } from "../firebase";
 import { useDispatch } from "react-redux";
 import { signInSuccess } from "../redux/user/userSlice";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import MyButton from "./MyButton";
 
 export default function OAuth() {
   const auth = getAuth(app);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const urlParams = new URLSearchParams(location.search);
+  const callbackUrl = urlParams.get("callbackUrl");
+
   const handleGoogleClick = async () => {
     const provider = new GoogleAuthProvider();
     provider.setCustomParameters({ prompt: "select_account" });
@@ -29,12 +33,14 @@ export default function OAuth() {
       const data = await res.json();
       if (res.ok) {
         dispatch(signInSuccess(data));
-        navigate("/");
+        navigate(`${callbackUrl ?? "/"}`);
+        //navigate("/");
       }
     } catch (error) {
       console.log(error);
     }
   };
+
   return (
     /*     <Button
       type="button"

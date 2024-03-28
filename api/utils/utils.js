@@ -47,7 +47,6 @@ export const errorHandler = (statusCode, message) => {
 };
 
 //FIREBASE_API_KEY=AIzaSyDUvxFA7Vv_FHmhzmxLsWs-Iw5BNdpHFuw
-
 import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -60,8 +59,6 @@ const firebaseConfig = {
   messagingSenderId: "916742751526",
   appId: "1:916742751526:web:3c028738af122cfece6de7",
 };
-
 //console.log("firebaseConfig:", firebaseConfig);
-
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
