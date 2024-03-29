@@ -425,7 +425,6 @@ const ForgotPassword = async (req, res, next) => {
       });
     });
 
-    //const file = await fs.readFile(process.cwd() + '/app/data.json', 'utf8');
     /* const emailsDir = path.resolve(process.cwd(), "emails");
     console.log("emailsDir: ", emailsDir);
     const emailFile = readFileSync(path.join(emailsDir, "reset-email.html"), {
@@ -448,7 +447,7 @@ const ForgotPassword = async (req, res, next) => {
     /* const emailFile = readFileSync("./emails/reset-email.html", {
       encoding: "utf8",
     }); */
-    console.log("emailFile: ", emailFile);
+    //console.log("emailFile: ", emailFile);
     const emailTemplate = Handlebars.compile(emailFile);
 
     let mailOptions = {

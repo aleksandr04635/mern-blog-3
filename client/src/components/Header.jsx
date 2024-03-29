@@ -6,6 +6,7 @@ import { signoutSuccess } from "../redux/user/userSlice";
 import { useEffect, useState } from "react";
 import ThemeSwitcher from "./ThemeSwitcher";
 import MyButton from "./MyButton";
+import { customDropdownTheme } from "../../customFlowbiteThemes";
 
 function SearchFormForHeader({ type }) {
   const { pageSize } = useSelector((state) => state.pageSize);
@@ -158,6 +159,7 @@ export default function Header() {
                   alt={"user"}
                 />
               }
+              theme={customDropdownTheme}
             >
               <Dropdown.Header>
                 <span className="block text-sm">{currentUser.username}</span>
@@ -170,7 +172,7 @@ export default function Header() {
                   Create a post
                 </Dropdown.Item>
               </Link>
-              <Dropdown.Divider />
+              {/*  <Dropdown.Divider /> */}
               <Link to={"/dashboard?tab=profile"}>
                 <Dropdown.Item>Profile</Dropdown.Item>
               </Link>
