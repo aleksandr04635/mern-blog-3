@@ -26,13 +26,14 @@ export default function About() {
               Mongo database accessed through Mongoose ORM. Deployment to Vercel
               required the minimization of the number of .js files in the API
               directory and a new database connection for each serverless
-              function. For UI elements Flowbite library with Tailwind styles is
-              used.
+              function. That's the reason for the file structure of the api
+              folder being so far from optimal. For UI elements Flowbite library
+              with Tailwind styles is used.
             </p>
             <p>
               Redux Toolkit is used to store user data, the theme, and the
               number of posts per page, persisting them in the local storage.
-              RTK query performs comments, posts and comments fetching, creating
+              RTK-Query performs comments, posts and comments fetching, creating
               and updating by invalidating the cached query results by
               corresponding data mutations. For example, create a post with tags
               and then delete it from a posts list screen. The numbers of posts

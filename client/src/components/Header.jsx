@@ -37,6 +37,13 @@ function SearchFormForHeader({ type }) {
     }
   };
 
+  /*   <p
+  onClick={handleSubmit}
+  className="absolute right-[-21px] top-[10px] h-10 w-12 cursor-pointer border-none text-xl"
+>
+  <AiOutlineSearch />
+</p> */
+
   //overflow-hidden
   return (
     <form
@@ -57,12 +64,13 @@ function SearchFormForHeader({ type }) {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className="w-full  rounded-lg border
-       border-main-border py-1.5 focus:border-main-border focus:ring-1 focus:ring-main-border dark:bg-dark-active-bg 
+       border-main-border py-1.5 focus:border-main-border focus:ring-1 focus:ring-main-border dark:bg-dark-additional-bg/40  
         md:w-[300px]"
       />
+      {/* dark:bg-dark-active-bg */}
       <p
         onClick={handleSubmit}
-        className="absolute right-[-21px] top-[10px] h-10 w-12 cursor-pointer border-none text-xl"
+        className="absolute right-[-1px] top-[10px] h-6 w-7 cursor-pointer border-none text-xl"
       >
         <AiOutlineSearch />
       </p>

@@ -15,10 +15,10 @@ export default function TinyMCEEditor({ value2, onChange, toCom = false }) {
   const editorRef = useRef(null);
   const [imageUploadError, setImageUploadError] = useState(null);
   const [skinStyle, setSkinStyle] = useState(
-    theme === "light" ? "oxide" : "oxide-dark"
+    theme === "light" ? "oxide" : "oxide-dark",
   );
   const [contentStyle, setContentStyle] = useState(
-    theme === "light" ? "/index.css" : "/index.css,dark"
+    theme === "light" ? "/index.css" : "/index.css,dark",
   );
   // const [cont, setCont] = useState("");
   //console.log("value2:", value2);
@@ -55,7 +55,7 @@ export default function TinyMCEEditor({ value2, onChange, toCom = false }) {
   return (
     <>
       <Editor
-        className=" text-base text-justify"
+        className=" text-justify text-base"
         //apiKey="uloldf7z9pe592lrmjoh9s32tjjx7ylnar853dybeypiebee"
         //apiKey="your-api-key"
         //tinymceScriptSrc={process.env.PUBLIC_URL + '/tinymce/tinymce.min.js'}
@@ -83,7 +83,7 @@ export default function TinyMCEEditor({ value2, onChange, toCom = false }) {
             conSt = theme === "light" ? "/index.css" : "/index.css,dark";
             setSkinStyle(theme === "light" ? "oxide" : "oxide-dark");
             setContentStyle(
-              theme === "light" ? "/index.css" : "/index.css,dark"
+              theme === "light" ? "/index.css" : "/index.css,dark",
             );
             //set();
             // console.log(`Editor: ${editor.id} is now initialized.`);
@@ -185,11 +185,12 @@ export default function TinyMCEEditor({ value2, onChange, toCom = false }) {
                     (error) => {
                       console.log("error:", error);
                       setImageUploadError("Image upload failed");
-                      tinymce.activeEditor.notificationManager.open({
+                      /* RECTIFY THE ERROR COMMENTED HERE*/
+                      /*   tinymce.activeEditor.notificationManager.open({
                         text: error.message,
                         type: "error",
                         timeout: 5000,
-                      });
+                      }); */
                     },
                     () => {
                       console.log(" not error:");
@@ -208,10 +209,10 @@ export default function TinyMCEEditor({ value2, onChange, toCom = false }) {
                           };
                           reader.readAsDataURL(file);
                           //setFormData({ ...formData, image: downloadURL });
-                        }
+                        },
                       );
                       //let URL=await getDownloadURL(uploadTask.snapshot.ref)
-                    }
+                    },
                   );
                 } catch (error) {
                   setImageUploadError("Image upload failed");

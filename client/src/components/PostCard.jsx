@@ -59,7 +59,7 @@ md:h-full
             <img
               src={post.image}
               alt="post cover"
-              className="w-full object-cover md:h-full   "
+              className="w-full object-cover object-center md:h-full   "
             />
           </Link>
         </div>

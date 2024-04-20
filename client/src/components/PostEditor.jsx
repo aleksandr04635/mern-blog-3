@@ -365,8 +365,8 @@ export default function PostEditor({ mode, postId }) {
               </div>
             </div>
             <div className="px-1 text-base">
-              Your posts are sorted by importance on your page. Don't set it
-              above 1 without real purpose
+              Your posts are sorted by importance on your page. Don&apos;t set
+              it above 1 without real purpose
             </div>
           </div>
 
