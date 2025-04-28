@@ -35,7 +35,7 @@ export default function FooterCom() {
 
           <Link
             className="link-stand text-base"
-            href={`https://oleksandrs-resume.vercel.app`}
+            to={`https://oleksandrs-resume.vercel.app`}
             target="_blank"
             rel="noopener noreferrer"
           >
