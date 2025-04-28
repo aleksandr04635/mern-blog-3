@@ -26,27 +26,27 @@ export default function About() {
               Mongo database accessed through Mongoose ORM. Deployment to Vercel
               required the minimization of the number of .js files in the API
               directory and a new database connection for each serverless
-              function. That's the reason for the file structure of the api
+              function. That&apos;s the reason for the file structure of the api
               folder being so far from optimal. For UI elements Flowbite library
               with Tailwind styles is used.
             </p>
             <p>
               Redux Toolkit is used to store user data, the theme, and the
               number of posts per page, persisting them in the local storage.
-              RTK-Query performs comments, posts and comments fetching, creating
-              and updating by invalidating the cached query results by
-              corresponding data mutations. For example, create a post with tags
-              and then delete it from a posts list screen. The numbers of posts
-              with tags in the tags list will change by posts mutations. Also,
-              you can edit a post in completely another window and change its
-              tag, and upon returning to the main window with the tags list it
-              will change.
+              RTK-Query performs comments, posts and tags fetching, creating and
+              updating by invalidating the cached query results by corresponding
+              data mutations. For example, create a post with tags and then
+              delete it from a posts list screen. The numbers of posts with tags
+              in the tags list will be changed by post creation or deletion.
+              Also, you can edit a post in completely another window and change
+              its tag, and upon returning to the main window with the tags list
+              the last will change.
             </p>
             <p>
-              The entire comments tree system worked in this way, by
-              invalidation of queries in the cache by mutations initially, you
-              can still find this code commented, but then I remade the comments
-              tree into manual cache changing by optimistic update - changing
+              The entire comments tree system worked this way, by invalidation
+              of queries in the cache by mutations initially, you can still find
+              this code commented, but afterwards I remade the comments tree
+              system into manual cache changing by optimistic update - changing
               the cache before the delivery of the query result in cases of
               editing and liking of comments, or pessimistic update - by
               changing the result of previous queries depending on the result of
@@ -73,11 +73,11 @@ export default function About() {
               topmost page varies depending on the total number of posts,
               corresponding to the query. It, and the whole pagination system
               was made with the intent of full correspondence of shown data to
-              the URL, so that the addition of new posts doesn't change which
-              posts are shown by the old URL, so that they all can be stored in
-              bookmarks, for example. Note how changing the number of posts per
-              page changes the URL, just like the selection of author or tag,
-              the posts of which are shown.
+              the URL, so that the addition of new posts doesn&apos;t change
+              which posts are shown by the old URL, so that they all can be
+              stored in bookmarks, for example. Note how changing the number of
+              posts per page changes the URL, just like the selection of author
+              or tag, the posts of which are shown.
             </p>
             <p>
               User authentication is made with two options: email and password
@@ -108,12 +108,12 @@ export default function About() {
               the page scroll would make a tooltip invisible.
             </p>
             <p>
-              Also, notice how the page title changes depending on whether it's
-              a page with a list of posts with a specific tag, that of specific
-              author or just a result of a search query. Together with full
-              correspondence of the shown post lists to the URL it allows for
-              bookmarking any specific page of any post list and its content
-              won't change in the future - try to bookmark any post list.
+              Also, notice how the page title changes depending on whether
+              it&apos;s a page with a list of posts with a specific tag, that of
+              specific author or just a result of a search query. Together with
+              full correspondence of the shown post lists to the URL it allows
+              for bookmarking any specific page of any post list and its content
+              won&apos;t change in the future - try to bookmark any post list.
             </p>
             <p>
               Look how the color theme changing is made - default one is the

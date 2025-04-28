@@ -13,29 +13,29 @@
               function. For UI elements Flowbite library with Tailwind styles is
               used.
             </p>
-            <p>
+                 <p>
               Redux Toolkit is used to store user data, the theme, and the
               number of posts per page, persisting them in the local storage.
-              RTK query performs comments, posts and comments fetching, creating
-              and updating by invalidating the cached query results by
-              corresponding data mutations. For example, create a post with tags
-              and then delete it from a posts list screen. The numbers of posts
-              with tags in the tags list will change by posts mutations. Also,
-              you can edit a post in completely another window and change its
-              tag, and upon returning to the main window with the tags list it
-              will change.
+              RTK-Query performs comments, posts and tags fetching, creating and
+              updating by invalidating the cached query results by corresponding
+              data mutations. For example, create a post with tags and then
+              delete it from a posts list screen. The numbers of posts with tags
+              in the tags list will be changed by post creation or deletion.
+              Also, you can edit a post in completely another window and change
+              its tag, and upon returning to the main window with the tags list
+              the last will change.
             </p>
             <p>
-              The entire comments tree system worked in this way, by
-              invalidation of queries in the cache by mutations initially, you
-              can still find this code commented, but then I remade the comments
-              tree to manual cache changing by optimistic update - changing the
-              cache before the delivery of the query result in case of editing
-              and liking, or pessimistic update - by changing the result of
-              previous queries depending on the result of new ones of another
-              endpoint in case of creation and deletion of comments. It
-              minimised the time the user sees any loading to the minimum.
-              Possible errors are accounted for too - you can uncomment
+              The entire comments tree system worked this way, by invalidation
+              of queries in the cache by mutations initially, you can still find
+              this code commented, but afterwards I remade the comments tree
+              system into manual cache changing by optimistic update - changing
+              the cache before the delivery of the query result in cases of
+              editing and liking of comments, or pessimistic update - by
+              changing the result of previous queries depending on the result of
+              new ones to another endpoint in cases of creation and deletion of
+              comments. It minimised the time the user sees any loading to the
+              minimum. Possible errors are accounted for too - you can uncomment
               commented throwing of test errors in comment.route.js in the API
               folder and see the result, for example by clicking like of comment
               - like count would initially change and then the error would

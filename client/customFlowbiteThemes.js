@@ -214,6 +214,7 @@ export const customAlertTheme = {
   wrapper: "flex items-center",
 };
 
+//dark:hover:bg-dark-active-bg
 export const customTableTheme = {
   root: {
     base: "w-full text-left text-sm text-additional-text dark:text-dark-additional-text ",
@@ -235,7 +236,7 @@ export const customTableTheme = {
   },
   row: {
     base: "group/row bg-white/90 dark:bg-dark-additional-bg/40 ",
-    hovered: "hover:bg-active-bg dark:hover:bg-dark-active-bg",
+    hovered: "hover:bg-active-bg dark:hover:bg-dark-active-bg  ",
     striped:
       "odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-700",
   },

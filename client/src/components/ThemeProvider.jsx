@@ -2,14 +2,16 @@ import { useSelector } from "react-redux";
 
 export default function ThemeProvider({ children }) {
   const { theme } = useSelector((state) => state.theme);
+
+  /*  bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))]    dark:from-[#065179]      dark:to-[#0e1425]*/
   return (
     <div className={theme}>
       <div
         className="  flex  min-h-screen w-full flex-col justify-stretch
          bg-white 
-         bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] 
+        
                       text-gray-950
-                  dark:from-[#065179]      dark:to-[#0e1425]
+                dark:bg-[radial-gradient(ellipse_at_top,_hsl(206,95%,20%)_0%,_hsl(224,45%,5%)_100%)]
                      dark:text-white "
       >
         {children}

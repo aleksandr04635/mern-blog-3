@@ -23,7 +23,7 @@ export default function FooterCom() {
       border-layout-border bg-white/90 dark:bg-dark-additional-bg/40"
     >
       <div className="mx-auto w-full max-w-7xl">
-        <div className="flex w-full items-center justify-between">
+        <div className="flex w-full  flex-col items-center justify-between sm:flex-row">
           <Link
             className="link-stand"
             to={window.location.origin + `?pageSize=${pageSize}`}
@@ -32,6 +32,16 @@ export default function FooterCom() {
           >
             &copy; {new Date().getFullYear()} My blog
           </Link>
+
+          <Link
+            className="link-stand text-base"
+            href={`https://oleksandrs-resume.vercel.app`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            My&nbsp;CV&nbsp;and&nbsp;contacts
+          </Link>
+
           <Link
             className="link-stand"
             target="_blank"
